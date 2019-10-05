@@ -28,3 +28,10 @@ ionic serve
 ```
 
 O Ionic subirá um servidor e abrirá o navegador padrão do seu dispositivo, caso o navegador não abra automaticamente abra o navegador, copie o endereço HTTP local e cole na barra de endereço do seu navegador.
+
+## Isenção de responsabilidade
+
+Negociar no mercado de criptomoedas é muito arriscado, sendo assim nunca invista uma quantia em dinheiro que você não pode perder, pois você pode perder todo o dinheiro investido.
+
+Não nos responsabilizamos pelos seus ganhos ou perdas, cabe a você verificar por conta própria se a corretora é confiável e conferir os livros de ordens, pois as informações disponibilizadas pelo software são apenas indicadores.
+
