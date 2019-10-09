@@ -4,6 +4,8 @@ import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 
+import { ConcordaIsencaoResponsabilidade } from './concorda-isencao-responsabilidade.enum';
+
 @Component({
   selector: 'app-isencao-responsabilidade',
   templateUrl: './isencao-responsabilidade.page.html',
@@ -30,11 +32,11 @@ export class IsencaoResponsabilidadePage {
 
   async salvarConcordaIsencaoResponsabilidade() {
     this.storage.set(
-      'concorda-isencao-responsabilidade-perdas-ganhos',
+      ConcordaIsencaoResponsabilidade.PERDAS_GANHOS,
       this.concordaIsencaoPerdasGanhos.toString()
     );
     this.storage.set(
-      'concorda-isencao-responsabilidade-corretoras',
+      ConcordaIsencaoResponsabilidade.CORRETORAS,
       this.concordaIsencaoCorretoras.toString()
     );
   }
