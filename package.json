@@ -9,10 +9,12 @@
     "build": "ng build",
     "test": "ng test --watch false",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "git-test": "node git-test.js"
   },
   "precommit": {
     "run": [
+      "git-test",
       "lint"
     ]
   },
