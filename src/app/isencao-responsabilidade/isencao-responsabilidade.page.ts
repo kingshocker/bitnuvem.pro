@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-isencao-responsabilidade',
@@ -15,7 +16,8 @@ export class IsencaoResponsabilidadePage {
 
   constructor(
     private toastController: ToastController,
-    private storage: Storage
+    private storage: Storage,
+    private router: Router
   ) {}
 
   async informarItensNaoMarcados() {
@@ -37,11 +39,16 @@ export class IsencaoResponsabilidadePage {
     );
   }
 
+  redicionarPaginaInicial() {
+    this.router.navigate(['/']);
+  }
+
   concordarTermosUso() {
     if (!(this.concordaIsencaoPerdasGanhos && this.concordaIsencaoCorretoras)) {
       this.informarItensNaoMarcados();
     } else {
       this.salvarConcordaIsencaoResponsabilidade();
+      this.redicionarPaginaInicial();
     }
   }
 }
