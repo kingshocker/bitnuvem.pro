@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { BisqService } from './corretora/bisq.service';
+import { BraziliexService } from './corretora/braziliex.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +31,7 @@ import { BisqService } from './corretora/bisq.service';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     IsencaoResponsabilidadeGuard,
     BisqService,
+    BraziliexService,
   ],
   bootstrap: [AppComponent]
 })
