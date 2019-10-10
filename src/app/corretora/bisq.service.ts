@@ -30,7 +30,7 @@ interface LivroOrdensBTCBisq {
   providedIn: 'root'
 })
 export class BisqService implements Corretora {
-  readonly BISQ_TAXA_ORDEM_EXECUTORA = 0.006;
+  readonly TAXA_ORDEM_EXECUTORA = 0.006;
   id = 'bisq';
   nome = 'Bisq';
   paginaInicial = 'https://bisq.network/pt-pt/';
@@ -79,10 +79,10 @@ export class BisqService implements Corretora {
   }
 
   calcularValorVendaAposTaxas(valor: number): number {
-    return valor - (valor * this.BISQ_TAXA_ORDEM_EXECUTORA);
+    return valor - (valor * this.TAXA_ORDEM_EXECUTORA);
   }
 
   calcularValorCompraAposTaxas(valor: number): number {
-    return valor - (valor * this.BISQ_TAXA_ORDEM_EXECUTORA);
+    return valor - (valor * this.TAXA_ORDEM_EXECUTORA);
   }
 }
