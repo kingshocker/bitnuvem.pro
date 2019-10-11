@@ -14,6 +14,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { BisqService } from './corretora/bisq.service';
 import { BraziliexService } from './corretora/braziliex.service';
+import { ArbitragemService } from './arbitragem/arbitragem.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +33,7 @@ import { BraziliexService } from './corretora/braziliex.service';
     IsencaoResponsabilidadeGuard,
     BisqService,
     BraziliexService,
+    ArbitragemService,
   ],
   bootstrap: [AppComponent]
 })
