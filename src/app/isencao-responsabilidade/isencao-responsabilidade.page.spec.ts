@@ -1,5 +1,8 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { Storage } from '@ionic/storage';
 
 import { IsencaoResponsabilidadePage } from './isencao-responsabilidade.page';
 
@@ -11,6 +14,13 @@ describe('IsencaoResponsabilidadePage', () => {
     TestBed.configureTestingModule({
       declarations: [ IsencaoResponsabilidadePage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports: [RouterTestingModule],
+      providers: [
+        {
+          provide: Storage,
+          useFactory: () => new Storage({})
+        },
+      ]
     })
     .compileComponents();
   }));
