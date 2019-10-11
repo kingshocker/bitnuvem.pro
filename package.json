@@ -1,8 +1,8 @@
 {
   "name": "CriptoArbitragem",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "version": "0.1.0",
+  "author": "Carlson Santana Cruz",
+  "homepage": "https://github.com/carlsonsantana/criptoarbitragem",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -65,5 +65,5 @@
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
   },
-  "description": "An Ionic project"
+  "description": "Notificar sobre oportunidades de arbitragem em Bitcoin."
 }
