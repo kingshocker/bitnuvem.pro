@@ -1,9 +1,18 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
+import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
+
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)},
+  {
+    path: '',
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule),
+    canActivate: [IsencaoResponsabilidadeGuard]
+  },
+  {
+    path: 'isencao-responsabilidade',
+    loadChildren: './isencao-responsabilidade/isencao-responsabilidade.module#IsencaoResponsabilidadePageModule'
+  },
 ];
 
 @NgModule({

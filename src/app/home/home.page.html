@@ -1,14 +1,28 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Ionic Blank
+      CriptoArbitragem
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm">
+      <thead class="thead-light">
+        <tr>
+          <th>Compre em</th>
+          <th>Venda em</th>
+          <th>Lucro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let arbitragem of arbitragens">
+          <td>{{ arbitragem.corretoraVenda.nome }}</td>
+          <td>{{ arbitragem.corretoraCompra.nome }}</td>
+          <td>R$ {{ arbitragem.lucro | number:'1.2-2':'pt-BR' }} ({{ arbitragem.porcentagemLucro | number:'1.2-2':'pt-BR' }}%)</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </ion-content>
