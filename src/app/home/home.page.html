@@ -20,7 +20,7 @@
         <tr *ngFor="let arbitragem of arbitragens">
           <td>{{ arbitragem.corretoraVenda.nome }}</td>
           <td>{{ arbitragem.corretoraCompra.nome }}</td>
-          <td>{{ arbitragem.lucro | number:'1.2-2' }}</td>
+          <td>R$ {{ arbitragem.lucro | number:'1.2-2' }} ({{ arbitragem.porcentagemLucro | number:'1.2-2' }}%)</td>
         </tr>
       </tbody>
     </table>

@@ -19,6 +19,10 @@ export class Arbitragem {
     this.verificarOportunidades();
   }
 
+  get porcentagemLucro() {
+    return this.lucro / this.investimento * 100;
+  }
+
   private clonarOrdem(ordem: Ordem) {
     return {preco: ordem.preco, quantidade: ordem.quantidade};
   }
