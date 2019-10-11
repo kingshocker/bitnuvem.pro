@@ -62,14 +62,14 @@ export class BisqService implements Corretora {
             preco: Number.parseFloat(ordemBisq.price),
             quantidade: Number.parseFloat(ordemBisq.amount)
           };
-          ordensVenda.push(ordem);
+          ordensCompra.push(ordem);
         });
         livroOrdensBisq.sells.forEach((ordemBisq: OrdemBisq) => {
           const ordem: Ordem = {
             preco: Number.parseFloat(ordemBisq.price),
             quantidade: Number.parseFloat(ordemBisq.amount)
           };
-          ordensCompra.push(ordem);
+          ordensVenda.push(ordem);
         });
         this.livroOrdens = livroOrdens;
 
