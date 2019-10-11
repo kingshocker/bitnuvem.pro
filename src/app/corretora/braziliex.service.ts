@@ -66,11 +66,19 @@ export class BraziliexService implements Corretora {
     ) as Promise<LivroOrdens>;
   }
 
+  calcularValorTaxaVenda(valor: number): number {
+    return valor * this.TAXA_ORDEM;
+  }
+
+  calcularValorTaxaCompra(valor: number): number {
+    return valor * this.TAXA_ORDEM;
+  }
+
   calcularValorVendaAposTaxas(valor: number): number {
-    return valor - (valor * this.TAXA_ORDEM);
+    return valor + this.calcularValorTaxaVenda(valor);
   }
 
   calcularValorCompraAposTaxas(valor: number): number {
-    return valor - (valor * this.TAXA_ORDEM);
+    return valor + this.calcularValorTaxaVenda(valor);
   }
 }

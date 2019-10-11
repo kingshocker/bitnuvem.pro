@@ -1,6 +1,7 @@
 import { Corretora, Ordens, Ordem } from '../corretora/corretora';
 
 interface OrdemArbitragem extends Ordem {
+  valorTaxa: number;
   numeroOperacoes: number;
 }
 
@@ -29,11 +30,17 @@ export class Arbitragem {
   ): number {
     if (
       (ordemVenda.quantidade < ordemCompra.quantidade)
-      && ((ordemVenda.preco * ordemVenda.quantidade) < saldoRestante)
+      && (
+        this.corretoraVenda.calcularValorVendaAposTaxas(
+          ordemVenda.preco * ordemVenda.quantidade
+        ) < saldoRestante
+      )
     ) {
       return ordemVenda.quantidade;
     } else if (
-      (ordemCompra.preco * ordemCompra.quantidade) < saldoRestante
+      this.corretoraCompra.calcularValorCompraAposTaxas(
+        ordemCompra.preco * ordemCompra.quantidade
+      ) < saldoRestante
     ) {
       return ordemCompra.quantidade;
     } else {
@@ -45,20 +52,23 @@ export class Arbitragem {
     ordensArbitragem: Ordens,
     preco: number,
     indice: number,
-    quantidadeOperada: number
+    quantidadeOperada: number,
+    taxa: number
   ) {
     let ordemArbitragem: OrdemArbitragem;
     if (ordensArbitragem.length <= indice) {
       ordemArbitragem = {
         preco,
         quantidade: quantidadeOperada,
-        numeroOperacoes: 1
+        numeroOperacoes: 1,
+        valorTaxa: taxa,
       };
       ordensArbitragem.push(ordemArbitragem);
     } else {
       ordemArbitragem = ordensArbitragem[indice] as OrdemArbitragem;
       ordemArbitragem.quantidade += quantidadeOperada;
       ordemArbitragem.numeroOperacoes++;
+      ordemArbitragem.valorTaxa += taxa;
     }
   }
 
@@ -97,24 +107,38 @@ export class Arbitragem {
 
       ordemVenda.quantidade -= quantidadeOperada;
       ordemCompra.quantidade -= quantidadeOperada;
-      saldoRestante -= quantidadeOperada * ordemVenda.preco;
-      this.investimento += quantidadeOperada * ordemVenda.preco;
+      saldoRestante -= this.corretoraVenda.calcularValorVendaAposTaxas(
+        quantidadeOperada * ordemVenda.preco
+      );
+      this.investimento += this.corretoraVenda.calcularValorVendaAposTaxas(
+        quantidadeOperada * ordemVenda.preco
+      );
+      const taxaVenda = this.corretoraVenda.calcularValorTaxaVenda(
+        quantidadeOperada * ordemVenda.preco
+      );
+      const taxaCompra = this.corretoraCompra.calcularValorTaxaCompra(
+        quantidadeOperada * ordemCompra.preco
+      );
       this.lucro += (
         (quantidadeOperada * ordemCompra.preco)
         - (quantidadeOperada * ordemVenda.preco)
+        - taxaVenda
+        - taxaCompra
       );
 
       this.adicionarOrdemArbitragem(
         this.ordensVenda,
         ordemVenda.preco,
         indiceVenda,
-        quantidadeOperada
+        quantidadeOperada,
+        taxaVenda
       );
       this.adicionarOrdemArbitragem(
         this.ordensCompra,
         ordemCompra.preco,
         indiceCompra,
-        quantidadeOperada
+        quantidadeOperada,
+        taxaCompra
       );
 
       if (ordemVenda.quantidade === 0) {

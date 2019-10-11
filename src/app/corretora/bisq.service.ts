@@ -78,11 +78,19 @@ export class BisqService implements Corretora {
     ) as Promise<LivroOrdens>;
   }
 
+  calcularValorTaxaVenda(valor: number): number {
+    return valor * this.TAXA_ORDEM_EXECUTORA;
+  }
+
+  calcularValorTaxaCompra(valor: number): number {
+    return valor * this.TAXA_ORDEM_EXECUTORA;
+  }
+
   calcularValorVendaAposTaxas(valor: number): number {
-    return valor - (valor * this.TAXA_ORDEM_EXECUTORA);
+    return valor + this.calcularValorTaxaVenda(valor);
   }
 
   calcularValorCompraAposTaxas(valor: number): number {
-    return valor - (valor * this.TAXA_ORDEM_EXECUTORA);
+    return valor + this.calcularValorTaxaCompra(valor);
   }
 }
