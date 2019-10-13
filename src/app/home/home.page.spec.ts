@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { IonicModule } from '@ionic/angular';
@@ -8,8 +8,11 @@ import { HomePage } from './home.page';
 describe('HomePage', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
+  const DEFAULT_TIMEOUT_INTERVAL = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+  const DOIS_MINUTOS_EM_MILISEGUNDOS = 1000 * 60 * 2;
 
   beforeEach(async(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = DOIS_MINUTOS_EM_MILISEGUNDOS;
     TestBed.configureTestingModule({
       declarations: [ HomePage ],
       imports: [
@@ -17,13 +20,18 @@ describe('HomePage', () => {
         HttpClientTestingModule,
       ]
     }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    component.ngOnDestroy();
+  });
+
+  it('should create', fakeAsync(() => {
+    expect(component).toBeDefined();
   }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  afterEach(() => jasmine.DEFAULT_TIMEOUT_INTERVAL = DEFAULT_TIMEOUT_INTERVAL);
 });
