@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule),
-    canActivate: [IsencaoResponsabilidadeGuard]
+    canActivate: [IsencaoResponsabilidadeGuard],
   },
   {
     path: 'isencao-responsabilidade',
@@ -16,6 +16,11 @@ const routes: Routes = [
   {
     path: 'arbitragem/:corretora-venda/:corretora-compra',
     loadChildren: './arbitragem/arbitragem.module#ArbitragemPageModule'
+  },
+  {
+    path: 'configuracoes',
+    loadChildren: './configuracoes/configuracoes.module#ConfiguracoesPageModule',
+    canActivate: [IsencaoResponsabilidadeGuard],
   },
 ];
 
