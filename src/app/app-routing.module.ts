@@ -13,6 +13,10 @@ const routes: Routes = [
     path: 'isencao-responsabilidade',
     loadChildren: './isencao-responsabilidade/isencao-responsabilidade.module#IsencaoResponsabilidadePageModule'
   },
+  {
+    path: 'arbitragem/:corretora-venda/:corretora-compra',
+    loadChildren: './arbitragem/arbitragem.module#ArbitragemPageModule'
+  },
 ];
 
 @NgModule({

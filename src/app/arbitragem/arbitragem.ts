@@ -1,6 +1,7 @@
 import { Corretora, Ordens, Ordem } from '../corretora/corretora';
 
 interface OrdemArbitragem extends Ordem {
+  total: number;
   valorTaxa: number;
   numeroOperacoes: number;
 }
@@ -66,6 +67,7 @@ export class Arbitragem {
         quantidade: quantidadeOperada,
         numeroOperacoes: 1,
         valorTaxa: taxa,
+        total: preco * quantidadeOperada,
       };
       ordensArbitragem.push(ordemArbitragem);
     } else {
@@ -73,6 +75,7 @@ export class Arbitragem {
       ordemArbitragem.quantidade += quantidadeOperada;
       ordemArbitragem.numeroOperacoes++;
       ordemArbitragem.valorTaxa += taxa;
+      ordemArbitragem.total = preco * ordemArbitragem.quantidade;
     }
   }
 

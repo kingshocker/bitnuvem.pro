@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ arbitragem.corretoraVenda.nome }} x {{ arbitragem.corretoraCompra.nome }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <div class="row">
+      <div class="col">
+        <strong>Corretora venda</strong>
+        <p>{{ arbitragem.corretoraVenda.nome }}</p>
+      </div>
+      <div class="col">
+        <strong>Corretora compra</strong>
+        <p>{{ arbitragem.corretoraCompra.nome }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <strong>Investimento</strong>
+        <p>R$ {{ arbitragem.investimento | number:'1.2-2':'pt-BR' }}</p>
+      </div>
+      <div class="col">
+        <strong>Lucro</strong>
+        <p>R$ {{ arbitragem.lucro | number:'1.2-2':'pt-BR' }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <strong>Porcentagem de lucro</strong>
+        <p>{{ arbitragem.lucro | number:'1.2-2':'pt-BR' }}%</p>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm">
+      <caption>Ordens de venda na {{ arbitragem.corretoraVenda.nome }}</caption>
+      <thead class="thead-light">
+        <tr>
+          <th>Preço</th>
+          <th>Quantidade</th>
+          <th>Total</th>
+          <th>Taxas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ordem of arbitragem.ordensVenda">
+          <td>{{ ordem.preco | number:'1.2-2':'pt-BR' }}</td>
+          <td>{{ ordem.quantidade | number:'1.0-8':'pt-BR' }}</td>
+          <td>{{ ordem.total | number:'1.2-2':'pt-BR' }}</td>
+          <td>{{ ordem.valorTaxa | number:'1.2-2':'pt-BR' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm">
+      <caption>Ordens de compra na {{ arbitragem.corretoraCompra.nome }}</caption>
+      <thead class="thead-light">
+        <tr>
+          <th>Preço</th>
+          <th>Quantidade</th>
+          <th>Total</th>
+          <th>Taxas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ordem of arbitragem.ordensCompra">
+          <td>{{ ordem.preco | number:'1.2-2':'pt-BR' }}</td>
+          <td>{{ ordem.quantidade | number:'1.0-8':'pt-BR' }}</td>
+          <td>{{ ordem.total | number:'1.2-2':'pt-BR' }}</td>
+          <td>{{ ordem.valorTaxa | number:'1.2-2':'pt-BR' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-content>
