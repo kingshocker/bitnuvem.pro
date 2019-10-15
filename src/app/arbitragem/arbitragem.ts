@@ -15,7 +15,7 @@ export class Arbitragem {
   constructor(
     public corretoraVenda: Corretora,
     public corretoraCompra: Corretora,
-    public investimentoInicial: number
+    public investimentoMaximo: number,
   ) {
     this.verificarOportunidades();
   }
@@ -90,7 +90,7 @@ export class Arbitragem {
     this.investimento = 0;
     this.lucro = 0;
 
-    let saldoRestante = this.investimentoInicial;
+    let saldoRestante = this.investimentoMaximo;
     let quantidadeOperada = 0;
 
     let indiceVenda = 0;

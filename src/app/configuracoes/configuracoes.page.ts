@@ -10,6 +10,7 @@ import { ConfiguracoesService } from './configuracoes.service';
 export class ConfiguracoesPage implements OnInit {
   lucroAcima: number;
   porcentagemLucro: number;
+  investimentoMaximo: number;
 
   constructor(private configuracoes: ConfiguracoesService) {}
 
@@ -20,6 +21,9 @@ export class ConfiguracoesPage implements OnInit {
     this.configuracoes.propagadorPorcentagemLucroObservavel.subscribe(
       (valor) => this.porcentagemLucro = valor
     );
+    this.configuracoes.propagadorInvestimentoMaximoObservavel.subscribe(
+      (valor) => this.investimentoMaximo = valor
+    );
   }
 
   mudarLucro() {
@@ -28,5 +32,9 @@ export class ConfiguracoesPage implements OnInit {
 
   mudarPorcentagemLucro() {
     this.configuracoes.mudarFiltroPorcentagemLucroAcima(this.porcentagemLucro);
+  }
+
+  mudarInvestimentoMaximo() {
+    this.configuracoes.mudarInvestimentoMaximo(this.investimentoMaximo);
   }
 }

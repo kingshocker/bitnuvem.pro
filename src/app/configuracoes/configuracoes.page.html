@@ -10,6 +10,13 @@
 <ion-content>
   <ion-list>
     <ion-list-header>
+      <ion-label>Definições</ion-label>
+    </ion-list-header>
+    <ion-item>
+      <ion-label position="floating">Investimento</ion-label>
+      <ion-input type="number" inputmode="decimal" [(ngModel)]="investimentoMaximo" (change)="mudarInvestimentoMaximo()"></ion-input>
+    </ion-item>
+    <ion-list-header>
       <ion-label>Filtros</ion-label>
     </ion-list-header>
     <ion-item>

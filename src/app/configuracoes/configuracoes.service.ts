@@ -7,37 +7,67 @@ import { Storage } from '@ionic/storage';
   providedIn: 'root'
 })
 export class ConfiguracoesService {
+  readonly FILTRO_LUCRO_ACIMA = 'filtro-lucro-acima';
+  readonly FILTRO_PORCENTAGEM_LUCRO_ACIMA = 'filtro-porcentagem-lucro-acima';
+  readonly INVESTIMENTO_MAXIMO = 'investimento-maximo';
   private propagadorLucro = new BehaviorSubject(null);
   private propagadorPorcentagemLucro = new BehaviorSubject(null);
+  private propagadorInvestimentoMaximo = new BehaviorSubject(null);
   propagadorLucroObservavel = this.propagadorLucro.asObservable();
   propagadorPorcentagemLucroObservavel = (
     this.propagadorPorcentagemLucro.asObservable()
   );
+  propagadorInvestimentoMaximoObservavel = (
+    this.propagadorInvestimentoMaximo.asObservable()
+  );
 
   constructor(private storage: Storage) {
-    this.storage.get('filtro-lucro-acima').then((valor) => {
+    this.carregarValorPropagador(
+      this.FILTRO_LUCRO_ACIMA,
+      this.propagadorLucro,
+      0,
+    );
+    this.carregarValorPropagador(
+      this.FILTRO_PORCENTAGEM_LUCRO_ACIMA,
+      this.propagadorPorcentagemLucro,
+      0,
+    );
+    this.carregarValorPropagador(
+      this.INVESTIMENTO_MAXIMO,
+      this.propagadorInvestimentoMaximo,
+      1000,
+    );
+  }
+
+  private carregarValorPropagador(
+    id: string,
+    propagador: BehaviorSubject<any>,
+    valorPadrao: any,
+  ) {
+    this.storage.get(id).then((valor: any) => {
       if ((valor !== undefined) && (valor !== null)) {
-        this.propagadorLucro.next(valor);
+        propagador.next(valor);
       } else {
-        this.propagadorLucro.next(0);
-      }
-    });
-    this.storage.get('filtro-porcentagem-lucro-acima').then((valor) => {
-      if ((valor !== undefined) && (valor !== null)) {
-        this.propagadorPorcentagemLucro.next(valor);
-      } else {
-        this.propagadorPorcentagemLucro.next(0);
+        propagador.next(valorPadrao);
       }
     });
   }
 
   mudarFiltroLucroAcima(lucroAcima1: number) {
     this.propagadorLucro.next(lucroAcima1);
-    this.storage.set('filtro-lucro-acima', lucroAcima1);
+    this.storage.set(this.FILTRO_LUCRO_ACIMA, lucroAcima1);
   }
 
   mudarFiltroPorcentagemLucroAcima(porcentagemLucroAcima: number) {
     this.propagadorPorcentagemLucro.next(porcentagemLucroAcima);
-    this.storage.set('filtro-porcentagem-lucro-acima', porcentagemLucroAcima);
+    this.storage.set(
+      this.FILTRO_PORCENTAGEM_LUCRO_ACIMA,
+      porcentagemLucroAcima,
+    );
+  }
+
+  mudarInvestimentoMaximo(investimentoMaximo: number) {
+    this.propagadorInvestimentoMaximo.next(investimentoMaximo);
+    this.storage.set(this.INVESTIMENTO_MAXIMO, investimentoMaximo);
   }
 }
