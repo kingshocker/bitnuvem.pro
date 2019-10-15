@@ -18,6 +18,7 @@ import { BisqService } from './corretora/bisq.service';
 import { BraziliexService } from './corretora/braziliex.service';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
 import { ComunicacaoService } from './shared/comunicacao.service';
+import { ConfiguracoesService } from './configuracoes/configuracoes.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,6 +39,7 @@ import { ComunicacaoService } from './shared/comunicacao.service';
     BraziliexService,
     ArbitragemService,
     ComunicacaoService,
+    ConfiguracoesService,
   ],
   bootstrap: [AppComponent]
 })

@@ -14,11 +14,11 @@
     </ion-list-header>
     <ion-item>
       <ion-label position="floating">Lucro acima de</ion-label>
-      <ion-input type="number" value="0"></ion-input>
+      <ion-input type="number" inputmode="decimal" [(ngModel)]="lucroAcima" (change)="mudarLucro()"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Porcentagem de lucro acima de</ion-label>
-      <ion-input type="number" value="0"></ion-input>
+      <ion-input type="number" inputmode="decimal" [(ngModel)]="porcentagemLucro" (change)="mudarPorcentagemLucro()"></ion-input>
     </ion-item>
   </ion-list>
 </ion-content>
