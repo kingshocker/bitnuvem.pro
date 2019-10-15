@@ -4,6 +4,7 @@ import { Corretora, LivroOrdens } from '../corretora/corretora';
 import { BisqService } from '../corretora/bisq.service';
 import { BraziliexService } from '../corretora/braziliex.service';
 import { Arbitragem } from './arbitragem';
+import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,20 @@ import { Arbitragem } from './arbitragem';
 export class ArbitragemService {
   corretoras: Array<Corretora>;
   oportunidadesArbitragem: Array<Arbitragem>;
+  lucroAcima: number;
+  porcentagemLucro: number;
 
-  constructor(private bisq: BisqService, private braziliex: BraziliexService) {
+  constructor(
+    private bisq: BisqService,
+    private braziliex: BraziliexService,
+    private configuracoes: ConfiguracoesService,
+  ) {
+    this.configuracoes.propagadorLucroObservavel.subscribe(
+      (valor) => this.lucroAcima = valor
+    );
+    this.configuracoes.propagadorPorcentagemLucroObservavel.subscribe(
+      (valor) => this.porcentagemLucro = valor
+    );
     this.corretoras = [this.bisq, this.braziliex];
   }
 
@@ -43,7 +56,13 @@ export class ArbitragemService {
           && corretoraB.livroOrdens.venda.length > 0
           && corretoraB.menorPrecoVenda < corretoraA.maiorPrecoCompra
         ) {
-          arbitragens.push(new Arbitragem(corretoraB, corretoraA, 1000));
+          const arbitragem = new Arbitragem(corretoraB, corretoraA, 1000);
+          if (
+            (arbitragem.lucro >= this.lucroAcima)
+            && (arbitragem.porcentagemLucro >= this.porcentagemLucro)
+          ) {
+            arbitragens.push(arbitragem);
+          }
         }
       }
     }

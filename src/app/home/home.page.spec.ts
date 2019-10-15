@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { IonicModule } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
 import { HomePage } from './home.page';
 
@@ -20,7 +21,13 @@ describe('HomePage', () => {
         IonicModule.forRoot(),
         HttpClientTestingModule,
         RouterTestingModule,
-      ]
+      ],
+      providers: [
+        {
+          provide: Storage,
+          useFactory: () => new Storage({})
+        }
+      ],
     }).compileComponents();
   }));
 
