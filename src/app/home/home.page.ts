@@ -8,6 +8,8 @@ import { OnPageVisible, OnPageHidden } from 'angular-page-visibility';
 import { ArbitragemService } from '../arbitragem/arbitragem.service';
 import { Arbitragem } from '../arbitragem/arbitragem';
 import { ComunicacaoService } from '../shared/comunicacao.service';
+import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
+import { NotificacaoService } from '../shared/notificacao.service';
 
 @Component({
   selector: 'app-home',
@@ -20,21 +22,27 @@ export class HomePage implements OnInit, OnDestroy {
   paginaVisivel: boolean;
   intervalo: Observable<any>;
   arbitragens: Array<Arbitragem>;
+  permitirNotificar: boolean;
 
   constructor(
     private oportunidades: ArbitragemService,
     private comunicacao: ComunicacaoService,
     private router: Router,
+    private configuracoes: ConfiguracoesService,
+    private notificacao: NotificacaoService,
   ) {}
 
   ngOnInit() {
+    this.configuracoes.propagadorNotificarObservavel.subscribe(
+      (valor) => this.permitirNotificar = valor
+    );
     this.verificarOportunidadesArbitragem();
     this.paginaAtiva = true;
     this.paginaVisivel = true;
     if (!this.intervalo) {
       this.intervalo = interval(this.UM_MINUTO_EM_MILISEGUNDOS);
       this.intervalo.pipe(takeWhile(() => this.paginaAtiva)).subscribe(() => {
-        if (this.paginaVisivel) {
+        if ((this.paginaVisivel) || (this.permitirNotificar)) {
           this.verificarOportunidadesArbitragem();
         }
       });
@@ -59,6 +67,16 @@ export class HomePage implements OnInit, OnDestroy {
   async verificarOportunidadesArbitragem() {
     this.oportunidades.verificarOportunidadesArbitragem().then(
       (arbitragens) => {
+        if (
+          (this.permitirNotificar)
+          && (!this.paginaVisivel)
+          && (arbitragens.length > 0)
+        ) {
+          this.notificacao.notificar(
+            'Oportunidade de arbitragem',
+            'Há novas oportunidades de arbitragem que podem ser do seu interesse',
+          );
+        }
         this.arbitragens = arbitragens;
       }
     );

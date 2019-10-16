@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Platform } from '@ionic/angular';
+
 import { ConfiguracoesService } from './configuracoes.service';
 
 @Component({
@@ -11,8 +13,12 @@ export class ConfiguracoesPage implements OnInit {
   lucroAcima: number;
   porcentagemLucro: number;
   investimentoMaximo: number;
+  permitirNotificar: boolean;
 
-  constructor(private configuracoes: ConfiguracoesService) {}
+  constructor(
+    private configuracoes: ConfiguracoesService,
+    private platform: Platform,
+  ) {}
 
   ngOnInit() {
     this.configuracoes.propagadorLucroObservavel.subscribe(
@@ -23,6 +29,9 @@ export class ConfiguracoesPage implements OnInit {
     );
     this.configuracoes.propagadorInvestimentoMaximoObservavel.subscribe(
       (valor) => this.investimentoMaximo = valor
+    );
+    this.configuracoes.propagadorNotificarObservavel.subscribe(
+      (valor) => this.permitirNotificar = valor
     );
   }
 
@@ -36,5 +45,17 @@ export class ConfiguracoesPage implements OnInit {
 
   mudarInvestimentoMaximo() {
     this.configuracoes.mudarInvestimentoMaximo(this.investimentoMaximo);
+  }
+
+  mudarPermitirNotificar() {
+    if (
+      (this.permitirNotificar)
+      && (typeof Notification !== typeof undefined)
+      && (!this.platform.is('cordova'))
+      && (!this.platform.is('capacitor'))
+    ) {
+      Notification.requestPermission();
+    }
+    this.configuracoes.mudarPermitirNotificar(this.permitirNotificar);
   }
 }

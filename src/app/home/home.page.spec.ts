@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { IonicModule } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 import { HomePage } from './home.page';
 
@@ -26,7 +27,8 @@ describe('HomePage', () => {
         {
           provide: Storage,
           useFactory: () => new Storage({})
-        }
+        },
+        LocalNotifications,
       ],
     }).compileComponents();
   }));

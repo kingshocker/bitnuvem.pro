@@ -10,9 +10,13 @@ export class ConfiguracoesService {
   readonly FILTRO_LUCRO_ACIMA = 'filtro-lucro-acima';
   readonly FILTRO_PORCENTAGEM_LUCRO_ACIMA = 'filtro-porcentagem-lucro-acima';
   readonly INVESTIMENTO_MAXIMO = 'investimento-maximo';
+  readonly PERMITIR_NOTIFICAR = 'permitir-notificar';
+
   private propagadorLucro = new BehaviorSubject(null);
   private propagadorPorcentagemLucro = new BehaviorSubject(null);
   private propagadorInvestimentoMaximo = new BehaviorSubject(null);
+  private propagadorNotificar = new BehaviorSubject(null);
+
   propagadorLucroObservavel = this.propagadorLucro.asObservable();
   propagadorPorcentagemLucroObservavel = (
     this.propagadorPorcentagemLucro.asObservable()
@@ -20,6 +24,7 @@ export class ConfiguracoesService {
   propagadorInvestimentoMaximoObservavel = (
     this.propagadorInvestimentoMaximo.asObservable()
   );
+  propagadorNotificarObservavel = this.propagadorNotificar.asObservable();
 
   constructor(private storage: Storage) {
     this.carregarValorPropagador(
@@ -36,6 +41,11 @@ export class ConfiguracoesService {
       this.INVESTIMENTO_MAXIMO,
       this.propagadorInvestimentoMaximo,
       1000,
+    );
+    this.carregarValorPropagador(
+      this.PERMITIR_NOTIFICAR,
+      this.propagadorNotificar,
+      false,
     );
   }
 
@@ -69,5 +79,10 @@ export class ConfiguracoesService {
   mudarInvestimentoMaximo(investimentoMaximo: number) {
     this.propagadorInvestimentoMaximo.next(investimentoMaximo);
     this.storage.set(this.INVESTIMENTO_MAXIMO, investimentoMaximo);
+  }
+
+  mudarPermitirNotificar(permitirNotificar: boolean) {
+    this.propagadorNotificar.next(permitirNotificar);
+    this.storage.set(this.PERMITIR_NOTIFICAR, permitirNotificar);
   }
 }

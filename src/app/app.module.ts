@@ -9,6 +9,8 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { IonicStorageModule } from '@ionic/storage';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { Platform } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +21,7 @@ import { BraziliexService } from './corretora/braziliex.service';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
 import { ComunicacaoService } from './shared/comunicacao.service';
 import { ConfiguracoesService } from './configuracoes/configuracoes.service';
+import { NotificacaoService } from './shared/notificacao.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,6 +43,9 @@ import { ConfiguracoesService } from './configuracoes/configuracoes.service';
     ArbitragemService,
     ComunicacaoService,
     ConfiguracoesService,
+    LocalNotifications,
+    Platform,
+    NotificacaoService,
   ],
   bootstrap: [AppComponent]
 })
