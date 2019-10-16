@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Corretora, LivroOrdens } from '../corretora/corretora';
 import { BisqService } from '../corretora/bisq.service';
 import { BraziliexService } from '../corretora/braziliex.service';
+import { CoinextService } from '../corretora/coinext.service';
+
 import { Arbitragem } from './arbitragem';
 import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
 
@@ -19,6 +21,7 @@ export class ArbitragemService {
   constructor(
     private bisq: BisqService,
     private braziliex: BraziliexService,
+    private coinext: CoinextService,
     private configuracoes: ConfiguracoesService,
   ) {
     this.configuracoes.propagadorLucroObservavel.subscribe(
@@ -30,7 +33,7 @@ export class ArbitragemService {
     this.configuracoes.propagadorInvestimentoMaximoObservavel.subscribe(
       (valor) => this.investimentoMaximo = valor
     );
-    this.corretoras = [this.bisq, this.braziliex];
+    this.corretoras = [this.bisq, this.braziliex, this.coinext];
   }
 
   async verificarOportunidadesArbitragem(): Promise<Array<Arbitragem>> {

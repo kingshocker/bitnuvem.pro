@@ -15,9 +15,11 @@ import { Platform } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { BisqService } from './corretora/bisq.service';
 import { BraziliexService } from './corretora/braziliex.service';
+import { CoinextService } from './corretora/coinext.service';
+
+import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
 import { ComunicacaoService } from './shared/comunicacao.service';
 import { ConfiguracoesService } from './configuracoes/configuracoes.service';
@@ -40,6 +42,7 @@ import { NotificacaoService } from './shared/notificacao.service';
     IsencaoResponsabilidadeGuard,
     BisqService,
     BraziliexService,
+    CoinextService,
     ArbitragemService,
     ComunicacaoService,
     ConfiguracoesService,
