@@ -15,7 +15,8 @@ const routes: Routes = [
   },
   {
     path: 'arbitragem/:corretora-venda/:corretora-compra',
-    loadChildren: './arbitragem/arbitragem.module#ArbitragemPageModule'
+    loadChildren: './arbitragem/arbitragem.module#ArbitragemPageModule',
+    canActivate: [IsencaoResponsabilidadeGuard],
   },
   {
     path: 'configuracoes',

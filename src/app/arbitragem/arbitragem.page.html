@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ arbitragem.corretoraVenda.nome }} x {{ arbitragem.corretoraCompra.nome }}</ion-title>
+    <ion-title *ngIf="arbitragem">{{ arbitragem.corretoraVenda.nome }} x {{ arbitragem.corretoraCompra.nome }}</ion-title>
     <ion-buttons slot="primary">
       <ion-button routerLink="/configuracoes">
         <ion-icon slot="icon-only" name="settings"></ion-icon>
@@ -12,7 +12,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="arbitragem">
   <div>
     <div class="row">
       <div class="col">

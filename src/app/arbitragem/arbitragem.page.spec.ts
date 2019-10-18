@@ -1,5 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { Storage } from '@ionic/storage';
 
 import { ArbitragemPage } from './arbitragem.page';
 
@@ -11,6 +15,16 @@ describe('ArbitragemPage', () => {
     TestBed.configureTestingModule({
       declarations: [ ArbitragemPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+      ],
+      providers: [
+        {
+          provide: Storage,
+          useFactory: () => new Storage({})
+        }
+      ],
     })
     .compileComponents();
   }));
