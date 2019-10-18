@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Corretora, LivroOrdens } from '../corretora/corretora';
-import { BisqService } from '../corretora/bisq.service';
-import { BraziliexService } from '../corretora/braziliex.service';
-import { CoinextService } from '../corretora/coinext.service';
+import { CorretoraService } from '../corretora/corretora.service';
 
 import { Arbitragem } from './arbitragem';
 import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
@@ -12,16 +10,13 @@ import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
   providedIn: 'root'
 })
 export class ArbitragemService {
-  corretoras: Array<Corretora>;
   oportunidadesArbitragem: Array<Arbitragem>;
   lucroAcima: number;
   porcentagemLucro: number;
   investimentoMaximo: number;
 
   constructor(
-    private bisq: BisqService,
-    private braziliex: BraziliexService,
-    private coinext: CoinextService,
+    private corretoraService: CorretoraService,
     private configuracoes: ConfiguracoesService,
   ) {
     this.configuracoes.propagadorLucroObservavel.subscribe(
@@ -33,12 +28,11 @@ export class ArbitragemService {
     this.configuracoes.propagadorInvestimentoMaximoObservavel.subscribe(
       (valor) => this.investimentoMaximo = valor
     );
-    this.corretoras = [this.bisq, this.braziliex, this.coinext];
   }
 
   retornarCorretoraPeloId(idCorretora: string): Corretora {
     let corretoraEncontrada = null;
-    this.corretoras.forEach((corretora) => {
+    this.corretoraService.corretoras.forEach((corretora) => {
       if (corretora.id === idCorretora) {
         corretoraEncontrada = corretora;
       }
@@ -70,19 +64,19 @@ export class ArbitragemService {
   async verificarOportunidadesArbitragem(): Promise<Array<Arbitragem>> {
     const arbitragens: Array<Arbitragem> = [];
     const promises: Array<Promise<LivroOrdens>> = [];
-    this.corretoras.forEach((corretora: Corretora) => {
+    this.corretoraService.corretoras.forEach((corretora: Corretora) => {
       promises.push(corretora.carregarLivroOrdens());
     });
     await Promise.all(promises);
 
     for (
-      let indiceA = 0, length: number = this.corretoras.length;
+      let indiceA = 0, length: number = this.corretoraService.corretoras.length;
       indiceA < length;
       indiceA++
     ) {
-      const corretoraA = this.corretoras[indiceA];
+      const corretoraA = this.corretoraService.corretoras[indiceA];
       for (let indiceB: number = indiceA + 1; indiceB < length; indiceB++) {
-        const corretoraB = this.corretoras[indiceB];
+        const corretoraB = this.corretoraService.corretoras[indiceB];
         const arbitragem = this.verificarOportunidadesArbitragemCorretoras(
           corretoraA,
           corretoraB,
