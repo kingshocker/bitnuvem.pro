@@ -14,6 +14,7 @@ export class ArbitragemService {
   lucroAcima: number;
   porcentagemLucro: number;
   investimentoMaximo: number;
+  corretorasHabilitadas: {[idCorretora: string]: boolean} = {};
 
   constructor(
     private corretoraService: CorretoraService,
@@ -28,6 +29,15 @@ export class ArbitragemService {
     this.configuracoes.propagadorInvestimentoMaximoObservavel.subscribe(
       (valor) => this.investimentoMaximo = valor
     );
+    this.corretoraService.corretoras.forEach((corretora) => {
+      this.corretorasHabilitadas[corretora.id] = null;
+      this
+        .configuracoes
+        .propagadoresCorretorasHabilitadasObservaveis[corretora.id]
+        .subscribe(
+          (valor) => this.corretorasHabilitadas[corretora.id] = valor
+        );
+    });
   }
 
   retornarCorretoraPeloId(idCorretora: string): Corretora {
@@ -64,19 +74,23 @@ export class ArbitragemService {
   async verificarOportunidadesArbitragem(): Promise<Array<Arbitragem>> {
     const arbitragens: Array<Arbitragem> = [];
     const promises: Array<Promise<LivroOrdens>> = [];
+    const corretoras: Array<Corretora> = [];
     this.corretoraService.corretoras.forEach((corretora: Corretora) => {
-      promises.push(corretora.carregarLivroOrdens());
+      if (this.corretorasHabilitadas[corretora.id]) {
+        corretoras.push(corretora);
+        promises.push(corretora.carregarLivroOrdens());
+      }
     });
     await Promise.all(promises);
 
     for (
-      let indiceA = 0, length: number = this.corretoraService.corretoras.length;
+      let indiceA = 0, length: number = corretoras.length;
       indiceA < length;
       indiceA++
     ) {
-      const corretoraA = this.corretoraService.corretoras[indiceA];
+      const corretoraA = corretoras[indiceA];
       for (let indiceB: number = indiceA + 1; indiceB < length; indiceB++) {
-        const corretoraB = this.corretoraService.corretoras[indiceB];
+        const corretoraB = corretoras[indiceB];
         const arbitragem = this.verificarOportunidadesArbitragemCorretoras(
           corretoraA,
           corretoraB,
