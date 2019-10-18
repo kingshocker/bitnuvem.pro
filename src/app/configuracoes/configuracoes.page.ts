@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 
 import { ConfiguracoesService } from './configuracoes.service';
+import { Corretora } from '../corretora/corretora';
+import { CorretoraService } from '../corretora/corretora.service';
 
 @Component({
   selector: 'app-configuracoes',
@@ -14,10 +16,12 @@ export class ConfiguracoesPage implements OnInit {
   porcentagemLucro: number;
   investimentoMaximo: number;
   permitirNotificar: boolean;
+  corretoras: Array<{corretora: Corretora, habilitada: boolean}>;
 
   constructor(
     private configuracoes: ConfiguracoesService,
     private platform: Platform,
+    private corretoraService: CorretoraService,
   ) {}
 
   ngOnInit() {
@@ -33,6 +37,13 @@ export class ConfiguracoesPage implements OnInit {
     this.configuracoes.propagadorNotificarObservavel.subscribe(
       (valor) => this.permitirNotificar = valor
     );
+    this.corretoras = [];
+    this.corretoraService.corretoras.forEach((corretora) => {
+      this.corretoras.push({
+        corretora,
+        habilitada: true,
+      });
+    });
   }
 
   mudarLucro() {

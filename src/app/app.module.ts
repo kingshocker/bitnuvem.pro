@@ -15,6 +15,7 @@ import { Platform } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import { CorretoraService } from './corretora/corretora.service';
 import { BisqService } from './corretora/bisq.service';
 import { BraziliexService } from './corretora/braziliex.service';
 import { CoinextService } from './corretora/coinext.service';
@@ -40,6 +41,7 @@ import { NotificacaoService } from './shared/notificacao.service';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     IsencaoResponsabilidadeGuard,
+    CorretoraService,
     BisqService,
     BraziliexService,
     CoinextService,
