@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Storage } from '@ionic/storage';
+
+import { Corretora } from '../corretora/corretora';
+import { CorretoraService } from '../corretora/corretora.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +12,7 @@ import { Storage } from '@ionic/storage';
 export class ConfiguracoesService {
   readonly FILTRO_LUCRO_ACIMA = 'filtro-lucro-acima';
   readonly FILTRO_PORCENTAGEM_LUCRO_ACIMA = 'filtro-porcentagem-lucro-acima';
+  readonly FILTRO_CORRETORAS_HABILITADAS = 'filtro-corretora-{corretora}-habilitada';
   readonly INVESTIMENTO_MAXIMO = 'investimento-maximo';
   readonly PERMITIR_NOTIFICAR = 'permitir-notificar';
 
@@ -16,6 +20,7 @@ export class ConfiguracoesService {
   private propagadorPorcentagemLucro = new BehaviorSubject(null);
   private propagadorInvestimentoMaximo = new BehaviorSubject(null);
   private propagadorNotificar = new BehaviorSubject(null);
+  private propagadoresCorretorasHabilitadas: { [idCorretora: string]: BehaviorSubject<boolean> } = {};
 
   propagadorLucroObservavel = this.propagadorLucro.asObservable();
   propagadorPorcentagemLucroObservavel = (
@@ -25,8 +30,12 @@ export class ConfiguracoesService {
     this.propagadorInvestimentoMaximo.asObservable()
   );
   propagadorNotificarObservavel = this.propagadorNotificar.asObservable();
+  propagadoresCorretorasHabilitadasObservaveis: { [idCorretora: string]: Observable<boolean> } = {};
 
-  constructor(private storage: Storage) {
+  constructor(
+    private storage: Storage,
+    private corretoraService: CorretoraService,
+  ) {
     this.carregarValorPropagador(
       this.FILTRO_LUCRO_ACIMA,
       this.propagadorLucro,
@@ -47,6 +56,20 @@ export class ConfiguracoesService {
       this.propagadorNotificar,
       false,
     );
+    this.corretoraService.corretoras.forEach((corretora) => {
+      const propagador = new BehaviorSubject(null);
+      this.propagadoresCorretorasHabilitadas[corretora.id] = propagador;
+      this.propagadoresCorretorasHabilitadasObservaveis[corretora.id] = (
+        propagador.asObservable()
+      );
+
+      this.carregarValorPropagadorCorretora(
+        this.FILTRO_CORRETORAS_HABILITADAS,
+        corretora.id,
+        propagador,
+        true,
+      );
+    });
   }
 
   private carregarValorPropagador(
@@ -63,6 +86,19 @@ export class ConfiguracoesService {
     });
   }
 
+  private carregarValorPropagadorCorretora(
+    id: string,
+    idCorretora: string,
+    propagador: BehaviorSubject<any>,
+    valorPadrao: any,
+  ) {
+    this.carregarValorPropagador(
+      id.replace('{corretora}', idCorretora),
+      propagador,
+      valorPadrao,
+    );
+  }
+
   mudarFiltroLucroAcima(lucroAcima1: number) {
     this.propagadorLucro.next(lucroAcima1);
     this.storage.set(this.FILTRO_LUCRO_ACIMA, lucroAcima1);
@@ -74,6 +110,14 @@ export class ConfiguracoesService {
       this.FILTRO_PORCENTAGEM_LUCRO_ACIMA,
       porcentagemLucroAcima,
     );
+  }
+
+  mudarFiltroCorretoraHabilitada(idCorretora: string, habilitada: boolean) {
+    const id = this.FILTRO_CORRETORAS_HABILITADAS.replace(
+      '{corretora}',
+      idCorretora,
+    );
+    this.storage.set(id, habilitada);
   }
 
   mudarInvestimentoMaximo(investimentoMaximo: number) {

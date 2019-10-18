@@ -39,10 +39,14 @@ export class ConfiguracoesPage implements OnInit {
     );
     this.corretoras = [];
     this.corretoraService.corretoras.forEach((corretora) => {
-      this.corretoras.push({
-        corretora,
-        habilitada: true,
-      });
+      const corretoraHabilitada = {corretora, habilitada: null};
+      this.corretoras.push(corretoraHabilitada);
+      this
+        .configuracoes
+        .propagadoresCorretorasHabilitadasObservaveis[corretora.id]
+        .subscribe(
+          (valor) => corretoraHabilitada.habilitada = valor
+        );
     });
   }
 
@@ -68,5 +72,16 @@ export class ConfiguracoesPage implements OnInit {
       Notification.requestPermission();
     }
     this.configuracoes.mudarPermitirNotificar(this.permitirNotificar);
+  }
+
+  mudarCorretoraHabilitada(idCorretora: string) {
+    this.corretoras.forEach((corretora) => {
+      if (corretora.corretora.id === idCorretora) {
+        this.configuracoes.mudarFiltroCorretoraHabilitada(
+          idCorretora,
+          corretora.habilitada
+        );
+      }
+    });
   }
 }
