@@ -62,6 +62,7 @@ export class HomePage implements OnInit, OnDestroy {
   @OnPageVisible()
   onPaginaVisivel() {
     this.paginaVisivel = true;
+    this.usuarioNotificado = false;
   }
 
   @OnPageHidden()
