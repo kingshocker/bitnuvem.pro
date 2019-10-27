@@ -23,6 +23,7 @@ export class HomePage implements OnInit, OnDestroy {
   intervalo: Observable<any>;
   arbitragens: Array<Arbitragem>;
   permitirNotificar: boolean;
+  usuarioNotificado: boolean;
 
   constructor(
     private oportunidades: ArbitragemService,
@@ -39,10 +40,14 @@ export class HomePage implements OnInit, OnDestroy {
     this.verificarOportunidadesArbitragem();
     this.paginaAtiva = true;
     this.paginaVisivel = true;
+    this.usuarioNotificado = false;
     if (!this.intervalo) {
       this.intervalo = interval(this.UM_MINUTO_EM_MILISEGUNDOS);
       this.intervalo.pipe(takeWhile(() => this.paginaAtiva)).subscribe(() => {
-        if ((this.paginaVisivel) || (this.permitirNotificar)) {
+        if (
+          (this.paginaVisivel)
+          || (this.permitirNotificar && (!this.usuarioNotificado))
+        ) {
           this.verificarOportunidadesArbitragem();
         }
       });
@@ -78,6 +83,7 @@ export class HomePage implements OnInit, OnDestroy {
           );
         }
         this.arbitragens = arbitragens;
+        this.usuarioNotificado = true;
       }
     );
   }
