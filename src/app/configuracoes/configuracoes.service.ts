@@ -15,6 +15,7 @@ export class ConfiguracoesService {
   readonly FILTRO_CORRETORAS_HABILITADAS = 'filtro-corretora-{corretora}-habilitada';
   readonly INVESTIMENTO_MAXIMO = 'investimento-maximo';
   readonly PERMITIR_NOTIFICAR = 'permitir-notificar';
+  readonly promises = [];
 
   private propagadorLucro = new BehaviorSubject(null);
   private propagadorPorcentagemLucro = new BehaviorSubject(null);
@@ -36,25 +37,33 @@ export class ConfiguracoesService {
     private storage: Storage,
     private corretoraService: CorretoraService,
   ) {
-    this.carregarValorPropagador(
-      this.FILTRO_LUCRO_ACIMA,
-      this.propagadorLucro,
-      0,
+    this.promises.push(
+      this.carregarValorPropagador(
+        this.FILTRO_LUCRO_ACIMA,
+        this.propagadorLucro,
+        0,
+      )
     );
-    this.carregarValorPropagador(
-      this.FILTRO_PORCENTAGEM_LUCRO_ACIMA,
-      this.propagadorPorcentagemLucro,
-      0,
+    this.promises.push(
+      this.carregarValorPropagador(
+        this.FILTRO_PORCENTAGEM_LUCRO_ACIMA,
+        this.propagadorPorcentagemLucro,
+        0,
+      )
     );
-    this.carregarValorPropagador(
-      this.INVESTIMENTO_MAXIMO,
-      this.propagadorInvestimentoMaximo,
-      1000,
+    this.promises.push(
+      this.carregarValorPropagador(
+        this.INVESTIMENTO_MAXIMO,
+        this.propagadorInvestimentoMaximo,
+        1000,
+      )
     );
-    this.carregarValorPropagador(
-      this.PERMITIR_NOTIFICAR,
-      this.propagadorNotificar,
-      false,
+    this.promises.push(
+      this.carregarValorPropagador(
+        this.PERMITIR_NOTIFICAR,
+        this.propagadorNotificar,
+        false,
+      )
     );
     this.corretoraService.corretoras.forEach((corretora) => {
       const propagador = new BehaviorSubject(null);
@@ -63,36 +72,40 @@ export class ConfiguracoesService {
         propagador.asObservable()
       );
 
-      this.carregarValorPropagadorCorretora(
-        this.FILTRO_CORRETORAS_HABILITADAS,
-        corretora.id,
-        propagador,
-        true,
+      this.promises.push(
+        this.carregarValorPropagadorCorretora(
+          this.FILTRO_CORRETORAS_HABILITADAS,
+          corretora.id,
+          propagador,
+          true,
+        )
       );
     });
   }
 
-  private carregarValorPropagador(
+  private async carregarValorPropagador(
     id: string,
     propagador: BehaviorSubject<any>,
     valorPadrao: any,
-  ) {
+  ): Promise<any> {
     this.storage.get(id).then((valor: any) => {
       if ((valor !== undefined) && (valor !== null)) {
         propagador.next(valor);
+        return valor;
       } else {
         propagador.next(valorPadrao);
+        return valorPadrao;
       }
     });
   }
 
-  private carregarValorPropagadorCorretora(
+  private async carregarValorPropagadorCorretora(
     id: string,
     idCorretora: string,
     propagador: BehaviorSubject<any>,
     valorPadrao: any,
-  ) {
-    this.carregarValorPropagador(
+  ): Promise<any> {
+    return this.carregarValorPropagador(
       id.replace('{corretora}', idCorretora),
       propagador,
       valorPadrao,
@@ -129,4 +142,15 @@ export class ConfiguracoesService {
     this.propagadorNotificar.next(permitirNotificar);
     this.storage.set(this.PERMITIR_NOTIFICAR, permitirNotificar);
   }
+
+  async carregarConfiguracoes(): Promise<boolean> {
+    await Promise.all(this.promises);
+    return true;
+  }
+}
+
+export function configuracoesServiceFactory(
+  configuracoes: ConfiguracoesService
+) {
+  return () => configuracoes.carregarConfiguracoes();
 }

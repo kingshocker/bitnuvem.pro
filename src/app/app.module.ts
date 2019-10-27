@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,7 +23,7 @@ import { CoinextService } from './corretora/coinext.service';
 import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
 import { ComunicacaoService } from './shared/comunicacao.service';
-import { ConfiguracoesService } from './configuracoes/configuracoes.service';
+import { ConfiguracoesService, configuracoesServiceFactory } from './configuracoes/configuracoes.service';
 import { NotificacaoService } from './shared/notificacao.service';
 
 @NgModule({
@@ -47,7 +47,12 @@ import { NotificacaoService } from './shared/notificacao.service';
     CoinextService,
     ArbitragemService,
     ComunicacaoService,
-    ConfiguracoesService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configuracoesServiceFactory,
+      deps: [ConfiguracoesService],
+      multi: true,
+    },
     LocalNotifications,
     Platform,
     NotificacaoService,
