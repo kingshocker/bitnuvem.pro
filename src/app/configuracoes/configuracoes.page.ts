@@ -38,6 +38,9 @@ export class ConfiguracoesPage implements OnInit {
     this.configuracoes.propagadorNotificarObservavel.subscribe(
       (valor) => this.permitirNotificar = valor
     );
+    this.configuracoes.propagadorTempoEntreNotificacoesObservavel.subscribe(
+      (valor) => this.tempoEntreNotificacoes = valor
+    );
     this.corretoras = [];
     this.corretoraService.corretoras.forEach((corretora) => {
       const corretoraHabilitada = {corretora, habilitada: null};
@@ -73,6 +76,10 @@ export class ConfiguracoesPage implements OnInit {
       Notification.requestPermission();
     }
     this.configuracoes.mudarPermitirNotificar(this.permitirNotificar);
+  }
+
+  mudarTempoEntreNotificacoes() {
+    this.configuracoes.mudarTempoEntreNoficacoes(this.tempoEntreNotificacoes);
   }
 
   mudarCorretoraHabilitada(idCorretora: string) {

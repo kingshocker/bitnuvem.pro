@@ -15,6 +15,8 @@ export class ConfiguracoesService {
   readonly FILTRO_CORRETORAS_HABILITADAS = 'filtro-corretora-{corretora}-habilitada';
   readonly INVESTIMENTO_MAXIMO = 'investimento-maximo';
   readonly PERMITIR_NOTIFICAR = 'permitir-notificar';
+  readonly TEMPO_ENTRE_NOTIFICACOES = 'tempo-entre-notificacoes';
+  readonly VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES = 60 * 2;
   readonly promises = [];
 
   private propagadorLucro = new BehaviorSubject(null);
@@ -22,6 +24,7 @@ export class ConfiguracoesService {
   private propagadorInvestimentoMaximo = new BehaviorSubject(null);
   private propagadorNotificar = new BehaviorSubject(null);
   private propagadoresCorretorasHabilitadas: { [idCorretora: string]: BehaviorSubject<boolean> } = {};
+  private propagadorTempoEntreNotificacoes = new BehaviorSubject(null);
 
   propagadorLucroObservavel = this.propagadorLucro.asObservable();
   propagadorPorcentagemLucroObservavel = (
@@ -32,6 +35,9 @@ export class ConfiguracoesService {
   );
   propagadorNotificarObservavel = this.propagadorNotificar.asObservable();
   propagadoresCorretorasHabilitadasObservaveis: { [idCorretora: string]: Observable<boolean> } = {};
+  propagadorTempoEntreNotificacoesObservavel = (
+    this.propagadorTempoEntreNotificacoes.asObservable()
+  );
 
   constructor(
     private storage: Storage,
@@ -81,6 +87,13 @@ export class ConfiguracoesService {
         )
       );
     });
+    this.promises.push(
+      this.carregarValorPropagador(
+        this.TEMPO_ENTRE_NOTIFICACOES,
+        this.propagadorTempoEntreNotificacoes,
+        this.VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES,
+      )
+    );
   }
 
   private async carregarValorPropagador(
@@ -141,6 +154,11 @@ export class ConfiguracoesService {
   mudarPermitirNotificar(permitirNotificar: boolean) {
     this.propagadorNotificar.next(permitirNotificar);
     this.storage.set(this.PERMITIR_NOTIFICAR, permitirNotificar);
+  }
+
+  mudarTempoEntreNoficacoes(tempoEntreNotificacoes: number) {
+    this.propagadorTempoEntreNotificacoes.next(tempoEntreNotificacoes);
+    this.storage.set(this.TEMPO_ENTRE_NOTIFICACOES, tempoEntreNotificacoes);
   }
 
   async carregarConfiguracoes(): Promise<boolean> {
