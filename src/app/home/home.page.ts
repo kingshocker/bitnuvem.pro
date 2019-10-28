@@ -20,9 +20,11 @@ export class HomePage implements OnInit, OnDestroy {
   readonly UM_MINUTO_EM_MILISEGUNDOS = 1000 * 60;
   paginaAtiva: boolean;
   paginaVisivel: boolean;
-  intervalo: Observable<any>;
+  intervalo: Observable<number>;
+  intervaloVisualizacao: Subscription;
   arbitragens: Array<Arbitragem>;
   permitirNotificar: boolean;
+  tempoEntreNotificacoes: number;
   usuarioNotificado: boolean;
 
   constructor(
@@ -37,10 +39,14 @@ export class HomePage implements OnInit, OnDestroy {
     this.configuracoes.propagadorNotificarObservavel.subscribe(
       (valor) => this.permitirNotificar = valor
     );
+    this.configuracoes.propagadorTempoEntreNotificacoesObservavel.subscribe(
+      (valor) => this.tempoEntreNotificacoes = valor
+    );
     this.verificarOportunidadesArbitragem();
     this.paginaAtiva = true;
     this.paginaVisivel = true;
     this.usuarioNotificado = false;
+    this.intervaloVisualizacao = null;
     if (!this.intervalo) {
       this.intervalo = interval(this.UM_MINUTO_EM_MILISEGUNDOS);
       this.intervalo.pipe(takeWhile(() => this.paginaAtiva)).subscribe(() => {
@@ -59,10 +65,18 @@ export class HomePage implements OnInit, OnDestroy {
     this.paginaVisivel = false;
   }
 
+  voltarNotificarUsuario() {
+    this.usuarioNotificado = false;
+    if (this.intervaloVisualizacao !== null) {
+      this.intervaloVisualizacao.unsubscribe();
+      this.intervaloVisualizacao = null;
+    }
+  }
+
   @OnPageVisible()
   onPaginaVisivel() {
     this.paginaVisivel = true;
-    this.usuarioNotificado = false;
+    this.voltarNotificarUsuario();
   }
 
   @OnPageHidden()
@@ -82,6 +96,11 @@ export class HomePage implements OnInit, OnDestroy {
             'Oportunidade de arbitragem',
             'Há novas oportunidades de arbitragem que podem ser do seu interesse',
           );
+          this.intervaloVisualizacao = interval(
+            this.UM_MINUTO_EM_MILISEGUNDOS * this.tempoEntreNotificacoes
+          ).subscribe(() => {
+            this.voltarNotificarUsuario();
+          });
         }
         this.arbitragens = arbitragens;
         this.usuarioNotificado = true;
