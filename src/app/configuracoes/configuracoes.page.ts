@@ -17,6 +17,7 @@ export class ConfiguracoesPage implements OnInit {
   investimentoMaximo: number;
   permitirNotificar: boolean;
   corretoras: Array<{corretora: Corretora, habilitada: boolean}>;
+  tempoEntreNotificacoes: number;
 
   constructor(
     private configuracoes: ConfiguracoesService,
