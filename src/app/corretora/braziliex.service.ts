@@ -23,6 +23,12 @@ export class BraziliexService implements Corretora {
   id = 'braziliex';
   nome = 'Braziliex';
   paginaInicial = 'https://braziliex.com/';
+  paginaOrdens = 'https://braziliex.com/trade.php';
+  paginaContato = 'https://braziliex.com/exchange/support.php';
+  observacao = (
+    'A corretora oferece descontos para usuários que possuem certas quantidades'
+    + ' do token Braziliex Token (BRZX).'
+  );
   webservice = 'https://cors-anywhere.herokuapp.com/https://braziliex.com/api/v1/public/orderbook/btc_brl';
   livroOrdens: LivroOrdens;
 

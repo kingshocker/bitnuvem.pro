@@ -23,6 +23,10 @@ const routes: Routes = [
     loadChildren: './configuracoes/configuracoes.module#ConfiguracoesPageModule',
     canActivate: [IsencaoResponsabilidadeGuard],
   },
+  {
+    path: 'corretora/:idCorretora',
+    loadChildren: './corretora/corretora.module#CorretoraPageModule'
+  },
 ];
 
 @NgModule({

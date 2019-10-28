@@ -34,6 +34,15 @@ export class BisqService implements Corretora {
   id = 'bisq';
   nome = 'Bisq';
   paginaInicial = 'https://bisq.network/pt-pt/';
+  paginaOrdens = 'https://bisq.network/pt-pt/markets/?currency=btc_brl';
+  paginaContato = 'https://bisq.community/';
+  observacao = (
+    'Para negociar na Bisq se faz necessário realizar um depósito de segurança'
+    + ' de bitcoin, eles são necessários para proteger os negociadores do Bisq'
+    + ' de fraude e abuso. Os depósitos de segurança são definidos como uma'
+    + ' porcentagem do valor de negociação - 2% por padrão - mas podem ser'
+    + ' ajustados pelo criador da oferta.'
+  );
   webservice = 'https://markets.bisq.network/api/offers?market=btc_brl';
   livroOrdens: LivroOrdens;
 

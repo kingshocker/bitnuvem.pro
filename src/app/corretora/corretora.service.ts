@@ -18,4 +18,14 @@ export class CorretoraService {
   ) {
     this.corretoras = [this.bisq, this.braziliex, this.coinext];
   }
+
+  corretoraPeloId(idCorretora: string): Corretora {
+    let corretoraEncontrada: Corretora = null;
+    this.corretoras.forEach((corretora) => {
+      if (corretora.id === idCorretora) {
+        corretoraEncontrada = corretora;
+      }
+    });
+    return corretoraEncontrada;
+  }
 }

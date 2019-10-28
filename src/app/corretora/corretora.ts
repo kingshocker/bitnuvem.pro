@@ -14,6 +14,9 @@ export interface Corretora {
   id: string;
   nome: string;
   paginaInicial: string;
+  paginaOrdens: string;
+  paginaContato: string;
+  observacao: string;
   livroOrdens: LivroOrdens;
   menorPrecoVenda: number;
   maiorPrecoCompra: number;

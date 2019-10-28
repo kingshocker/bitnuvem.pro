@@ -15,6 +15,9 @@ export class CoinextService implements Corretora {
   id = 'coinext';
   nome = 'Coinext';
   paginaInicial = 'https://coinext.com.br/';
+  paginaOrdens = 'https://coinext.com.br/trade.html';
+  paginaContato = 'https://content.coinext.com.br/';
+  observacao = '';
   webservice = 'https://cors-anywhere.herokuapp.com/https://api.coinext.com.br:8443/AP/GetL2Snapshot?OMSId=1&InstrumentId=1&Depth=1';
   livroOrdens: LivroOrdens;
 
