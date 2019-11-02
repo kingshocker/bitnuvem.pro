@@ -16,9 +16,9 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { CorretoraService } from './corretora/corretora.service';
-import { BisqService } from './corretora/bisq.service';
-import { BraziliexService } from './corretora/braziliex.service';
-import { CoinextService } from './corretora/coinext.service';
+import { BisqService } from './corretora/api/bisq.service';
+import { BraziliexService } from './corretora/api/braziliex.service';
+import { CoinextService } from './corretora/api/coinext.service';
 
 import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { ArbitragemService } from './arbitragem/arbitragem.service';

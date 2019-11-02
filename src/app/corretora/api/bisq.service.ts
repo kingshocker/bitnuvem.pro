@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Corretora, LivroOrdens, Ordens, Ordem } from './corretora';
+import { Corretora, LivroOrdens, Ordens, Ordem } from '../corretora';
 
 interface OrdemBisq {
   offer_id: string;

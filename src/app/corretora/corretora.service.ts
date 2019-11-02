@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { Corretora } from './corretora';
-import { BisqService } from './bisq.service';
-import { BraziliexService } from './braziliex.service';
-import { CoinextService } from './coinext.service';
+import { BisqService } from './api/bisq.service';
+import { BraziliexService } from './api/braziliex.service';
+import { CoinextService } from './api/coinext.service';
 
 @Injectable({
   providedIn: 'root'
