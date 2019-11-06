@@ -8,6 +8,8 @@ export type Ordens = Array<Ordem>;
 export interface LivroOrdens {
   venda: Ordens;
   compra: Ordens;
+  dataRequisicao: Date;
+  dataResposta: Date;
 }
 
 export interface Corretora {

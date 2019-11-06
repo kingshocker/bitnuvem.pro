@@ -18,10 +18,18 @@
       <div class="col">
         <strong>Corretora venda</strong>
         <p><a [routerLink]="['/corretora', arbitragem.corretoraVenda.id]">{{ arbitragem.corretoraVenda.nome }}</a></p>
+        <strong>Data da requisição</strong>
+        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataRequisicao | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <strong>Data da resposta</strong>
+        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataResposta | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
       </div>
       <div class="col">
         <strong>Corretora compra</strong>
         <p><a [routerLink]="['/corretora', arbitragem.corretoraCompra.id]">{{ arbitragem.corretoraCompra.nome }}</a></p>
+        <strong>Data da requisição</strong>
+        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataRequisicao | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <strong>Data da resposta</strong>
+        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataResposta | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
       </div>
     </div>
     <div class="row">
@@ -43,7 +51,7 @@
   </div>
   <div class="table-responsive">
     <table class="table table-bordered table-sm">
-      <caption>Ordens de venda na {{ arbitragem.corretoraVenda.nome }}</caption>
+      <caption>Ordens de venda na {{ arbitragem.corretoraVenda.nome }</caption>
       <thead class="thead-light">
         <tr>
           <th>Preço</th>

@@ -45,11 +45,17 @@ export class BraziliexService implements Corretora {
   }
 
   carregarLivroOrdens(): Promise<LivroOrdens> {
+    const dataRequisicao = new Date();
     return this.http.get(this.webservice).toPromise().then(
       (livroOrdensBraziliex: LivroOrdensBraziliex) => {
         const ordensVenda: Ordens = [];
         const ordensCompra: Ordens = [];
-        const livroOrdens: LivroOrdens = {venda: ordensVenda, compra: ordensCompra};
+        const livroOrdens: LivroOrdens = {
+          venda: ordensVenda,
+          compra: ordensCompra,
+          dataRequisicao,
+          dataResposta: new Date(),
+        };
 
         livroOrdensBraziliex.asks.forEach((ordemBraziliex: OrdemBraziliex) => {
           const ordem: Ordem = {

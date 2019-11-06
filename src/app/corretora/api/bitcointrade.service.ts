@@ -50,12 +50,18 @@ export class BitcoinTradeService implements Corretora {
   }
 
   carregarLivroOrdens(): Promise<LivroOrdens> {
+    const dataRequisicao = new Date();
     return this.http.get(this.webservice).toPromise().then(
       (resposta: RespostaLivroOrdensBitcoinTrade) => {
         const livroOrdensBitcoinTrade: LivroOrdensBitcoinTrade = resposta.data;
         const ordensVenda: Ordens = [];
         const ordensCompra: Ordens = [];
-        const livroOrdens: LivroOrdens = {venda: ordensVenda, compra: ordensCompra};
+        const livroOrdens: LivroOrdens = {
+          venda: ordensVenda,
+          compra: ordensCompra,
+          dataRequisicao,
+          dataResposta: new Date(),
+        };
 
         livroOrdensBitcoinTrade.bids.forEach(
           (ordemBitcoinTrade: OrdemBitcoinTrade) => {

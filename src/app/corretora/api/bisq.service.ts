@@ -59,12 +59,18 @@ export class BisqService implements Corretora {
   }
 
   carregarLivroOrdens(): Promise<LivroOrdens> {
+    const dataRequisicao = new Date();
     return this.http.get(this.webservice).toPromise().then(
       (livroOrdensBTC: LivroOrdensBTCBisq) => {
         const livroOrdensBisq: LivroOrdensBisq = livroOrdensBTC.btc_brl;
         const ordensVenda: Ordens = [];
         const ordensCompra: Ordens = [];
-        const livroOrdens: LivroOrdens = {venda: ordensVenda, compra: ordensCompra};
+        const livroOrdens: LivroOrdens = {
+          venda: ordensVenda,
+          compra: ordensCompra,
+          dataRequisicao,
+          dataResposta: new Date(),
+        };
 
         livroOrdensBisq.buys.forEach((ordemBisq: OrdemBisq) => {
           const ordem: Ordem = {

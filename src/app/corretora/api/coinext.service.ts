@@ -34,11 +34,17 @@ export class CoinextService implements Corretora {
   }
 
   carregarLivroOrdens(): Promise<LivroOrdens> {
+    const dataRequisicao = new Date();
     return this.http.get(this.webservice).toPromise().then(
       (livroOrdensCoinext: LivroOrdensCoinext) => {
         const ordensVenda: Ordens = [];
         const ordensCompra: Ordens = [];
-        const livroOrdens: LivroOrdens = {venda: ordensVenda, compra: ordensCompra};
+        const livroOrdens: LivroOrdens = {
+          venda: ordensVenda,
+          compra: ordensCompra,
+          dataRequisicao,
+          dataResposta: new Date(),
+        };
 
         livroOrdensCoinext.forEach((ordemCoinext: OrdemCoinext) => {
           const ordem: Ordem = {
