@@ -59,13 +59,23 @@ export class ArbitragemService {
       && corretoraB.livroOrdens.compra.length > 0
       && corretoraA.menorPrecoVenda < corretoraB.maiorPrecoCompra
     ) {
-      return new Arbitragem(corretoraA, corretoraB, this.investimentoMaximo);
+      return new Arbitragem(
+        corretoraA,
+        corretoraB,
+        this.investimentoMaximo,
+        this.porcentagemLucro,
+      );
     } else if (
       corretoraA.livroOrdens.compra.length > 0
       && corretoraB.livroOrdens.venda.length > 0
       && corretoraB.menorPrecoVenda < corretoraA.maiorPrecoCompra
     ) {
-      return new Arbitragem(corretoraB, corretoraA, this.investimentoMaximo);
+      return new Arbitragem(
+        corretoraB,
+        corretoraA,
+        this.investimentoMaximo,
+        this.porcentagemLucro,
+      );
     }
 
     return null;

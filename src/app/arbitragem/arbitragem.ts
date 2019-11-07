@@ -16,12 +16,24 @@ export class Arbitragem {
     public corretoraVenda: Corretora,
     public corretoraCompra: Corretora,
     public investimentoMaximo: number,
+    private lucroPercentualMinimo: number,
   ) {
     this.verificarOportunidades();
   }
 
   get porcentagemLucro() {
     return this.lucro / this.investimento * 100;
+  }
+
+  private calcularNovaPorcentagemLucro(
+    lucroOperacao: number,
+    investimentoOperacao: number,
+  ): number {
+    return (
+      (this.lucro + lucroOperacao)
+      / (this.investimento + investimentoOperacao)
+      * 100
+    );
   }
 
   private clonarOrdem(ordem: Ordem) {
@@ -115,26 +127,34 @@ export class Arbitragem {
         saldoRestante
       );
 
-      ordemVenda.quantidade -= quantidadeOperada;
-      ordemCompra.quantidade -= quantidadeOperada;
-      saldoRestante -= this.corretoraVenda.calcularValorVendaAposTaxas(
-        quantidadeOperada * ordemVenda.preco
-      );
-      this.investimento += this.corretoraVenda.calcularValorVendaAposTaxas(
-        quantidadeOperada * ordemVenda.preco
-      );
+      const totalVenda = quantidadeOperada * ordemVenda.preco;
+      const totalCompra = quantidadeOperada * ordemCompra.preco;
       const taxaVenda = this.corretoraVenda.calcularValorTaxaVenda(
-        quantidadeOperada * ordemVenda.preco
+        totalVenda
       );
       const taxaCompra = this.corretoraCompra.calcularValorTaxaCompra(
-        quantidadeOperada * ordemCompra.preco
+        totalCompra
       );
-      this.lucro += (
-        (quantidadeOperada * ordemCompra.preco)
-        - (quantidadeOperada * ordemVenda.preco)
-        - taxaVenda
-        - taxaCompra
+      const lucroOperacao = totalCompra - totalVenda - taxaVenda - taxaCompra;
+      const investimentoOperacao = (
+        this.corretoraVenda.calcularValorVendaAposTaxas(totalVenda)
       );
+
+      if (
+        (lucroOperacao <= 0)
+        || (
+          this.calcularNovaPorcentagemLucro(lucroOperacao, investimentoOperacao)
+          < this.lucroPercentualMinimo
+        )
+      ) {
+        break;
+      }
+
+      ordemVenda.quantidade -= quantidadeOperada;
+      ordemCompra.quantidade -= quantidadeOperada;
+      saldoRestante -= investimentoOperacao;
+      this.investimento += investimentoOperacao;
+      this.lucro += lucroOperacao;
 
       this.adicionarOrdemArbitragem(
         this.ordensVenda,
