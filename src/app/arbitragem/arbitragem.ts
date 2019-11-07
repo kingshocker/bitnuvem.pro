@@ -49,7 +49,10 @@ export class Arbitragem {
     ) {
       return ordemCompra.quantidade;
     } else {
-      return saldoRestante / ordemVenda.preco;
+      return (
+        this.corretoraVenda.calcularValorMaximoVendaAposTaxas(saldoRestante)
+        / ordemVenda.preco
+      );
     }
   }
 

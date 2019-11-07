@@ -103,4 +103,12 @@ export class BitcoinTradeService implements Corretora {
   calcularValorCompraAposTaxas(valor: number): number {
     return valor + this.calcularValorTaxaCompra(valor);
   }
+
+  calcularValorMaximoVendaAposTaxas(limiteValor: number): number {
+    return limiteValor / (1 + this.TAXA_ORDEM_EXECUTORA);
+  }
+
+  calcularValorMaximoCompraAposTaxas(limiteValor: number): number {
+    return limiteValor / (1 + this.TAXA_ORDEM_EXECUTORA);
+  }
 }

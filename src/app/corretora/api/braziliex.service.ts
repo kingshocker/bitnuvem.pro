@@ -93,4 +93,12 @@ export class BraziliexService implements Corretora {
   calcularValorCompraAposTaxas(valor: number): number {
     return valor + this.calcularValorTaxaVenda(valor);
   }
+
+  calcularValorMaximoVendaAposTaxas(limiteValor: number): number {
+    return limiteValor / (1 + this.TAXA_ORDEM);
+  }
+
+  calcularValorMaximoCompraAposTaxas(limiteValor: number): number {
+    return limiteValor / (1 + this.TAXA_ORDEM);
+  }
 }
