@@ -18,7 +18,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Simular taxa de transferência</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="simularTaxaTransferencia"></ion-toggle>
+      <ion-toggle slot="end" [(ngModel)]="simularTaxaTransferencia" (ionChange)="mudarSimularTaxaTransferencia()"></ion-toggle>
     </ion-item>
     <ion-list-header>
       <ion-label>Filtros</ion-label>

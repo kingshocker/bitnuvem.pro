@@ -16,6 +16,7 @@ export class ConfiguracoesService {
   readonly INVESTIMENTO_MAXIMO = 'investimento-maximo';
   readonly PERMITIR_NOTIFICAR = 'permitir-notificar';
   readonly TEMPO_ENTRE_NOTIFICACOES = 'tempo-entre-notificacoes';
+  readonly SIMULAR_TAXA_TRANSFERENCIA = 'simular-taxa-transferencia';
   readonly VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES = 60 * 2;
   readonly promises = [];
 
@@ -25,6 +26,7 @@ export class ConfiguracoesService {
   private propagadorNotificar = new BehaviorSubject(null);
   private propagadoresCorretorasHabilitadas: { [idCorretora: string]: BehaviorSubject<boolean> } = {};
   private propagadorTempoEntreNotificacoes = new BehaviorSubject(null);
+  private propagadorSimularTaxaTransferencia = new BehaviorSubject(null);
 
   propagadorLucroObservavel = this.propagadorLucro.asObservable();
   propagadorPorcentagemLucroObservavel = (
@@ -37,6 +39,9 @@ export class ConfiguracoesService {
   propagadoresCorretorasHabilitadasObservaveis: { [idCorretora: string]: Observable<boolean> } = {};
   propagadorTempoEntreNotificacoesObservavel = (
     this.propagadorTempoEntreNotificacoes.asObservable()
+  );
+  propagadorSimularTaxaTransferenciaObservavel = (
+    this.propagadorSimularTaxaTransferencia.asObservable()
   );
 
   constructor(
@@ -92,6 +97,13 @@ export class ConfiguracoesService {
         this.TEMPO_ENTRE_NOTIFICACOES,
         this.propagadorTempoEntreNotificacoes,
         this.VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES,
+      )
+    );
+    this.promises.push(
+      this.carregarValorPropagador(
+        this.SIMULAR_TAXA_TRANSFERENCIA,
+        this.propagadorSimularTaxaTransferencia,
+        false,
       )
     );
   }
@@ -159,6 +171,11 @@ export class ConfiguracoesService {
   mudarTempoEntreNoficacoes(tempoEntreNotificacoes: number) {
     this.propagadorTempoEntreNotificacoes.next(tempoEntreNotificacoes);
     this.storage.set(this.TEMPO_ENTRE_NOTIFICACOES, tempoEntreNotificacoes);
+  }
+
+  mudarSimularTaxaTransferencia(simularTaxaTransferencia: boolean) {
+    this.propagadorSimularTaxaTransferencia.next(simularTaxaTransferencia);
+    this.storage.set(this.SIMULAR_TAXA_TRANSFERENCIA, simularTaxaTransferencia);
   }
 
   async carregarConfiguracoes(): Promise<boolean> {

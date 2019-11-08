@@ -42,6 +42,9 @@ export class ConfiguracoesPage implements OnInit {
     this.configuracoes.propagadorTempoEntreNotificacoesObservavel.subscribe(
       (valor) => this.tempoEntreNotificacoes = valor
     );
+    this.configuracoes.propagadorSimularTaxaTransferenciaObservavel.subscribe(
+      (valor) => this.simularTaxaTransferencia = valor
+    );
     this.corretoras = [];
     this.corretoraService.corretoras.forEach((corretora) => {
       const corretoraHabilitada = {corretora, habilitada: null};
@@ -92,5 +95,11 @@ export class ConfiguracoesPage implements OnInit {
         );
       }
     });
+  }
+
+  mudarSimularTaxaTransferencia() {
+    this.configuracoes.mudarSimularTaxaTransferencia(
+      this.simularTaxaTransferencia
+    );
   }
 }
