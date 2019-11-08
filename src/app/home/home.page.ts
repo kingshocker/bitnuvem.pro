@@ -48,6 +48,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.configuracoes.propagadorTempoEntreNotificacoesObservavel.subscribe(
       (valor) => this.tempoEntreNotificacoes = valor
     );
+    this.arbitragens = [];
     this.verificarOportunidadesArbitragem();
     this.paginaAtiva = true;
     this.paginaVisivel = true;
@@ -88,6 +89,10 @@ export class HomePage implements OnInit, OnDestroy {
   @OnPageHidden()
   onPaginaNaoVisivel() {
     this.paginaVisivel = false;
+  }
+
+  get existemOportunidadesAbitragem() {
+    return this.arbitragens.length > 0;
   }
 
   async verificarOportunidadesArbitragem() {

@@ -12,7 +12,7 @@
 </ion-header>
 
 <ion-content>
-  <div class="table-responsive">
+  <div class="table-responsive" *ngIf="existemOportunidadesAbitragem">
     <table class="table table-bordered table-sm">
       <thead class="thead-light">
         <tr>
@@ -29,5 +29,14 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div *ngIf="!existemOportunidadesAbitragem">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          Não há oportunidades de arbitragem de acordo com os parâmetros informados na configuração.
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 </ion-content>
