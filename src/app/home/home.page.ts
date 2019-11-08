@@ -4,6 +4,7 @@ import { Observable, interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
 import { OnPageVisible, OnPageHidden } from 'angular-page-visibility';
+import { LoadingController } from '@ionic/angular';
 
 import { ArbitragemService } from '../arbitragem/arbitragem.service';
 import { Arbitragem } from '../arbitragem/arbitragem';
@@ -27,15 +28,20 @@ export class HomePage implements OnInit, OnDestroy {
   tempoEntreNotificacoes: number;
   usuarioNotificado: boolean;
 
+  arbitragensVerificadas: boolean;
+  carregamento: HTMLIonLoadingElement;
+
   constructor(
     private oportunidades: ArbitragemService,
     private comunicacao: ComunicacaoService,
     private router: Router,
     private configuracoes: ConfiguracoesService,
     private notificacao: NotificacaoService,
+    private loadingController: LoadingController,
   ) {}
 
   ngOnInit() {
+    this.exibirMensagemPaginaCarregando();
     this.configuracoes.propagadorNotificarObservavel.subscribe(
       (valor) => this.permitirNotificar = valor
     );
@@ -104,6 +110,11 @@ export class HomePage implements OnInit, OnDestroy {
         }
         this.arbitragens = arbitragens;
         this.usuarioNotificado = true;
+
+        if (this.carregamento !== null) {
+          this.carregamento.dismiss();
+          this.carregamento = null;
+        }
       }
     );
   }
@@ -117,5 +128,12 @@ export class HomePage implements OnInit, OnDestroy {
       arbitragem.corretoraVenda.id,
       arbitragem.corretoraCompra.id,
     ]);
+  }
+
+  async exibirMensagemPaginaCarregando() {
+    this.carregamento = await this.loadingController.create({
+      message: 'Carregando...',
+    });
+    this.carregamento.present();
   }
 }
