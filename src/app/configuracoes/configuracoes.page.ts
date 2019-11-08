@@ -18,6 +18,7 @@ export class ConfiguracoesPage implements OnInit {
   permitirNotificar: boolean;
   corretoras: Array<{corretora: Corretora, habilitada: boolean}>;
   tempoEntreNotificacoes: number;
+  simularTaxaTransferencia: boolean;
 
   constructor(
     private configuracoes: ConfiguracoesService,
