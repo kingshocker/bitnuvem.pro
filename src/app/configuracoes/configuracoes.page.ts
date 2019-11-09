@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
 
 import { ConfiguracoesService } from './configuracoes.service';
 import { Corretora } from '../corretora/corretora';
@@ -24,6 +24,7 @@ export class ConfiguracoesPage implements OnInit {
     private configuracoes: ConfiguracoesService,
     private platform: Platform,
     private corretoraService: CorretoraService,
+    private alertController: AlertController,
   ) {}
 
   ngOnInit() {
@@ -97,9 +98,42 @@ export class ConfiguracoesPage implements OnInit {
     });
   }
 
-  mudarSimularTaxaTransferencia() {
-    this.configuracoes.mudarSimularTaxaTransferencia(
-      this.simularTaxaTransferencia
-    );
+  async mudarSimularTaxaTransferencia() {
+    if (this.simularTaxaTransferencia) {
+      const alert = await this.alertController.create({
+        header: 'Confirmar',
+        message: (
+          'A simulação da taxa de transferência é estimativa, por isso ela '
+          + 'pode conter erros. Sendo que nas corretoras que utilizam a taxa '
+          + 'de mineração da rede foi fixado o valor de 0,0005 BTC para as '
+          + 'simulações. Mesmo assim você concorda em habilitar a simulação da '
+          + 'transferência de criptomoedas?'
+        ),
+        mode: 'ios',
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              this.simularTaxaTransferencia = false;
+            }
+          }, {
+            text: 'Concordar',
+            handler: () => {
+              this.configuracoes.mudarSimularTaxaTransferencia(
+                this.simularTaxaTransferencia
+              );
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    } else {
+      this.configuracoes.mudarSimularTaxaTransferencia(
+        this.simularTaxaTransferencia
+      );
+    }
   }
 }
