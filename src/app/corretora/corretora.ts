@@ -22,6 +22,7 @@ export interface Corretora {
   livroOrdens: LivroOrdens;
   menorPrecoVenda: number;
   maiorPrecoCompra: number;
+  taxaTransferencia: number;
   carregarLivroOrdens(): Promise<LivroOrdens>;
   calcularValorTaxaVenda(valor: number): number;
   calcularValorTaxaCompra(valor: number): number;
@@ -29,5 +30,4 @@ export interface Corretora {
   calcularValorCompraAposTaxas(valor: number): number;
   calcularValorMaximoVendaAposTaxas(limiteValor: number): number;
   calcularValorMaximoCompraAposTaxas(limiteValor: number): number;
-  calcularTaxaTransferência(valor: number): number;
 }

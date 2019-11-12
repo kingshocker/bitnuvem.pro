@@ -12,7 +12,6 @@ type LivroOrdensCoinext = Array<OrdemCoinext>;
 })
 export class CoinextService implements Corretora {
   readonly TAXA_ORDEM = 0.005;
-  readonly TAXA_TRANSFERENCIA = 0.0004;
   id = 'coinext';
   nome = 'Coinext';
   paginaInicial = 'https://coinext.com.br/';
@@ -21,6 +20,7 @@ export class CoinextService implements Corretora {
   observacao = '';
   webservice = 'https://cors-anywhere.herokuapp.com/https://api.coinext.com.br:8443/AP/GetL2Snapshot?OMSId=1&InstrumentId=1&Depth=1';
   livroOrdens: LivroOrdens;
+  taxaTransferencia = 0.0004;
 
   constructor(private http: HttpClient) {
     this.livroOrdens = null;
@@ -87,9 +87,5 @@ export class CoinextService implements Corretora {
 
   calcularValorMaximoCompraAposTaxas(limiteValor: number): number {
     return limiteValor / (1 + this.TAXA_ORDEM);
-  }
-
-  calcularTaxaTransferência(valor: number): number {
-    return this.TAXA_TRANSFERENCIA;
   }
 }
