@@ -28,6 +28,7 @@ interface RespostaLivroOrdensBitcoinTrade {
 })
 export class BitcoinTradeService implements Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
+  readonly TAXA_TRANSFERENCIA = 0.0005;
   id = 'bitcointrade';
   nome = 'BitcoinTrade';
   paginaInicial = 'https://www.bitcointrade.com.br/pt-BR/';
@@ -110,5 +111,9 @@ export class BitcoinTradeService implements Corretora {
 
   calcularValorMaximoCompraAposTaxas(limiteValor: number): number {
     return limiteValor / (1 + this.TAXA_ORDEM_EXECUTORA);
+  }
+
+  calcularTaxaTransferência(valor: number): number {
+    return this.TAXA_TRANSFERENCIA;
   }
 }

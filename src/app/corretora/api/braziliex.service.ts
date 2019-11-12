@@ -20,6 +20,7 @@ interface LivroOrdensBraziliex {
 })
 export class BraziliexService implements Corretora {
   readonly TAXA_ORDEM = 0.005;
+  readonly TAXA_TRANSFERENCIA = 0.00054714;
   id = 'braziliex';
   nome = 'Braziliex';
   paginaInicial = 'https://braziliex.com/';
@@ -100,5 +101,9 @@ export class BraziliexService implements Corretora {
 
   calcularValorMaximoCompraAposTaxas(limiteValor: number): number {
     return limiteValor / (1 + this.TAXA_ORDEM);
+  }
+
+  calcularTaxaTransferência(valor: number): number {
+    return this.TAXA_TRANSFERENCIA;
   }
 }

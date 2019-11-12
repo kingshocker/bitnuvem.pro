@@ -31,6 +31,7 @@ interface LivroOrdensBTCBisq {
 })
 export class BisqService implements Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.006;
+  readonly TAXA_TRANSFERENCIA = 0.0005;
   id = 'bisq';
   nome = 'Bisq';
   paginaInicial = 'https://bisq.network/pt-pt/';
@@ -115,5 +116,9 @@ export class BisqService implements Corretora {
 
   calcularValorMaximoCompraAposTaxas(limiteValor: number): number {
     return limiteValor / (1 + this.TAXA_ORDEM_EXECUTORA);
+  }
+
+  calcularTaxaTransferência(valor: number): number {
+    return this.TAXA_TRANSFERENCIA;
   }
 }

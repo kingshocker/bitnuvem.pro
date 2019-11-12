@@ -29,4 +29,5 @@ export interface Corretora {
   calcularValorCompraAposTaxas(valor: number): number;
   calcularValorMaximoVendaAposTaxas(limiteValor: number): number;
   calcularValorMaximoCompraAposTaxas(limiteValor: number): number;
+  calcularTaxaTransferência(valor: number): number;
 }

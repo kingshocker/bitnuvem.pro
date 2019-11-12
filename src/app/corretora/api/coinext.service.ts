@@ -12,6 +12,7 @@ type LivroOrdensCoinext = Array<OrdemCoinext>;
 })
 export class CoinextService implements Corretora {
   readonly TAXA_ORDEM = 0.005;
+  readonly TAXA_TRANSFERENCIA = 0.0004;
   id = 'coinext';
   nome = 'Coinext';
   paginaInicial = 'https://coinext.com.br/';
@@ -86,5 +87,9 @@ export class CoinextService implements Corretora {
 
   calcularValorMaximoCompraAposTaxas(limiteValor: number): number {
     return limiteValor / (1 + this.TAXA_ORDEM);
+  }
+
+  calcularTaxaTransferência(valor: number): number {
+    return this.TAXA_TRANSFERENCIA;
   }
 }
