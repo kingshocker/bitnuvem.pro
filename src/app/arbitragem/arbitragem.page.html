@@ -47,6 +47,10 @@
         <strong>Porcentagem de lucro</strong>
         <p>{{ arbitragem.porcentagemLucro | number:'1.2-2':'pt-BR' }}%</p>
       </div>
+      <div class="col" *ngIf="arbitragem.possuiTaxaTransferencia">
+        <strong>Taxa de transferência</strong>
+        <p>{{ arbitragem.taxaTransferencia | number:'1.4-8':'pt-BR' }} BTC</p>
+      </div>
     </div>
   </div>
   <div class="table-responsive">

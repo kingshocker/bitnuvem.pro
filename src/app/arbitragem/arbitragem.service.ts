@@ -15,6 +15,7 @@ export class ArbitragemService {
   porcentagemLucro: number;
   investimentoMaximo: number;
   corretorasHabilitadas: {[idCorretora: string]: boolean} = {};
+  simularTaxaTransferencia: boolean;
 
   constructor(
     private corretoraService: CorretoraService,
@@ -28,6 +29,9 @@ export class ArbitragemService {
     );
     this.configuracoes.propagadorInvestimentoMaximoObservavel.subscribe(
       (valor) => this.investimentoMaximo = valor
+    );
+    this.configuracoes.propagadorSimularTaxaTransferenciaObservavel.subscribe(
+      (valor) => this.simularTaxaTransferencia = valor
     );
     this.corretoraService.corretoras.forEach((corretora) => {
       this.corretorasHabilitadas[corretora.id] = null;
@@ -64,6 +68,7 @@ export class ArbitragemService {
         corretoraB,
         this.investimentoMaximo,
         this.porcentagemLucro,
+        this.simularTaxaTransferencia,
       );
     } else if (
       corretoraA.livroOrdens.compra.length > 0
@@ -75,6 +80,7 @@ export class ArbitragemService {
         corretoraA,
         this.investimentoMaximo,
         this.porcentagemLucro,
+        this.simularTaxaTransferencia,
       );
     }
 
