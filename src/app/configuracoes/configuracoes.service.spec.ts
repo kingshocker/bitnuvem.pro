@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { Storage } from '@ionic/storage';
 
@@ -12,7 +13,10 @@ describe('ConfiguracoesService', () => {
           provide: Storage,
           useFactory: () => new Storage({})
         }
-      ]
+      ],
+      imports: [
+        HttpClientTestingModule,
+      ],
     });
   });
 

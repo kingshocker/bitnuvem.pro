@@ -1,5 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { Storage } from '@ionic/storage';
 
@@ -18,7 +19,10 @@ describe('ConfiguracoesPage', () => {
           provide: Storage,
           useFactory: () => new Storage({})
         }
-      ]
+      ],
+      imports: [
+        HttpClientTestingModule,
+      ],
     })
     .compileComponents();
   }));
