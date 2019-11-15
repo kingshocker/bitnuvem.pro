@@ -1,5 +1,7 @@
 {
   "name": "CriptoArbitragem",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
