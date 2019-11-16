@@ -74,9 +74,18 @@ export class ConfiguracoesPage implements OnInit {
 
   mudarPermitirNotificar() {
     if (this.permitirNotificar) {
-      this.notificacaoService.requisitarPermissaoNotificar();
+      this.notificacaoService.requisitarPermissaoNotificar().then(
+        (permitido) => {
+          if (permitido) {
+            this.configuracoes.mudarPermitirNotificar(this.permitirNotificar);
+          } else {
+            this.permitirNotificar = false;
+          }
+        }
+      );
+    } else {
+      this.configuracoes.mudarPermitirNotificar(this.permitirNotificar);
     }
-    this.configuracoes.mudarPermitirNotificar(this.permitirNotificar);
   }
 
   mudarTempoEntreNotificacoes() {

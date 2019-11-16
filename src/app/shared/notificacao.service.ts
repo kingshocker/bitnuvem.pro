@@ -30,13 +30,28 @@ export class NotificacaoService {
     }
   }
 
-  requisitarPermissaoNotificar() {
+  requisitarPermissaoNotificar(): Promise<boolean> {
     if (
       (typeof Notification !== typeof undefined)
       && (!this.platform.is('cordova'))
       && (!this.platform.is('capacitor'))
     ) {
-      Notification.requestPermission();
+      return new Promise((resolve) => {
+        Notification.requestPermission((permissao: string) => {
+          if (permissao === 'granted') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        }).then((permissao: string) => {
+          if (permissao === 'granted') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+      });
     }
+    return new Promise((resolve) => resolve(true));
   }
 }
