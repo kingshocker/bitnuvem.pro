@@ -38,7 +38,11 @@ export class HomePage implements OnInit, OnDestroy {
     private configuracoes: ConfiguracoesService,
     private notificacao: NotificacaoService,
     private loadingController: LoadingController,
-  ) {}
+  ) {
+    this.carregamento = null;
+    this.arbitragens = [];
+    this.intervaloVisualizacao = null;
+  }
 
   ngOnInit() {
     this.exibirMensagemPaginaCarregando();
@@ -48,12 +52,10 @@ export class HomePage implements OnInit, OnDestroy {
     this.configuracoes.propagadorTempoEntreNotificacoesObservavel.subscribe(
       (valor) => this.tempoEntreNotificacoes = valor
     );
-    this.arbitragens = [];
     this.verificarOportunidadesArbitragem();
     this.paginaAtiva = true;
     this.paginaVisivel = true;
     this.usuarioNotificado = false;
-    this.intervaloVisualizacao = null;
     if (!this.intervalo) {
       this.intervalo = interval(this.UM_MINUTO_EM_MILISEGUNDOS);
       this.intervalo.pipe(takeWhile(() => this.paginaAtiva)).subscribe(() => {
