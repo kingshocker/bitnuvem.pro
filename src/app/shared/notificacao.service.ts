@@ -19,7 +19,6 @@ export class NotificacaoService {
        title: titulo,
        text: texto,
       }]);
-      console.log('Que viage é essa');
     } else if (
       (typeof Notification !== typeof undefined)
       && (Notification.permission === 'granted')
@@ -28,6 +27,16 @@ export class NotificacaoService {
         body: texto
       };
       const notificacao = new Notification(titulo, opcoes);
+    }
+  }
+
+  requisitarPermissaoNotificar() {
+    if (
+      (typeof Notification !== typeof undefined)
+      && (!this.platform.is('cordova'))
+      && (!this.platform.is('capacitor'))
+    ) {
+      Notification.requestPermission();
     }
   }
 }

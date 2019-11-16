@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Platform, AlertController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 import { ConfiguracoesService } from './configuracoes.service';
 import { Corretora } from '../corretora/corretora';
 import { CorretoraService } from '../corretora/corretora.service';
+import { NotificacaoService } from '../shared/notificacao.service';
 
 @Component({
   selector: 'app-configuracoes',
@@ -22,9 +23,9 @@ export class ConfiguracoesPage implements OnInit {
 
   constructor(
     private configuracoes: ConfiguracoesService,
-    private platform: Platform,
     private corretoraService: CorretoraService,
     private alertController: AlertController,
+    private notificacaoService: NotificacaoService,
   ) {}
 
   ngOnInit() {
@@ -72,13 +73,8 @@ export class ConfiguracoesPage implements OnInit {
   }
 
   mudarPermitirNotificar() {
-    if (
-      (this.permitirNotificar)
-      && (typeof Notification !== typeof undefined)
-      && (!this.platform.is('cordova'))
-      && (!this.platform.is('capacitor'))
-    ) {
-      Notification.requestPermission();
+    if (this.permitirNotificar) {
+      this.notificacaoService.requisitarPermissaoNotificar();
     }
     this.configuracoes.mudarPermitirNotificar(this.permitirNotificar);
   }
