@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { timeout, catchError } from 'rxjs/operators';
 
-import { Corretora, LivroOrdens, Ordens, Ordem } from '../corretora';
+import {
+  Corretora,
+  LivroOrdens,
+  Ordens,
+  Ordem,
+  TEMPO_REQUISICAO_MAXIMO,
+} from '../corretora';
 
 interface OrdemBisq {
   offer_id: string;
@@ -61,37 +68,49 @@ export class BisqService implements Corretora {
 
   carregarLivroOrdens(): Promise<LivroOrdens> {
     const dataRequisicao = new Date();
-    return this.http.get(this.webservice).toPromise().then(
-      (livroOrdensBTC: LivroOrdensBTCBisq) => {
-        const livroOrdensBisq: LivroOrdensBisq = livroOrdensBTC.btc_brl;
-        const ordensVenda: Ordens = [];
-        const ordensCompra: Ordens = [];
-        const livroOrdens: LivroOrdens = {
-          venda: ordensVenda,
-          compra: ordensCompra,
-          dataRequisicao,
-          dataResposta: new Date(),
+    return this.http.get(this.webservice).pipe(
+      timeout(TEMPO_REQUISICAO_MAXIMO),
+      catchError((erro) => {
+        console.log(this.id, erro);
+
+        return new Promise((resolve) => {
+          resolve({
+            btc_brl: {
+              buys: [],
+              sells: [],
+            },
+          });
+        }) as Promise<LivroOrdensBTCBisq>;
+      }),
+    ).toPromise().then((livroOrdensBTC: LivroOrdensBTCBisq) => {
+      const livroOrdensBisq: LivroOrdensBisq = livroOrdensBTC.btc_brl;
+      const ordensVenda: Ordens = [];
+      const ordensCompra: Ordens = [];
+      const livroOrdens: LivroOrdens = {
+        venda: ordensVenda,
+        compra: ordensCompra,
+        dataRequisicao,
+        dataResposta: new Date(),
+      };
+
+      livroOrdensBisq.buys.forEach((ordemBisq: OrdemBisq) => {
+        const ordem: Ordem = {
+          preco: Number.parseFloat(ordemBisq.price),
+          quantidade: Number.parseFloat(ordemBisq.amount)
         };
+        ordensCompra.push(ordem);
+      });
+      livroOrdensBisq.sells.forEach((ordemBisq: OrdemBisq) => {
+        const ordem: Ordem = {
+          preco: Number.parseFloat(ordemBisq.price),
+          quantidade: Number.parseFloat(ordemBisq.amount)
+        };
+        ordensVenda.push(ordem);
+      });
+      this.livroOrdens = livroOrdens;
 
-        livroOrdensBisq.buys.forEach((ordemBisq: OrdemBisq) => {
-          const ordem: Ordem = {
-            preco: Number.parseFloat(ordemBisq.price),
-            quantidade: Number.parseFloat(ordemBisq.amount)
-          };
-          ordensCompra.push(ordem);
-        });
-        livroOrdensBisq.sells.forEach((ordemBisq: OrdemBisq) => {
-          const ordem: Ordem = {
-            preco: Number.parseFloat(ordemBisq.price),
-            quantidade: Number.parseFloat(ordemBisq.amount)
-          };
-          ordensVenda.push(ordem);
-        });
-        this.livroOrdens = livroOrdens;
-
-        return livroOrdens;
-      }
-    ) as Promise<LivroOrdens>;
+      return livroOrdens;
+    }) as Promise<LivroOrdens>;
   }
 
   calcularValorTaxaVenda(valor: number): number {

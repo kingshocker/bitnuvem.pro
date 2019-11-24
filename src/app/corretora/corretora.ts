@@ -31,3 +31,5 @@ export interface Corretora {
   calcularValorMaximoVendaAposTaxas(limiteValor: number): number;
   calcularValorMaximoCompraAposTaxas(limiteValor: number): number;
 }
+
+export const TEMPO_REQUISICAO_MAXIMO = 30000;

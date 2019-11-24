@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { timeout, catchError } from 'rxjs/operators';
 
-import { Corretora, LivroOrdens, Ordens, Ordem } from '../corretora';
+import {
+  Corretora,
+  LivroOrdens,
+  Ordens,
+  Ordem,
+  TEMPO_REQUISICAO_MAXIMO,
+} from '../corretora';
 
 interface OrdemBitcoinTrade {
   unit_price: number;
@@ -52,41 +60,55 @@ export class BitcoinTradeService implements Corretora {
 
   carregarLivroOrdens(): Promise<LivroOrdens> {
     const dataRequisicao = new Date();
-    return this.http.get(this.webservice).toPromise().then(
-      (resposta: RespostaLivroOrdensBitcoinTrade) => {
-        const livroOrdensBitcoinTrade: LivroOrdensBitcoinTrade = resposta.data;
-        const ordensVenda: Ordens = [];
-        const ordensCompra: Ordens = [];
-        const livroOrdens: LivroOrdens = {
-          venda: ordensVenda,
-          compra: ordensCompra,
-          dataRequisicao,
-          dataResposta: new Date(),
-        };
+    return this.http.get(this.webservice).pipe(
+      timeout(TEMPO_REQUISICAO_MAXIMO),
+      catchError((erro) => {
+        console.log(this.id, erro);
 
-        livroOrdensBitcoinTrade.bids.forEach(
-          (ordemBitcoinTrade: OrdemBitcoinTrade) => {
-            const ordem: Ordem = {
-              preco: ordemBitcoinTrade.unit_price,
-              quantidade: ordemBitcoinTrade.amount
-            };
-            ordensCompra.push(ordem);
-          }
-        );
-        livroOrdensBitcoinTrade.asks.forEach(
-          (ordemBitcoinTrade: OrdemBitcoinTrade) => {
-            const ordem: Ordem = {
-              preco: ordemBitcoinTrade.unit_price,
-              quantidade: ordemBitcoinTrade.amount
-            };
-            ordensVenda.push(ordem);
-          }
-        );
-        this.livroOrdens = livroOrdens;
+        return new Promise((resolve) => {
+          resolve({
+            code: null,
+            message: null,
+            data: {
+              asks: [],
+              bids: [],
+            },
+          });
+        }) as Promise<RespostaLivroOrdensBitcoinTrade>;
+      }),
+    ).toPromise().then((resposta: RespostaLivroOrdensBitcoinTrade) => {
+      const livroOrdensBitcoinTrade: LivroOrdensBitcoinTrade = resposta.data;
+      const ordensVenda: Ordens = [];
+      const ordensCompra: Ordens = [];
+      const livroOrdens: LivroOrdens = {
+        venda: ordensVenda,
+        compra: ordensCompra,
+        dataRequisicao,
+        dataResposta: new Date(),
+      };
 
-        return livroOrdens;
-      }
-    ) as Promise<LivroOrdens>;
+      livroOrdensBitcoinTrade.bids.forEach(
+        (ordemBitcoinTrade: OrdemBitcoinTrade) => {
+          const ordem: Ordem = {
+            preco: ordemBitcoinTrade.unit_price,
+            quantidade: ordemBitcoinTrade.amount
+          };
+          ordensCompra.push(ordem);
+        }
+      );
+      livroOrdensBitcoinTrade.asks.forEach(
+        (ordemBitcoinTrade: OrdemBitcoinTrade) => {
+          const ordem: Ordem = {
+            preco: ordemBitcoinTrade.unit_price,
+            quantidade: ordemBitcoinTrade.amount
+          };
+          ordensVenda.push(ordem);
+        }
+      );
+      this.livroOrdens = livroOrdens;
+
+      return livroOrdens;
+    }) as Promise<LivroOrdens>;
   }
 
   calcularValorTaxaVenda(valor: number): number {

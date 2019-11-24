@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { timeout, catchError } from 'rxjs/operators';
 
-import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
+import {
+  Corretora,
+  LivroOrdens,
+  Ordem,
+  Ordens,
+  TEMPO_REQUISICAO_MAXIMO,
+} from '../corretora';
 
 interface OrdemBraziliex {
   price: number;
@@ -47,36 +55,46 @@ export class BraziliexService implements Corretora {
 
   carregarLivroOrdens(): Promise<LivroOrdens> {
     const dataRequisicao = new Date();
-    return this.http.get(this.webservice).toPromise().then(
-      (livroOrdensBraziliex: LivroOrdensBraziliex) => {
-        const ordensVenda: Ordens = [];
-        const ordensCompra: Ordens = [];
-        const livroOrdens: LivroOrdens = {
-          venda: ordensVenda,
-          compra: ordensCompra,
-          dataRequisicao,
-          dataResposta: new Date(),
+    return this.http.get(this.webservice).pipe(
+      timeout(TEMPO_REQUISICAO_MAXIMO),
+      catchError((erro) => {
+        console.log(this.id, erro);
+
+        return new Promise((resolve) => {
+          resolve({
+            asks: [],
+            bids: [],
+          });
+        }) as Promise<LivroOrdensBraziliex>;
+      }),
+    ).toPromise().then((livroOrdensBraziliex: LivroOrdensBraziliex) => {
+      const ordensVenda: Ordens = [];
+      const ordensCompra: Ordens = [];
+      const livroOrdens: LivroOrdens = {
+        venda: ordensVenda,
+        compra: ordensCompra,
+        dataRequisicao,
+        dataResposta: new Date(),
+      };
+
+      livroOrdensBraziliex.asks.forEach((ordemBraziliex: OrdemBraziliex) => {
+        const ordem: Ordem = {
+          preco: ordemBraziliex.price,
+          quantidade: ordemBraziliex.amount
         };
+        ordensVenda.push(ordem);
+      });
+      livroOrdensBraziliex.bids.forEach((ordemBraziliex: OrdemBraziliex) => {
+        const ordem: Ordem = {
+          preco: ordemBraziliex.price,
+          quantidade: ordemBraziliex.amount
+        };
+        ordensCompra.push(ordem);
+      });
 
-        livroOrdensBraziliex.asks.forEach((ordemBraziliex: OrdemBraziliex) => {
-          const ordem: Ordem = {
-            preco: ordemBraziliex.price,
-            quantidade: ordemBraziliex.amount
-          };
-          ordensVenda.push(ordem);
-        });
-        livroOrdensBraziliex.bids.forEach((ordemBraziliex: OrdemBraziliex) => {
-          const ordem: Ordem = {
-            preco: ordemBraziliex.price,
-            quantidade: ordemBraziliex.amount
-          };
-          ordensCompra.push(ordem);
-        });
-
-        this.livroOrdens = livroOrdens;
-        return livroOrdens;
-      }
-    ) as Promise<LivroOrdens>;
+      this.livroOrdens = livroOrdens;
+      return livroOrdens;
+    }) as Promise<LivroOrdens>;
   }
 
   calcularValorTaxaVenda(valor: number): number {

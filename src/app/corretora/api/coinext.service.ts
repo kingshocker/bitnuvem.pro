@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { timeout, catchError } from 'rxjs/operators';
 
-import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
+import {
+  Corretora,
+  LivroOrdens,
+  Ordem,
+  Ordens,
+  TEMPO_REQUISICAO_MAXIMO,
+} from '../corretora';
 
 type OrdemCoinext = Array<number>;
 
@@ -36,33 +44,40 @@ export class CoinextService implements Corretora {
 
   carregarLivroOrdens(): Promise<LivroOrdens> {
     const dataRequisicao = new Date();
-    return this.http.get(this.webservice).toPromise().then(
-      (livroOrdensCoinext: LivroOrdensCoinext) => {
-        const ordensVenda: Ordens = [];
-        const ordensCompra: Ordens = [];
-        const livroOrdens: LivroOrdens = {
-          venda: ordensVenda,
-          compra: ordensCompra,
-          dataRequisicao,
-          dataResposta: new Date(),
+    return this.http.get(this.webservice).pipe(
+      timeout(TEMPO_REQUISICAO_MAXIMO),
+      catchError((erro) => {
+        console.log(this.id, erro);
+
+        return new Promise((resolve) => {
+          resolve([]);
+        }) as Promise<LivroOrdensCoinext>;
+      }),
+    ).toPromise().then((livroOrdensCoinext: LivroOrdensCoinext) => {
+      const ordensVenda: Ordens = [];
+      const ordensCompra: Ordens = [];
+      const livroOrdens: LivroOrdens = {
+        venda: ordensVenda,
+        compra: ordensCompra,
+        dataRequisicao,
+        dataResposta: new Date(),
+      };
+
+      livroOrdensCoinext.forEach((ordemCoinext: OrdemCoinext) => {
+        const ordem: Ordem = {
+          preco: ordemCoinext[6],
+          quantidade: ordemCoinext[8]
         };
+        if (ordemCoinext[9] === 1) {
+          ordensVenda.push(ordem);
+        } else {
+          ordensCompra.push(ordem);
+        }
+      });
 
-        livroOrdensCoinext.forEach((ordemCoinext: OrdemCoinext) => {
-          const ordem: Ordem = {
-            preco: ordemCoinext[6],
-            quantidade: ordemCoinext[8]
-          };
-          if (ordemCoinext[9] === 1) {
-            ordensVenda.push(ordem);
-          } else {
-            ordensCompra.push(ordem);
-          }
-        });
-
-        this.livroOrdens = livroOrdens;
-        return livroOrdens;
-      }
-    ) as Promise<LivroOrdens>;
+      this.livroOrdens = livroOrdens;
+      return livroOrdens;
+    }) as Promise<LivroOrdens>;
   }
 
   calcularValorTaxaVenda(valor: number): number {
