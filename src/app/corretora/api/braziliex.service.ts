@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { timeout, catchError } from 'rxjs/operators';
 
 import {
   Corretora,
@@ -26,8 +24,13 @@ interface LivroOrdensBraziliex {
 @Injectable({
   providedIn: 'root'
 })
-export class BraziliexService implements Corretora {
-  readonly TAXA_ORDEM = 0.005;
+export class BraziliexService extends Corretora {
+  readonly TAXA_ORDEM_EXECUTORA = 0.005;
+  readonly LIVRO_ORDENS_VAZIO = {
+    asks: [],
+    bids: [],
+  };
+
   id = 'braziliex';
   nome = 'Braziliex';
   paginaInicial = 'https://braziliex.com/';
@@ -41,83 +44,42 @@ export class BraziliexService implements Corretora {
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.00054714;
 
-  constructor(private http: HttpClient) {
+  constructor(public http: HttpClient) {
+    super(http);
     this.livroOrdens = null;
   }
 
-  get menorPrecoVenda(): number {
-    return this.livroOrdens.venda[0].preco;
-  }
+  converterLivroOrdensAPI(
+    livroOrdensAPI: any,
+    dataRequisicao: Date,
+  ): LivroOrdens {
+    const livroOrdensBraziliex: LivroOrdensBraziliex = (
+      livroOrdensAPI
+    ) as LivroOrdensBraziliex;
+    const ordensVenda: Ordens = [];
+    const ordensCompra: Ordens = [];
+    const livroOrdens: LivroOrdens = {
+      venda: ordensVenda,
+      compra: ordensCompra,
+      dataRequisicao,
+      dataResposta: new Date(),
+    };
 
-  get maiorPrecoCompra(): number {
-    return this.livroOrdens.compra[0].preco;
-  }
-
-  carregarLivroOrdens(): Promise<LivroOrdens> {
-    const dataRequisicao = new Date();
-    return this.http.get(this.webservice).pipe(
-      timeout(TEMPO_REQUISICAO_MAXIMO),
-      catchError((erro) => {
-        console.log(this.id, erro);
-
-        return new Promise((resolve) => {
-          resolve({
-            asks: [],
-            bids: [],
-          });
-        }) as Promise<LivroOrdensBraziliex>;
-      }),
-    ).toPromise().then((livroOrdensBraziliex: LivroOrdensBraziliex) => {
-      const ordensVenda: Ordens = [];
-      const ordensCompra: Ordens = [];
-      const livroOrdens: LivroOrdens = {
-        venda: ordensVenda,
-        compra: ordensCompra,
-        dataRequisicao,
-        dataResposta: new Date(),
+    livroOrdensBraziliex.asks.forEach((ordemBraziliex: OrdemBraziliex) => {
+      const ordem: Ordem = {
+        preco: ordemBraziliex.price,
+        quantidade: ordemBraziliex.amount,
       };
+      ordensVenda.push(ordem);
+    });
+    livroOrdensBraziliex.bids.forEach((ordemBraziliex: OrdemBraziliex) => {
+      const ordem: Ordem = {
+        preco: ordemBraziliex.price,
+        quantidade: ordemBraziliex.amount,
+      };
+      ordensCompra.push(ordem);
+    });
 
-      livroOrdensBraziliex.asks.forEach((ordemBraziliex: OrdemBraziliex) => {
-        const ordem: Ordem = {
-          preco: ordemBraziliex.price,
-          quantidade: ordemBraziliex.amount
-        };
-        ordensVenda.push(ordem);
-      });
-      livroOrdensBraziliex.bids.forEach((ordemBraziliex: OrdemBraziliex) => {
-        const ordem: Ordem = {
-          preco: ordemBraziliex.price,
-          quantidade: ordemBraziliex.amount
-        };
-        ordensCompra.push(ordem);
-      });
-
-      this.livroOrdens = livroOrdens;
-      return livroOrdens;
-    }) as Promise<LivroOrdens>;
-  }
-
-  calcularValorTaxaVenda(valor: number): number {
-    return valor * this.TAXA_ORDEM;
-  }
-
-  calcularValorTaxaCompra(valor: number): number {
-    return valor * this.TAXA_ORDEM;
-  }
-
-  calcularValorVendaAposTaxas(valor: number): number {
-    return valor + this.calcularValorTaxaVenda(valor);
-  }
-
-  calcularValorCompraAposTaxas(valor: number): number {
-    return valor + this.calcularValorTaxaVenda(valor);
-  }
-
-  calcularValorMaximoVendaAposTaxas(limiteValor: number): number {
-    return limiteValor / (1 + this.TAXA_ORDEM);
-  }
-
-  calcularValorMaximoCompraAposTaxas(limiteValor: number): number {
-    return limiteValor / (1 + this.TAXA_ORDEM);
+    return livroOrdens;
   }
 }
