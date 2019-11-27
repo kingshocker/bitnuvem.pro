@@ -112,11 +112,7 @@ export class HomePage implements OnInit, OnDestroy {
         }
         this.arbitragens = arbitragens;
         this.usuarioNotificado = true;
-
-        if (this.carregamento !== null) {
-          this.carregamento.dismiss();
-          this.carregamento = null;
-        }
+        this.fecharMensagemPaginaCarregando();
       }
     );
   }
@@ -136,6 +132,16 @@ export class HomePage implements OnInit, OnDestroy {
     this.carregamento = await this.loadingController.create({
       message: 'Carregando...',
     });
-    this.carregamento.present();
+    await this.carregamento.present();
+    if (this.usuarioNotificado) {
+      this.fecharMensagemPaginaCarregando();
+    }
+  }
+
+  fecharMensagemPaginaCarregando() {
+    if (this.carregamento !== null) {
+      this.carregamento.dismiss();
+      this.carregamento = null;
+    }
   }
 }
