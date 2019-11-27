@@ -14,30 +14,30 @@
     </ion-list-header>
     <ion-item>
       <ion-label position="floating">Investimento</ion-label>
-      <ion-input type="number" inputmode="decimal" [(ngModel)]="investimentoMaximo" (change)="mudarInvestimentoMaximo()"></ion-input>
+      <ion-input type="number" inputmode="decimal" [(ngModel)]="configuracao.investimentoMaximo" (change)="mudarInvestimentoMaximo()"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Simular taxa de transferência</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="simularTaxaTransferencia" (ionChange)="mudarSimularTaxaTransferencia()"></ion-toggle>
+      <ion-toggle slot="end" [(ngModel)]="configuracao.simularTaxaTransferencia" (ionChange)="mudarSimularTaxaTransferencia()"></ion-toggle>
     </ion-item>
     <ion-list-header>
       <ion-label>Filtros</ion-label>
     </ion-list-header>
     <ion-item>
       <ion-label position="floating">Lucro acima de</ion-label>
-      <ion-input type="number" inputmode="decimal" [(ngModel)]="lucroAcima" (change)="mudarLucro()"></ion-input>
+      <ion-input type="number" inputmode="decimal" [(ngModel)]="configuracao.filtroLucroAcima" (change)="mudarLucro()"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Porcentagem de lucro acima de</ion-label>
-      <ion-input type="number" inputmode="decimal" [(ngModel)]="porcentagemLucro" (change)="mudarPorcentagemLucro()"></ion-input>
+      <ion-input type="number" inputmode="decimal" [(ngModel)]="configuracao.filtroPorcentagemLucroAcima" (change)="mudarPorcentagemLucro()"></ion-input>
     </ion-item>
     <ion-item-group>
       <ion-item-divider>
         <ion-label>Corretoras</ion-label>
       </ion-item-divider>
       <ion-item *ngFor="let corretora of corretoras">
-        <ion-label>{{ corretora.corretora.nome }}</ion-label>
-        <ion-toggle slot="end" [(ngModel)]="corretora.habilitada" (ionChange)="mudarCorretoraHabilitada(corretora.corretora.id)"></ion-toggle>
+        <ion-label>{{ corretora.nome }}</ion-label>
+        <ion-toggle slot="end" [(ngModel)]="configuracao.corretoras[corretora.id]" (ionChange)="mudarCorretoraHabilitada(corretora.id)"></ion-toggle>
       </ion-item>
     </ion-item-group>
     <ion-list-header>
@@ -45,11 +45,11 @@
     </ion-list-header>
     <ion-item>
       <ion-label>Notificar</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="permitirNotificar" (ionChange)="mudarPermitirNotificar()"></ion-toggle>
+      <ion-toggle slot="end" [(ngModel)]="configuracao.permitirNotificar" (ionChange)="mudarPermitirNotificar()"></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Tempo entre notificações</ion-label>
-      <ion-input type="number" inputmode="numeric" [(ngModel)]="tempoEntreNotificacoes" (change)="mudarTempoEntreNotificacoes()"></ion-input>
+      <ion-input type="number" inputmode="numeric" [(ngModel)]="configuracao.tempoEntreNotificacoes" (change)="mudarTempoEntreNotificacoes()"></ion-input>
       <ion-note>Após quantos minutos você poderá ser notificado novamente após ter recebido uma notificação não visualizada.</ion-note>
     </ion-item>
   </ion-list>

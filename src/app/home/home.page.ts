@@ -9,6 +9,7 @@ import { LoadingController } from '@ionic/angular';
 import { ArbitragemService } from '../arbitragem/arbitragem.service';
 import { Arbitragem } from '../arbitragem/arbitragem';
 import { ComunicacaoService } from '../shared/comunicacao.service';
+import { Configuracao } from '../configuracoes/configuracao';
 import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
 import { NotificacaoService } from '../shared/notificacao.service';
 
@@ -24,9 +25,8 @@ export class HomePage implements OnInit, OnDestroy {
   intervalo: Observable<number>;
   intervaloVisualizacao: Subscription;
   arbitragens: Array<Arbitragem>;
-  permitirNotificar: boolean;
-  tempoEntreNotificacoes: number;
   usuarioNotificado: boolean;
+  configuracao: Configuracao;
 
   arbitragensVerificadas: boolean;
   carregamento: HTMLIonLoadingElement;
@@ -46,12 +46,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.exibirMensagemPaginaCarregando();
-    this.configuracoes.propagadorNotificarObservavel.subscribe(
-      (valor) => this.permitirNotificar = valor
-    );
-    this.configuracoes.propagadorTempoEntreNotificacoesObservavel.subscribe(
-      (valor) => this.tempoEntreNotificacoes = valor
-    );
+    this.configuracao = this.configuracoes.configuracao;
     this.verificarOportunidadesArbitragem();
     this.paginaAtiva = true;
     this.paginaVisivel = true;
@@ -61,7 +56,7 @@ export class HomePage implements OnInit, OnDestroy {
       this.intervalo.pipe(takeWhile(() => this.paginaAtiva)).subscribe(() => {
         if (
           (this.paginaVisivel)
-          || (this.permitirNotificar && (!this.usuarioNotificado))
+          || (this.configuracao.permitirNotificar && (!this.usuarioNotificado))
         ) {
           this.verificarOportunidadesArbitragem();
         }
@@ -101,7 +96,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.oportunidades.verificarOportunidadesArbitragem().then(
       (arbitragens) => {
         if (
-          (this.permitirNotificar)
+          (this.configuracao.permitirNotificar)
           && (!this.paginaVisivel)
           && (arbitragens.length > 0)
         ) {
@@ -110,7 +105,7 @@ export class HomePage implements OnInit, OnDestroy {
             'Há novas oportunidades de arbitragem que podem ser do seu interesse',
           );
           this.intervaloVisualizacao = interval(
-            this.UM_MINUTO_EM_MILISEGUNDOS * this.tempoEntreNotificacoes
+            this.UM_MINUTO_EM_MILISEGUNDOS * this.configuracao.tempoEntreNotificacoes
           ).subscribe(() => {
             this.voltarNotificarUsuario();
           });

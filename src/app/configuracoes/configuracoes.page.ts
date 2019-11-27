@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { AlertController } from '@ionic/angular';
 
+import { Configuracao } from './configuracao';
 import { ConfiguracoesService } from './configuracoes.service';
 import { Corretora } from '../corretora/corretora';
 import { CorretoraService } from '../corretora/corretora.service';
@@ -13,13 +14,8 @@ import { NotificacaoService } from '../shared/notificacao.service';
   styleUrls: ['./configuracoes.page.scss'],
 })
 export class ConfiguracoesPage implements OnInit {
-  lucroAcima: number;
-  porcentagemLucro: number;
-  investimentoMaximo: number;
-  permitirNotificar: boolean;
-  corretoras: Array<{corretora: Corretora, habilitada: boolean}>;
-  tempoEntreNotificacoes: number;
-  simularTaxaTransferencia: boolean;
+  corretoras: Array<Corretora>;
+  configuracao: Configuracao;
 
   constructor(
     private configuracoes: ConfiguracoesService,
@@ -29,82 +25,63 @@ export class ConfiguracoesPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.configuracoes.propagadorLucroObservavel.subscribe(
-      (valor) => this.lucroAcima = valor
-    );
-    this.configuracoes.propagadorPorcentagemLucroObservavel.subscribe(
-      (valor) => this.porcentagemLucro = valor
-    );
-    this.configuracoes.propagadorInvestimentoMaximoObservavel.subscribe(
-      (valor) => this.investimentoMaximo = valor
-    );
-    this.configuracoes.propagadorNotificarObservavel.subscribe(
-      (valor) => this.permitirNotificar = valor
-    );
-    this.configuracoes.propagadorTempoEntreNotificacoesObservavel.subscribe(
-      (valor) => this.tempoEntreNotificacoes = valor
-    );
-    this.configuracoes.propagadorSimularTaxaTransferenciaObservavel.subscribe(
-      (valor) => this.simularTaxaTransferencia = valor
-    );
-    this.corretoras = [];
-    this.corretoraService.corretoras.forEach((corretora) => {
-      const corretoraHabilitada = {corretora, habilitada: null};
-      this.corretoras.push(corretoraHabilitada);
-      this
-        .configuracoes
-        .propagadoresCorretorasHabilitadasObservaveis[corretora.id]
-        .subscribe(
-          (valor) => corretoraHabilitada.habilitada = valor
-        );
-    });
+    this.configuracao = this.configuracoes.configuracao;
+    this.corretoras = this.corretoraService.corretoras;
   }
 
   mudarLucro() {
-    this.configuracoes.mudarFiltroLucroAcima(this.lucroAcima);
+    this.configuracoes.mudarFiltroLucroAcima(
+      this.configuracao.filtroLucroAcima
+    );
   }
 
   mudarPorcentagemLucro() {
-    this.configuracoes.mudarFiltroPorcentagemLucroAcima(this.porcentagemLucro);
+    this.configuracoes.mudarFiltroPorcentagemLucroAcima(
+      this.configuracao.filtroPorcentagemLucroAcima
+    );
   }
 
   mudarInvestimentoMaximo() {
-    this.configuracoes.mudarInvestimentoMaximo(this.investimentoMaximo);
+    this.configuracoes.mudarInvestimentoMaximo(
+      this.configuracao.investimentoMaximo
+    );
   }
 
   mudarPermitirNotificar() {
-    if (this.permitirNotificar) {
+    if (this.configuracao.permitirNotificar) {
       this.notificacaoService.requisitarPermissaoNotificar().then(
         (permitido) => {
           if (permitido) {
-            this.configuracoes.mudarPermitirNotificar(this.permitirNotificar);
+            this.configuracoes.mudarPermitirNotificar(
+              this.configuracao.permitirNotificar
+            );
           } else {
-            this.permitirNotificar = false;
+            this.configuracao.permitirNotificar = false;
           }
         }
       );
     } else {
-      this.configuracoes.mudarPermitirNotificar(this.permitirNotificar);
+      this.configuracoes.mudarPermitirNotificar(
+        this.configuracao.permitirNotificar
+      );
     }
   }
 
   mudarTempoEntreNotificacoes() {
-    this.configuracoes.mudarTempoEntreNoficacoes(this.tempoEntreNotificacoes);
+    this.configuracoes.mudarTempoEntreNoficacoes(
+      this.configuracao.tempoEntreNotificacoes
+    );
   }
 
   mudarCorretoraHabilitada(idCorretora: string) {
-    this.corretoras.forEach((corretora) => {
-      if (corretora.corretora.id === idCorretora) {
-        this.configuracoes.mudarFiltroCorretoraHabilitada(
-          idCorretora,
-          corretora.habilitada
-        );
-      }
-    });
+    this.configuracoes.mudarFiltroCorretoraHabilitada(
+      idCorretora,
+      this.configuracao.corretoras[idCorretora],
+    );
   }
 
   async mudarSimularTaxaTransferencia() {
-    if (this.simularTaxaTransferencia) {
+    if (this.configuracao.simularTaxaTransferencia) {
       const alert = await this.alertController.create({
         header: 'Confirmar',
         message: (
@@ -121,13 +98,13 @@ export class ConfiguracoesPage implements OnInit {
             role: 'cancel',
             cssClass: 'secondary',
             handler: () => {
-              this.simularTaxaTransferencia = false;
+              this.configuracao.simularTaxaTransferencia = false;
             }
           }, {
             text: 'Concordar',
             handler: () => {
               this.configuracoes.mudarSimularTaxaTransferencia(
-                this.simularTaxaTransferencia
+                this.configuracao.simularTaxaTransferencia
               );
             }
           }
@@ -137,7 +114,7 @@ export class ConfiguracoesPage implements OnInit {
       await alert.present();
     } else {
       this.configuracoes.mudarSimularTaxaTransferencia(
-        this.simularTaxaTransferencia
+        this.configuracao.simularTaxaTransferencia
       );
     }
   }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Storage } from '@ionic/storage';
 
+import { Configuracao } from './configuracao';
 import { Corretora } from '../corretora/corretora';
 import { CorretoraService } from '../corretora/corretora.service';
 
@@ -20,162 +20,115 @@ export class ConfiguracoesService {
   readonly VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES = 60 * 2;
   readonly promises = [];
 
-  private propagadorLucro = new BehaviorSubject(null);
-  private propagadorPorcentagemLucro = new BehaviorSubject(null);
-  private propagadorInvestimentoMaximo = new BehaviorSubject(null);
-  private propagadorNotificar = new BehaviorSubject(null);
-  private propagadoresCorretorasHabilitadas: { [idCorretora: string]: BehaviorSubject<boolean> } = {};
-  private propagadorTempoEntreNotificacoes = new BehaviorSubject(null);
-  private propagadorSimularTaxaTransferencia = new BehaviorSubject(null);
-
-  propagadorLucroObservavel = this.propagadorLucro.asObservable();
-  propagadorPorcentagemLucroObservavel = (
-    this.propagadorPorcentagemLucro.asObservable()
-  );
-  propagadorInvestimentoMaximoObservavel = (
-    this.propagadorInvestimentoMaximo.asObservable()
-  );
-  propagadorNotificarObservavel = this.propagadorNotificar.asObservable();
-  propagadoresCorretorasHabilitadasObservaveis: { [idCorretora: string]: Observable<boolean> } = {};
-  propagadorTempoEntreNotificacoesObservavel = (
-    this.propagadorTempoEntreNotificacoes.asObservable()
-  );
-  propagadorSimularTaxaTransferenciaObservavel = (
-    this.propagadorSimularTaxaTransferencia.asObservable()
-  );
+  configuracao: Configuracao;
 
   constructor(
     private storage: Storage,
     private corretoraService: CorretoraService,
   ) {
+    this.configuracao = new Configuracao();
     this.promises.push(
-      this.carregarValorPropagador(
-        this.FILTRO_LUCRO_ACIMA,
-        this.propagadorLucro,
-        0,
+      this.carregarValor(this.FILTRO_LUCRO_ACIMA, 0).then((valor) => {
+        this.configuracao.filtroLucroAcima = valor;
+      })
+    );
+    this.promises.push(
+      this.carregarValor(this.FILTRO_PORCENTAGEM_LUCRO_ACIMA, 0).then(
+        (valor) => this.configuracao.filtroPorcentagemLucroAcima = valor
       )
     );
     this.promises.push(
-      this.carregarValorPropagador(
-        this.FILTRO_PORCENTAGEM_LUCRO_ACIMA,
-        this.propagadorPorcentagemLucro,
-        0,
+      this.carregarValor(this.INVESTIMENTO_MAXIMO, 1000).then(
+        (valor) => this.configuracao.investimentoMaximo = valor
       )
     );
     this.promises.push(
-      this.carregarValorPropagador(
-        this.INVESTIMENTO_MAXIMO,
-        this.propagadorInvestimentoMaximo,
-        1000,
+      this.carregarValor(this.PERMITIR_NOTIFICAR, false).then(
+        (valor) => this.configuracao.permitirNotificar = valor
       )
     );
     this.promises.push(
-      this.carregarValorPropagador(
-        this.PERMITIR_NOTIFICAR,
-        this.propagadorNotificar,
-        false,
+      this.carregarValor(
+        this.TEMPO_ENTRE_NOTIFICACOES,
+        this.VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES,
+      ).then((valor) => this.configuracao.tempoEntreNotificacoes = valor)
+    );
+    this.promises.push(
+      this.carregarValor(this.SIMULAR_TAXA_TRANSFERENCIA, false).then(
+        (valor) => this.configuracao.simularTaxaTransferencia = valor
       )
     );
     this.corretoraService.corretoras.forEach((corretora) => {
-      const propagador = new BehaviorSubject(null);
-      this.propagadoresCorretorasHabilitadas[corretora.id] = propagador;
-      this.propagadoresCorretorasHabilitadasObservaveis[corretora.id] = (
-        propagador.asObservable()
-      );
-
       this.promises.push(
-        this.carregarValorPropagadorCorretora(
+        this.carregarValorCorretora(
           this.FILTRO_CORRETORAS_HABILITADAS,
           corretora.id,
-          propagador,
           true,
-        )
+        ).then((valor) => this.configuracao.corretoras[corretora.id] = valor)
       );
     });
-    this.promises.push(
-      this.carregarValorPropagador(
-        this.TEMPO_ENTRE_NOTIFICACOES,
-        this.propagadorTempoEntreNotificacoes,
-        this.VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES,
-      )
-    );
-    this.promises.push(
-      this.carregarValorPropagador(
-        this.SIMULAR_TAXA_TRANSFERENCIA,
-        this.propagadorSimularTaxaTransferencia,
-        false,
-      )
-    );
   }
 
-  private async carregarValorPropagador(
-    id: string,
-    propagador: BehaviorSubject<any>,
-    valorPadrao: any,
-  ): Promise<any> {
-    this.storage.get(id).then((valor: any) => {
+  private async carregarValor(id: string, valorPadrao: any): Promise<any> {
+    return this.storage.get(id).then((valor: any) => {
       if ((valor !== undefined) && (valor !== null)) {
-        propagador.next(valor);
         return valor;
-      } else {
-        propagador.next(valorPadrao);
-        return valorPadrao;
       }
+      return valorPadrao;
     });
   }
 
-  private async carregarValorPropagadorCorretora(
+  private async carregarValorCorretora(
     id: string,
     idCorretora: string,
-    propagador: BehaviorSubject<any>,
     valorPadrao: any,
   ): Promise<any> {
-    return this.carregarValorPropagador(
+    return this.carregarValor(
       id.replace('{corretora}', idCorretora),
-      propagador,
       valorPadrao,
     );
   }
 
   mudarFiltroLucroAcima(lucroAcima1: number) {
-    this.propagadorLucro.next(lucroAcima1);
+    this.configuracao.filtroLucroAcima = lucroAcima1;
     this.storage.set(this.FILTRO_LUCRO_ACIMA, lucroAcima1);
   }
 
   mudarFiltroPorcentagemLucroAcima(porcentagemLucroAcima: number) {
-    this.propagadorPorcentagemLucro.next(porcentagemLucroAcima);
+    this.configuracao.filtroPorcentagemLucroAcima = porcentagemLucroAcima;
     this.storage.set(
       this.FILTRO_PORCENTAGEM_LUCRO_ACIMA,
       porcentagemLucroAcima,
     );
   }
 
+  mudarInvestimentoMaximo(investimentoMaximo: number) {
+    this.configuracao.investimentoMaximo = investimentoMaximo;
+    this.storage.set(this.INVESTIMENTO_MAXIMO, investimentoMaximo);
+  }
+
+  mudarPermitirNotificar(permitirNotificar: boolean) {
+    this.configuracao.permitirNotificar = permitirNotificar;
+    this.storage.set(this.PERMITIR_NOTIFICAR, permitirNotificar);
+  }
+
+  mudarTempoEntreNoficacoes(tempoEntreNotificacoes: number) {
+    this.configuracao.tempoEntreNotificacoes = tempoEntreNotificacoes;
+    this.storage.set(this.TEMPO_ENTRE_NOTIFICACOES, tempoEntreNotificacoes);
+  }
+
+  mudarSimularTaxaTransferencia(simularTaxaTransferencia: boolean) {
+    this.configuracao.simularTaxaTransferencia = simularTaxaTransferencia;
+    this.storage.set(this.SIMULAR_TAXA_TRANSFERENCIA, simularTaxaTransferencia);
+  }
+
   mudarFiltroCorretoraHabilitada(idCorretora: string, habilitada: boolean) {
+    this.configuracao.corretoras[idCorretora] = habilitada;
     const id = this.FILTRO_CORRETORAS_HABILITADAS.replace(
       '{corretora}',
       idCorretora,
     );
     this.storage.set(id, habilitada);
-  }
-
-  mudarInvestimentoMaximo(investimentoMaximo: number) {
-    this.propagadorInvestimentoMaximo.next(investimentoMaximo);
-    this.storage.set(this.INVESTIMENTO_MAXIMO, investimentoMaximo);
-  }
-
-  mudarPermitirNotificar(permitirNotificar: boolean) {
-    this.propagadorNotificar.next(permitirNotificar);
-    this.storage.set(this.PERMITIR_NOTIFICAR, permitirNotificar);
-  }
-
-  mudarTempoEntreNoficacoes(tempoEntreNotificacoes: number) {
-    this.propagadorTempoEntreNotificacoes.next(tempoEntreNotificacoes);
-    this.storage.set(this.TEMPO_ENTRE_NOTIFICACOES, tempoEntreNotificacoes);
-  }
-
-  mudarSimularTaxaTransferencia(simularTaxaTransferencia: boolean) {
-    this.propagadorSimularTaxaTransferencia.next(simularTaxaTransferencia);
-    this.storage.set(this.SIMULAR_TAXA_TRANSFERENCIA, simularTaxaTransferencia);
   }
 
   async carregarConfiguracoes(): Promise<boolean> {

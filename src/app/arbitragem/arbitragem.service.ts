@@ -4,6 +4,7 @@ import { Corretora, LivroOrdens } from '../corretora/corretora';
 import { CorretoraService } from '../corretora/corretora.service';
 
 import { Arbitragem } from './arbitragem';
+import { Configuracao } from '../configuracoes/configuracao';
 import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
 
 @Injectable({
@@ -11,37 +12,13 @@ import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
 })
 export class ArbitragemService {
   oportunidadesArbitragem: Array<Arbitragem>;
-  lucroAcima: number;
-  porcentagemLucro: number;
-  investimentoMaximo: number;
-  corretorasHabilitadas: {[idCorretora: string]: boolean} = {};
-  simularTaxaTransferencia: boolean;
+  configuracao: Configuracao;
 
   constructor(
     private corretoraService: CorretoraService,
     private configuracoes: ConfiguracoesService,
   ) {
-    this.configuracoes.propagadorLucroObservavel.subscribe(
-      (valor) => this.lucroAcima = valor
-    );
-    this.configuracoes.propagadorPorcentagemLucroObservavel.subscribe(
-      (valor) => this.porcentagemLucro = valor
-    );
-    this.configuracoes.propagadorInvestimentoMaximoObservavel.subscribe(
-      (valor) => this.investimentoMaximo = valor
-    );
-    this.configuracoes.propagadorSimularTaxaTransferenciaObservavel.subscribe(
-      (valor) => this.simularTaxaTransferencia = valor
-    );
-    this.corretoraService.corretoras.forEach((corretora) => {
-      this.corretorasHabilitadas[corretora.id] = null;
-      this
-        .configuracoes
-        .propagadoresCorretorasHabilitadasObservaveis[corretora.id]
-        .subscribe(
-          (valor) => this.corretorasHabilitadas[corretora.id] = valor
-        );
-    });
+    this.configuracao = this.configuracoes.configuracao;
   }
 
   retornarCorretoraPeloId(idCorretora: string): Corretora {
@@ -66,9 +43,9 @@ export class ArbitragemService {
       return new Arbitragem(
         corretoraA,
         corretoraB,
-        this.investimentoMaximo,
-        this.porcentagemLucro,
-        this.simularTaxaTransferencia,
+        this.configuracao.investimentoMaximo,
+        this.configuracao.filtroPorcentagemLucroAcima,
+        this.configuracao.simularTaxaTransferencia,
       );
     } else if (
       corretoraA.livroOrdens.compra.length > 0
@@ -78,9 +55,9 @@ export class ArbitragemService {
       return new Arbitragem(
         corretoraB,
         corretoraA,
-        this.investimentoMaximo,
-        this.porcentagemLucro,
-        this.simularTaxaTransferencia,
+        this.configuracao.investimentoMaximo,
+        this.configuracao.filtroPorcentagemLucroAcima,
+        this.configuracao.simularTaxaTransferencia,
       );
     }
 
@@ -91,12 +68,15 @@ export class ArbitragemService {
     const arbitragens: Array<Arbitragem> = [];
     const promises: Array<Promise<LivroOrdens>> = [];
     const corretoras: Array<Corretora> = [];
-    this.corretoraService.corretoras.forEach((corretora: Corretora) => {
-      if (this.corretorasHabilitadas[corretora.id]) {
-        corretoras.push(corretora);
-        promises.push(corretora.carregarLivroOrdens());
+    for (const idCorretora in this.configuracao.corretoras) {
+      if (this.configuracao.corretoras.hasOwnProperty(idCorretora)) {
+        continue;
       }
-    });
+
+      const corretora = this.corretoraService.corretoraPeloId(idCorretora);
+      corretoras.push(corretora);
+      promises.push(corretora.carregarLivroOrdens());
+    }
     await Promise.all(promises);
 
     for (
@@ -114,8 +94,11 @@ export class ArbitragemService {
 
         if (
           (arbitragem !== null)
-          && (arbitragem.lucro >= this.lucroAcima)
-          && (arbitragem.porcentagemLucro >= this.porcentagemLucro)
+          && (arbitragem.lucro >= this.configuracao.filtroLucroAcima)
+          && (
+            arbitragem.porcentagemLucro
+            >= this.configuracao.filtroPorcentagemLucroAcima
+          )
         ) {
           arbitragens.push(arbitragem);
         }
