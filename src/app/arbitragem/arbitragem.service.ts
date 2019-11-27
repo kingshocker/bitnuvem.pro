@@ -21,16 +21,6 @@ export class ArbitragemService {
     this.configuracao = this.configuracoes.configuracao;
   }
 
-  retornarCorretoraPeloId(idCorretora: string): Corretora {
-    let corretoraEncontrada = null;
-    this.corretoraService.corretoras.forEach((corretora) => {
-      if (corretora.id === idCorretora) {
-        corretoraEncontrada = corretora;
-      }
-    });
-    return corretoraEncontrada;
-  }
-
   verificarOportunidadesArbitragemCorretoras(
     corretoraA: Corretora,
     corretoraB: Corretora,
@@ -112,8 +102,8 @@ export class ArbitragemService {
     idCorretoraA: string,
     idCorretoraB: string,
   ): Promise<Arbitragem> {
-    const corretoraA = this.retornarCorretoraPeloId(idCorretoraA);
-    const corretoraB = this.retornarCorretoraPeloId(idCorretoraB);
+    const corretoraA = this.corretoraService.corretoraPeloId(idCorretoraA);
+    const corretoraB = this.corretoraService.corretoraPeloId(idCorretoraB);
 
     if ((corretoraA === null) || (corretoraB === null)) {
       return null;
