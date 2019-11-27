@@ -59,7 +59,7 @@ export class ArbitragemService {
     const promises: Array<Promise<LivroOrdens>> = [];
     const corretoras: Array<Corretora> = [];
     for (const idCorretora in this.configuracao.corretoras) {
-      if (this.configuracao.corretoras.hasOwnProperty(idCorretora)) {
+      if (!this.configuracao.corretoras.hasOwnProperty(idCorretora)) {
         continue;
       }
 
