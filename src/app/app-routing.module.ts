@@ -14,7 +14,7 @@ const routes: Routes = [
     loadChildren: './isencao-responsabilidade/isencao-responsabilidade.module#IsencaoResponsabilidadePageModule',
   },
   {
-    path: 'arbitragem/:corretora-venda/:corretora-compra',
+    path: 'arbitragem/:idCorretoraVenda/:idCorretoraCompra',
     loadChildren: './arbitragem/arbitragem.module#ArbitragemPageModule',
     canActivate: [IsencaoResponsabilidadeGuard],
   },

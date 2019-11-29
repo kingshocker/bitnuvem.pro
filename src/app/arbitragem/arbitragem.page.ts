@@ -27,10 +27,10 @@ export class ArbitragemPage implements OnInit {
 
   carregarArbitragemDiretamente() {
     const idCorretoraVenda = this.router.snapshot.paramMap.get(
-      'corretora-venda'
+      'idCorretoraVenda'
     );
     const idCorretoraCompra = this.router.snapshot.paramMap.get(
-      'corretora-compra'
+      'idCorretoraCompra'
     );
 
     this.arbitragemService.verificarOportunidadesArbitragemCorretorasPelosIds(
