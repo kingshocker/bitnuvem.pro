@@ -89,46 +89,54 @@ export class ConfiguracoesService {
     );
   }
 
-  mudarFiltroLucroAcima(lucroAcima1: number) {
-    this.configuracao.filtroLucroAcima = lucroAcima1;
-    this.storage.set(this.FILTRO_LUCRO_ACIMA, lucroAcima1);
-  }
-
-  mudarFiltroPorcentagemLucroAcima(porcentagemLucroAcima: number) {
-    this.configuracao.filtroPorcentagemLucroAcima = porcentagemLucroAcima;
+  mudarFiltroLucroAcima() {
     this.storage.set(
-      this.FILTRO_PORCENTAGEM_LUCRO_ACIMA,
-      porcentagemLucroAcima,
+      this.FILTRO_LUCRO_ACIMA,
+      this.configuracao.filtroLucroAcima,
     );
   }
 
-  mudarInvestimentoMaximo(investimentoMaximo: number) {
-    this.configuracao.investimentoMaximo = investimentoMaximo;
-    this.storage.set(this.INVESTIMENTO_MAXIMO, investimentoMaximo);
+  mudarFiltroPorcentagemLucroAcima() {
+    this.storage.set(
+      this.FILTRO_PORCENTAGEM_LUCRO_ACIMA,
+      this.configuracao.filtroPorcentagemLucroAcima,
+    );
   }
 
-  mudarPermitirNotificar(permitirNotificar: boolean) {
-    this.configuracao.permitirNotificar = permitirNotificar;
-    this.storage.set(this.PERMITIR_NOTIFICAR, permitirNotificar);
+  mudarInvestimentoMaximo() {
+    this.storage.set(
+      this.INVESTIMENTO_MAXIMO,
+      this.configuracao.investimentoMaximo,
+    );
   }
 
-  mudarTempoEntreNoficacoes(tempoEntreNotificacoes: number) {
-    this.configuracao.tempoEntreNotificacoes = tempoEntreNotificacoes;
-    this.storage.set(this.TEMPO_ENTRE_NOTIFICACOES, tempoEntreNotificacoes);
+  mudarPermitirNotificar() {
+    this.storage.set(
+      this.PERMITIR_NOTIFICAR,
+      this.configuracao.permitirNotificar,
+    );
   }
 
-  mudarSimularTaxaTransferencia(simularTaxaTransferencia: boolean) {
-    this.configuracao.simularTaxaTransferencia = simularTaxaTransferencia;
-    this.storage.set(this.SIMULAR_TAXA_TRANSFERENCIA, simularTaxaTransferencia);
+  mudarTempoEntreNoficacoes() {
+    this.storage.set(
+      this.TEMPO_ENTRE_NOTIFICACOES,
+      this.configuracao.tempoEntreNotificacoes,
+    );
   }
 
-  mudarFiltroCorretoraHabilitada(idCorretora: string, habilitada: boolean) {
-    this.configuracao.corretoras[idCorretora] = habilitada;
+  mudarSimularTaxaTransferencia() {
+    this.storage.set(
+      this.SIMULAR_TAXA_TRANSFERENCIA,
+      this.configuracao.simularTaxaTransferencia,
+    );
+  }
+
+  mudarFiltroCorretoraHabilitada(idCorretora: string) {
     const id = this.FILTRO_CORRETORAS_HABILITADAS.replace(
       '{corretora}',
       idCorretora,
     );
-    this.storage.set(id, habilitada);
+    this.storage.set(id, this.configuracao.corretoras[idCorretora]);
   }
 
   async carregarConfiguracoes(): Promise<boolean> {

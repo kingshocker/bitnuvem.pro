@@ -30,21 +30,15 @@ export class ConfiguracoesPage implements OnInit {
   }
 
   mudarLucro() {
-    this.configuracoes.mudarFiltroLucroAcima(
-      this.configuracao.filtroLucroAcima
-    );
+    this.configuracoes.mudarFiltroLucroAcima();
   }
 
   mudarPorcentagemLucro() {
-    this.configuracoes.mudarFiltroPorcentagemLucroAcima(
-      this.configuracao.filtroPorcentagemLucroAcima
-    );
+    this.configuracoes.mudarFiltroPorcentagemLucroAcima();
   }
 
   mudarInvestimentoMaximo() {
-    this.configuracoes.mudarInvestimentoMaximo(
-      this.configuracao.investimentoMaximo
-    );
+    this.configuracoes.mudarInvestimentoMaximo();
   }
 
   mudarPermitirNotificar() {
@@ -52,32 +46,23 @@ export class ConfiguracoesPage implements OnInit {
       this.notificacaoService.requisitarPermissaoNotificar().then(
         (permitido) => {
           if (permitido) {
-            this.configuracoes.mudarPermitirNotificar(
-              this.configuracao.permitirNotificar
-            );
+            this.configuracoes.mudarPermitirNotificar();
           } else {
             this.configuracao.permitirNotificar = false;
           }
         }
       );
     } else {
-      this.configuracoes.mudarPermitirNotificar(
-        this.configuracao.permitirNotificar
-      );
+      this.configuracoes.mudarPermitirNotificar();
     }
   }
 
   mudarTempoEntreNotificacoes() {
-    this.configuracoes.mudarTempoEntreNoficacoes(
-      this.configuracao.tempoEntreNotificacoes
-    );
+    this.configuracoes.mudarTempoEntreNoficacoes();
   }
 
   mudarCorretoraHabilitada(idCorretora: string) {
-    this.configuracoes.mudarFiltroCorretoraHabilitada(
-      idCorretora,
-      this.configuracao.corretoras[idCorretora],
-    );
+    this.configuracoes.mudarFiltroCorretoraHabilitada(idCorretora);
   }
 
   async mudarSimularTaxaTransferencia() {
@@ -103,9 +88,7 @@ export class ConfiguracoesPage implements OnInit {
           }, {
             text: 'Concordar',
             handler: () => {
-              this.configuracoes.mudarSimularTaxaTransferencia(
-                this.configuracao.simularTaxaTransferencia
-              );
+              this.configuracoes.mudarSimularTaxaTransferencia();
             }
           }
         ]
@@ -113,9 +96,7 @@ export class ConfiguracoesPage implements OnInit {
 
       await alert.present();
     } else {
-      this.configuracoes.mudarSimularTaxaTransferencia(
-        this.configuracao.simularTaxaTransferencia
-      );
+      this.configuracoes.mudarSimularTaxaTransferencia();
     }
   }
 }
