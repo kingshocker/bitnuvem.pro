@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'isencao-responsabilidade',
-    loadChildren: './isencao-responsabilidade/isencao-responsabilidade.module#IsencaoResponsabilidadePageModule'
+    loadChildren: './isencao-responsabilidade/isencao-responsabilidade.module#IsencaoResponsabilidadePageModule',
   },
   {
     path: 'arbitragem/:corretora-venda/:corretora-compra',
@@ -25,7 +25,8 @@ const routes: Routes = [
   },
   {
     path: 'corretora/:idCorretora',
-    loadChildren: './corretora/corretora.module#CorretoraPageModule'
+    loadChildren: './corretora/corretora.module#CorretoraPageModule',
+    canActivate: [IsencaoResponsabilidadeGuard],
   },
 ];
 
