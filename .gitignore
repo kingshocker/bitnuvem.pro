@@ -30,3 +30,9 @@ npm-debug.log*
 /plugins
 /www
 
+/resources/icon.png
+/resources/android/icon/
+/resources/android/splash/
+/resources/ios/
+/src/assets/icons/icon-*
+/src/assets/icon/favicon.png
