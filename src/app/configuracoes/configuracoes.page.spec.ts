@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { Storage } from '@ionic/storage';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 import { ConfiguracoesPage } from './configuracoes.page';
 
@@ -18,7 +19,8 @@ describe('ConfiguracoesPage', () => {
         {
           provide: Storage,
           useFactory: () => new Storage({})
-        }
+        },
+        LocalNotifications,
       ],
       imports: [
         HttpClientTestingModule,
