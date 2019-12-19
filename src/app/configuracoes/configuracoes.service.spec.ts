@@ -3,23 +3,25 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { Storage } from '@ionic/storage';
 
-import { ArbitragemService } from './arbitragem.service';
+import { ConfiguracoesService } from './configuracoes.service';
 
-describe('ArbitragemService', () => {
+describe('ConfiguracoesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
         {
           provide: Storage,
           useFactory: () => new Storage({})
         }
       ],
+      imports: [
+        HttpClientTestingModule,
+      ],
     });
   });
 
   it('should be created', () => {
-    const service: ArbitragemService = TestBed.get(ArbitragemService);
+    const service: ConfiguracoesService = TestBed.get(ConfiguracoesService);
     expect(service).toBeTruthy();
   });
 });

@@ -3,11 +3,16 @@
     <ion-title>
       CriptoArbitragem
     </ion-title>
+    <ion-buttons slot="primary">
+      <ion-button routerLink="/configuracoes">
+        <ion-icon slot="icon-only" name="settings"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="table-responsive">
+  <div class="table-responsive" *ngIf="existemOportunidadesAbitragem">
     <table class="table table-bordered table-sm">
       <thead class="thead-light">
         <tr>
@@ -17,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let arbitragem of arbitragens">
+        <tr *ngFor="let arbitragem of arbitragens; let indice = index" (click)="detalharOportunidadeArbitragem(indice)">
           <td>{{ arbitragem.corretoraVenda.nome }}</td>
           <td>{{ arbitragem.corretoraCompra.nome }}</td>
           <td>R$ {{ arbitragem.lucro | number:'1.2-2':'pt-BR' }} ({{ arbitragem.porcentagemLucro | number:'1.2-2':'pt-BR' }}%)</td>
@@ -25,4 +30,14 @@
       </tbody>
     </table>
   </div>
+  <div *ngIf="!existemOportunidadesAbitragem">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          Não há oportunidades de arbitragem de acordo com os parâmetros informados na configuração.
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <app-rodape></app-rodape>
 </ion-content>

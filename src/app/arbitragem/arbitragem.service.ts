@@ -1,53 +1,122 @@
 import { Injectable } from '@angular/core';
 
 import { Corretora, LivroOrdens } from '../corretora/corretora';
-import { BisqService } from '../corretora/bisq.service';
-import { BraziliexService } from '../corretora/braziliex.service';
+import { CorretoraService } from '../corretora/corretora.service';
+
 import { Arbitragem } from './arbitragem';
+import { Configuracao } from '../configuracoes/configuracao';
+import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArbitragemService {
-  corretoras: Array<Corretora>;
   oportunidadesArbitragem: Array<Arbitragem>;
+  configuracao: Configuracao;
 
-  constructor(private bisq: BisqService, private braziliex: BraziliexService) {
-    this.corretoras = [this.bisq, this.braziliex];
+  constructor(
+    private corretoraService: CorretoraService,
+    private configuracoes: ConfiguracoesService,
+  ) {
+    this.configuracao = this.configuracoes.configuracao;
+  }
+
+  verificarOportunidadesArbitragemCorretoras(
+    corretoraA: Corretora,
+    corretoraB: Corretora,
+  ): Arbitragem {
+    if (
+      corretoraA.livroOrdens.venda.length > 0
+      && corretoraB.livroOrdens.compra.length > 0
+      && corretoraA.menorPrecoVenda < corretoraB.maiorPrecoCompra
+    ) {
+      return new Arbitragem(
+        corretoraA,
+        corretoraB,
+        this.configuracao.investimentoMaximo,
+        this.configuracao.filtroPorcentagemLucroAcima,
+        this.configuracao.simularTaxaTransferencia,
+      );
+    } else if (
+      corretoraA.livroOrdens.compra.length > 0
+      && corretoraB.livroOrdens.venda.length > 0
+      && corretoraB.menorPrecoVenda < corretoraA.maiorPrecoCompra
+    ) {
+      return new Arbitragem(
+        corretoraB,
+        corretoraA,
+        this.configuracao.investimentoMaximo,
+        this.configuracao.filtroPorcentagemLucroAcima,
+        this.configuracao.simularTaxaTransferencia,
+      );
+    }
+
+    return null;
   }
 
   async verificarOportunidadesArbitragem(): Promise<Array<Arbitragem>> {
     const arbitragens: Array<Arbitragem> = [];
     const promises: Array<Promise<LivroOrdens>> = [];
-    this.corretoras.forEach((corretora: Corretora) => {
+    const corretoras: Array<Corretora> = [];
+    for (const idCorretora in this.configuracao.corretoras) {
+      if (!this.configuracao.corretoras.hasOwnProperty(idCorretora)) {
+        continue;
+      }
+
+      const corretora = this.corretoraService.corretoraPeloId(idCorretora);
+      corretoras.push(corretora);
       promises.push(corretora.carregarLivroOrdens());
-    });
+    }
     await Promise.all(promises);
 
     for (
-      let indiceA = 0, length: number = this.corretoras.length;
+      let indiceA = 0, length: number = corretoras.length;
       indiceA < length;
       indiceA++
     ) {
-      const corretoraA = this.corretoras[indiceA];
+      const corretoraA = corretoras[indiceA];
       for (let indiceB: number = indiceA + 1; indiceB < length; indiceB++) {
-        const corretoraB = this.corretoras[indiceB];
+        const corretoraB = corretoras[indiceB];
+        const arbitragem = this.verificarOportunidadesArbitragemCorretoras(
+          corretoraA,
+          corretoraB,
+        );
+
         if (
-          corretoraA.livroOrdens.venda.length > 0
-          && corretoraB.livroOrdens.compra.length > 0
-          && corretoraA.menorPrecoVenda < corretoraB.maiorPrecoCompra
+          (arbitragem !== null)
+          && (arbitragem.lucro >= this.configuracao.filtroLucroAcima)
+          && (
+            arbitragem.porcentagemLucro
+            >= this.configuracao.filtroPorcentagemLucroAcima
+          )
         ) {
-          arbitragens.push(new Arbitragem(corretoraA, corretoraB, 1000));
-        } else if (
-          corretoraA.livroOrdens.compra.length > 0
-          && corretoraB.livroOrdens.venda.length > 0
-          && corretoraB.menorPrecoVenda < corretoraA.maiorPrecoCompra
-        ) {
-          arbitragens.push(new Arbitragem(corretoraB, corretoraA, 1000));
+          arbitragens.push(arbitragem);
         }
       }
     }
 
     return arbitragens;
+  }
+
+  async verificarOportunidadesArbitragemCorretorasPelosIds(
+    idCorretoraA: string,
+    idCorretoraB: string,
+  ): Promise<Arbitragem> {
+    const corretoraA = this.corretoraService.corretoraPeloId(idCorretoraA);
+    const corretoraB = this.corretoraService.corretoraPeloId(idCorretoraB);
+
+    if ((corretoraA === null) || (corretoraB === null)) {
+      return null;
+    }
+
+    const promises: Array<Promise<LivroOrdens>> = [];
+    promises.push(corretoraA.carregarLivroOrdens());
+    promises.push(corretoraB.carregarLivroOrdens());
+    await Promise.all(promises);
+
+    return this.verificarOportunidadesArbitragemCorretoras(
+      corretoraA,
+      corretoraB,
+    );
   }
 }

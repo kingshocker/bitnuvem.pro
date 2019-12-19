@@ -7,11 +7,26 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule),
-    canActivate: [IsencaoResponsabilidadeGuard]
+    canActivate: [IsencaoResponsabilidadeGuard],
   },
   {
     path: 'isencao-responsabilidade',
-    loadChildren: './isencao-responsabilidade/isencao-responsabilidade.module#IsencaoResponsabilidadePageModule'
+    loadChildren: './isencao-responsabilidade/isencao-responsabilidade.module#IsencaoResponsabilidadePageModule',
+  },
+  {
+    path: 'arbitragem/:idCorretoraVenda/:idCorretoraCompra',
+    loadChildren: './arbitragem/arbitragem.module#ArbitragemPageModule',
+    canActivate: [IsencaoResponsabilidadeGuard],
+  },
+  {
+    path: 'configuracoes',
+    loadChildren: './configuracoes/configuracoes.module#ConfiguracoesPageModule',
+    canActivate: [IsencaoResponsabilidadeGuard],
+  },
+  {
+    path: 'corretora/:idCorretora',
+    loadChildren: './corretora/corretora.module#CorretoraPageModule',
+    canActivate: [IsencaoResponsabilidadeGuard],
   },
 ];
 

@@ -1,6 +1,7 @@
 import { Corretora, Ordens, Ordem } from '../corretora/corretora';
 
 interface OrdemArbitragem extends Ordem {
+  total: number;
   valorTaxa: number;
   numeroOperacoes: number;
 }
@@ -10,17 +11,31 @@ export class Arbitragem {
   ordensCompra: Ordens;
   lucro: number;
   investimento: number;
+  taxaTransferencia: number;
 
   constructor(
     public corretoraVenda: Corretora,
     public corretoraCompra: Corretora,
-    public investimentoInicial: number
+    public investimentoMaximo: number,
+    private lucroPercentualMinimo: number,
+    public possuiTaxaTransferencia: boolean,
   ) {
     this.verificarOportunidades();
   }
 
   get porcentagemLucro() {
     return this.lucro / this.investimento * 100;
+  }
+
+  private calcularNovaPorcentagemLucro(
+    lucroOperacao: number,
+    investimentoOperacao: number,
+  ): number {
+    return (
+      (this.lucro + lucroOperacao)
+      / (this.investimento + investimentoOperacao)
+      * 100
+    );
   }
 
   private clonarOrdem(ordem: Ordem) {
@@ -48,7 +63,10 @@ export class Arbitragem {
     ) {
       return ordemCompra.quantidade;
     } else {
-      return saldoRestante / ordemVenda.preco;
+      return (
+        this.corretoraVenda.calcularValorMaximoVendaAposTaxas(saldoRestante)
+        / ordemVenda.preco
+      );
     }
   }
 
@@ -66,6 +84,7 @@ export class Arbitragem {
         quantidade: quantidadeOperada,
         numeroOperacoes: 1,
         valorTaxa: taxa,
+        total: preco * quantidadeOperada,
       };
       ordensArbitragem.push(ordemArbitragem);
     } else {
@@ -73,6 +92,7 @@ export class Arbitragem {
       ordemArbitragem.quantidade += quantidadeOperada;
       ordemArbitragem.numeroOperacoes++;
       ordemArbitragem.valorTaxa += taxa;
+      ordemArbitragem.total = preco * ordemArbitragem.quantidade;
     }
   }
 
@@ -87,7 +107,7 @@ export class Arbitragem {
     this.investimento = 0;
     this.lucro = 0;
 
-    let saldoRestante = this.investimentoInicial;
+    let saldoRestante = this.investimentoMaximo;
     let quantidadeOperada = 0;
 
     let indiceVenda = 0;
@@ -95,6 +115,59 @@ export class Arbitragem {
 
     let ordemVenda = this.clonarOrdem(ordensVendaSimulacao[indiceVenda]);
     let ordemCompra = this.clonarOrdem(ordensCompraSimulacao[indiceCompra]);
+
+    let taxaTransferenciaRestante = 0;
+    if (this.possuiTaxaTransferencia) {
+      this.taxaTransferencia = this.corretoraVenda.taxaTransferencia;
+      taxaTransferenciaRestante = this.taxaTransferencia;
+    }
+
+    while (
+      (indiceVenda < ordensVendaSimulacao.length)
+      && (indiceCompra < ordensCompraSimulacao.length)
+      && (ordemVenda.preco < valorMaximo)
+      && (ordemCompra.preco > valorMinimo)
+      && (ordemVenda.preco < ordemCompra.preco)
+      && (saldoRestante > 0)
+      && (taxaTransferenciaRestante > 0)
+    ) {
+      quantidadeOperada = this.calcularQuantidadeOperada(
+        ordemVenda,
+        {
+          preco: ordemVenda.preco,
+          quantidade: taxaTransferenciaRestante,
+        },
+        saldoRestante
+      );
+
+      const totalVenda = quantidadeOperada * ordemVenda.preco;
+      const taxaVenda = this.corretoraVenda.calcularValorTaxaVenda(totalVenda);
+      const investimentoOperacao = (
+        this.corretoraVenda.calcularValorVendaAposTaxas(totalVenda)
+      );
+
+      ordemVenda.quantidade -= quantidadeOperada;
+      taxaTransferenciaRestante -= quantidadeOperada;
+      saldoRestante -= investimentoOperacao;
+      this.investimento += investimentoOperacao;
+      this.lucro += - totalVenda - taxaVenda;
+
+      this.adicionarOrdemArbitragem(
+        this.ordensVenda,
+        ordemVenda.preco,
+        indiceVenda,
+        quantidadeOperada,
+        taxaVenda,
+      );
+
+      if (ordemVenda.quantidade === 0) {
+        indiceVenda++;
+        if (indiceVenda < ordensVendaSimulacao.length) {
+          ordemVenda = this.clonarOrdem(ordensVendaSimulacao[indiceVenda]);
+        }
+      }
+    }
+
     while (
       (indiceVenda < ordensVendaSimulacao.length)
       && (indiceCompra < ordensCompraSimulacao.length)
@@ -109,26 +182,37 @@ export class Arbitragem {
         saldoRestante
       );
 
+      const totalVenda = quantidadeOperada * ordemVenda.preco;
+      const totalCompra = quantidadeOperada * ordemCompra.preco;
+      const taxaVenda = this.corretoraVenda.calcularValorTaxaVenda(totalVenda);
+      const taxaCompra = this.corretoraCompra.calcularValorTaxaCompra(
+        totalCompra
+      );
+      const lucroOperacao = totalCompra - totalVenda - taxaVenda - taxaCompra;
+      const investimentoOperacao = (
+        this.corretoraVenda.calcularValorVendaAposTaxas(totalVenda)
+      );
+
+      if (
+        (lucroOperacao <= 0)
+        || (
+          (lucroOperacao < this.lucro)
+          && (
+            this.calcularNovaPorcentagemLucro(
+              lucroOperacao,
+              investimentoOperacao
+            ) < this.lucroPercentualMinimo
+          )
+        )
+      ) {
+        break;
+      }
+
       ordemVenda.quantidade -= quantidadeOperada;
       ordemCompra.quantidade -= quantidadeOperada;
-      saldoRestante -= this.corretoraVenda.calcularValorVendaAposTaxas(
-        quantidadeOperada * ordemVenda.preco
-      );
-      this.investimento += this.corretoraVenda.calcularValorVendaAposTaxas(
-        quantidadeOperada * ordemVenda.preco
-      );
-      const taxaVenda = this.corretoraVenda.calcularValorTaxaVenda(
-        quantidadeOperada * ordemVenda.preco
-      );
-      const taxaCompra = this.corretoraCompra.calcularValorTaxaCompra(
-        quantidadeOperada * ordemCompra.preco
-      );
-      this.lucro += (
-        (quantidadeOperada * ordemCompra.preco)
-        - (quantidadeOperada * ordemVenda.preco)
-        - taxaVenda
-        - taxaCompra
-      );
+      saldoRestante -= investimentoOperacao;
+      this.investimento += investimentoOperacao;
+      this.lucro += lucroOperacao;
 
       this.adicionarOrdemArbitragem(
         this.ordensVenda,
