@@ -22,6 +22,7 @@ import { BisqService } from './corretora/api/bisq.service';
 import { BraziliexService } from './corretora/api/braziliex.service';
 import { CoinextService } from './corretora/api/coinext.service';
 import { BitcoinTradeService } from './corretora/api/bitcointrade.service';
+import { MercadoBitcoinService } from './corretora/api/mercadobitcoin.service';
 
 import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
@@ -50,6 +51,7 @@ import { NotificacaoService } from './shared/notificacao.service';
     BraziliexService,
     CoinextService,
     BitcoinTradeService,
+    MercadoBitcoinService,
     ArbitragemService,
     ComunicacaoService,
     {

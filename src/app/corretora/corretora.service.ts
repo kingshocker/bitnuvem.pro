@@ -5,6 +5,7 @@ import { BisqService } from './api/bisq.service';
 import { BraziliexService } from './api/braziliex.service';
 import { CoinextService } from './api/coinext.service';
 import { BitcoinTradeService } from './api/bitcointrade.service';
+import { MercadoBitcoinService } from './api/mercadobitcoin.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +18,14 @@ export class CorretoraService {
     private braziliex: BraziliexService,
     private coinext: CoinextService,
     private bitcoinTrade: BitcoinTradeService,
+    private mercadoBitcoin: MercadoBitcoinService,
   ) {
     this.corretoras = [
       this.bisq,
       this.braziliex,
       this.coinext,
       this.bitcoinTrade,
+      this.mercadoBitcoin,
     ];
   }
 
