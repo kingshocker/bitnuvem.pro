@@ -10,7 +10,8 @@ CriptoArbitragem é um software para notificar os usuários sobre oportunidades 
 * [BitcoinTrade](https://www.bitcointrade.com.br/pt-BR/);
 * [Mercado Bitcoin](https://www.mercadobitcoin.com.br/);
 * [Bitnuvem](https://bitnuvem.com/);
-* [Brasil Bitcoin](https://brasilbitcoin.com.br/).
+* [Brasil Bitcoin](https://brasilbitcoin.com.br/);
+* [BitCambio](https://bitcambio.com.br).
 
 ## Instalação das dependências
 
