@@ -24,6 +24,7 @@ import { CoinextService } from './corretora/api/coinext.service';
 import { BitcoinTradeService } from './corretora/api/bitcointrade.service';
 import { MercadoBitcoinService } from './corretora/api/mercadobitcoin.service';
 import { BitnuvemService } from './corretora/api/bitnuvem.service';
+import { BrasilBitcoinService } from './corretora/api/brasilbitcoin.service';
 
 import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
@@ -54,6 +55,7 @@ import { NotificacaoService } from './shared/notificacao.service';
     BitcoinTradeService,
     MercadoBitcoinService,
     BitnuvemService,
+    BrasilBitcoinService,
     ArbitragemService,
     ComunicacaoService,
     {
