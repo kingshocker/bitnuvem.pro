@@ -37,7 +37,7 @@ export class BrasilBitcoinService extends Corretora {
   paginaOrdens = 'https://brasilbitcoin.com.br/#testimonials';
   paginaContato = 'https://brasilbitcoin.com.br/';
   observacao = '';
-  webservice = 'https://brasilbitcoin.com.br/API/orderbook/BTC';
+  webservice = 'https://cors-anywhere.herokuapp.com/https://brasilbitcoin.com.br/API/orderbook/BTC';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0002;
 
