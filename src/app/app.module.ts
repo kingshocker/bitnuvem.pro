@@ -26,6 +26,7 @@ import { MercadoBitcoinService } from './corretora/api/mercadobitcoin.service';
 import { BitnuvemService } from './corretora/api/bitnuvem.service';
 import { BrasilBitcoinService } from './corretora/api/brasilbitcoin.service';
 import { BitCambioService } from './corretora/api/bitcambio.service';
+import { WalltimeService } from './corretora/api/walltime.service';
 
 import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
@@ -58,6 +59,7 @@ import { NotificacaoService } from './shared/notificacao.service';
     BitnuvemService,
     BrasilBitcoinService,
     BitCambioService,
+    WalltimeService,
     ArbitragemService,
     ComunicacaoService,
     {
