@@ -100,7 +100,7 @@ export class WalltimeService extends Corretora {
   }
 
   private converterNumeroWalltime(numeroWalltime: string): number {
-    if (numeroWalltime.indexOf('/') > -1) {
+    if (numeroWalltime.indexOf('/') === -1) {
       return parseFloat(numeroWalltime);
     }
     const numeros = numeroWalltime.split('/');
@@ -129,18 +129,20 @@ export class WalltimeService extends Corretora {
 
     livroOrdensWalltime['xbt-brl'].forEach(
       (ordemWalltime: OrdemWalltime) => {
+        const quantidade = this.converterNumeroWalltime(ordemWalltime[0]);
         const ordem: Ordem = {
-          preco: this.converterNumeroWalltime(ordemWalltime[1]),
-          quantidade: this.converterNumeroWalltime(ordemWalltime[0]),
+          preco: (this.converterNumeroWalltime(ordemWalltime[1]) / quantidade),
+          quantidade,
         };
         ordensVenda.push(ordem);
       }
     );
     livroOrdensWalltime['brl-xbt'].forEach(
       (ordemWalltime: OrdemWalltime) => {
+        const quantidade = this.converterNumeroWalltime(ordemWalltime[0]);
         const ordem: Ordem = {
-          preco: this.converterNumeroWalltime(ordemWalltime[1]),
-          quantidade: this.converterNumeroWalltime(ordemWalltime[0]),
+          preco: (this.converterNumeroWalltime(ordemWalltime[1]) / quantidade),
+          quantidade,
         };
         ordensCompra.push(ordem);
       }
