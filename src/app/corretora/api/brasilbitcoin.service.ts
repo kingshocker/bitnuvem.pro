@@ -62,7 +62,7 @@ export class BrasilBitcoinService extends Corretora {
       livroOrdensAPI
     ) as LivroOrdensBrasilBitcoin;
 
-    livroOrdensBrasilBitcoin.buy.forEach(
+    livroOrdensBrasilBitcoin.sell.forEach(
       (ordemBrasilBitcoin: OrdemBrasilBitcoin) => {
         const ordem: Ordem = {
           preco: ordemBrasilBitcoin.preco,
@@ -71,7 +71,7 @@ export class BrasilBitcoinService extends Corretora {
         ordensVenda.push(ordem);
       }
     );
-    livroOrdensBrasilBitcoin.sell.forEach(
+    livroOrdensBrasilBitcoin.buy.forEach(
       (ordemBrasilBitcoin: OrdemBrasilBitcoin) => {
         const ordem: Ordem = {
           preco: ordemBrasilBitcoin.preco,
