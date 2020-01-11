@@ -1,13 +1,18 @@
 # CriptoArbitragem
 
-CriptoArbitragem será um software para notificar aos usuários sobre oportunidades de [arbitragem](https://pt.wikipedia.org/wiki/Arbitragem_(economia)) em [Bitcoin](https://pt.wikipedia.org/wiki/Bitcoin) nas corretoras que aceitam Real (BRL).
+CriptoArbitragem é um software para notificar os usuários sobre oportunidades de [arbitragem](https://pt.wikipedia.org/wiki/Arbitragem_(economia)) em [Bitcoin](https://pt.wikipedia.org/wiki/Bitcoin) nas corretoras que aceitam Real (BRL).
 
 ## Corretoras suportadas
 
 * [Bisq](https://bisq.network/pt-pt/);
 * [Braziliex](https://braziliex.com/);
 * [Coinext](https://coinext.com.br/);
-* [BitcoinTrade](https://www.bitcointrade.com.br/pt-BR/).
+* [BitcoinTrade](https://www.bitcointrade.com.br/pt-BR/);
+* [Mercado Bitcoin](https://www.mercadobitcoin.com.br/);
+* [Bitnuvem](https://bitnuvem.com/);
+* [Brasil Bitcoin](https://brasilbitcoin.com.br/);
+* [BitCambio](https://bitcambio.com.br/);
+* [Walltime](https://walltime.info/).
 
 ## Instalação das dependências
 
