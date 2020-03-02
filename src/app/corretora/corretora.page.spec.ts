@@ -48,7 +48,7 @@ describe('CorretoraPage', () => {
   }));
 
   beforeEach(() => {
-    activatedRoute.setParam('idCorretora', 'bisq');
+    activatedRoute.setParam('idCorretora', 'coinext');
     fixture = TestBed.createComponent(CorretoraPage);
     component = fixture.componentInstance;
     fixture.detectChanges();

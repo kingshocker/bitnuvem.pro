@@ -4,7 +4,6 @@ CriptoArbitragem é um software para notificar os usuários sobre oportunidades 
 
 ## Corretoras suportadas
 
-* [Bisq](https://bisq.network/pt-pt/);
 * [Braziliex](https://braziliex.com/);
 * [Coinext](https://coinext.com.br/);
 * [BitcoinTrade](https://www.bitcointrade.com.br/pt-BR/);
@@ -46,4 +45,3 @@ O Ionic subirá um servidor e abrirá o navegador padrão do seu dispositivo, ca
 Negociar no mercado de criptomoedas é muito arriscado, sendo assim nunca invista uma quantia em dinheiro que você não pode perder, pois você pode perder todo o dinheiro investido.
 
 Não nos responsabilizamos pelos seus ganhos ou perdas, cabe a você verificar por conta própria se a corretora é confiável e conferir os livros de ordens, pois as informações disponibilizadas pelo software são apenas indicadores.
-
