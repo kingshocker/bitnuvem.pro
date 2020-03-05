@@ -11,7 +11,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "git-test": "node git-test.js",
-    "sync": "ngx-pwa-icons -i src/assets/icons/icon.png -s '1024' -o ./resources -n icon.png && ionic cordova resources && ionic cordova prepare && cordova-version-sync && ngx-pwa-icons -i src/assets/icons/icon.png && ngx-pwa-icons -i src/assets/icons/icon.png -s '64' -o ./src/assets/icon -n favicon.png && del resources/icon.png"
+    "sync": "ngx-pwa-icons -i src/assets/icons/icon.png -s '1024' -o ./resources -n icon.png && ionic cordova resources && ionic cordova prepare && cordova-version-sync && ngx-pwa-icons -i src/assets/icons/icon.png && ngx-pwa-icons -i src/assets/icons/icon.png -s '64' -o ./src/assets/icon -n favicon.png && del resources/icon.png",
+    "deploy_github_pages": "node deploy_github_pages.js"
   },
   "precommit": {
     "run": [
@@ -70,6 +71,9 @@
     "cordova-res": "^0.8.1",
     "cordova-version-sync": "^1.0.3",
     "del-cli": "^3.0.0",
+    "gh-pages": "^2.2.0",
+    "git-remote-origin-url": "^3.1.0",
+    "gitlog": "^3.1.2",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
