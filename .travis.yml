@@ -6,14 +6,7 @@ android:
   components:
   - platform-tools
   - tools
-  - build-tools-29.0.3
-  - android-23
-  - extra
-  - add-on
-licenses:
-  - android-sdk-preview-license-.+
-  - google-gdk-license-.+
-  - android-sdk-license-.+
+  - android-19
 addons:
   chrome: stable
 before_install:
