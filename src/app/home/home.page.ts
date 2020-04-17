@@ -5,6 +5,8 @@ import { takeWhile } from 'rxjs/operators';
 
 import { OnPageVisible, OnPageHidden } from 'angular-page-visibility';
 import { LoadingController } from '@ionic/angular';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+import { Platform } from '@ionic/angular';
 
 import { ArbitragemService } from '../arbitragem/arbitragem.service';
 import { Arbitragem } from '../arbitragem/arbitragem';
@@ -23,6 +25,7 @@ export class HomePage implements OnInit, OnDestroy {
   paginaAtiva: boolean;
   paginaVisivel: boolean;
   intervalo: Observable<number>;
+  intervaloBackground: Subscription;
   intervaloVisualizacao: Subscription;
   arbitragens: Array<Arbitragem>;
   usuarioNotificado: boolean;
@@ -38,10 +41,14 @@ export class HomePage implements OnInit, OnDestroy {
     private configuracoes: ConfiguracoesService,
     private notificacao: NotificacaoService,
     private loadingController: LoadingController,
+    private backgroundMode: BackgroundMode,
+    private platform: Platform,
   ) {
     this.carregamento = null;
     this.arbitragens = [];
     this.intervaloVisualizacao = null;
+
+    this.enableBackgroundMode();
   }
 
   ngOnInit() {
@@ -92,13 +99,50 @@ export class HomePage implements OnInit, OnDestroy {
     return this.arbitragens.length > 0;
   }
 
+  enableBackgroundMode() {
+    if (this.platform.is('cordova')) {
+      this.backgroundMode.enable();
+      this.backgroundMode.on('activate').subscribe(
+        this.activateFunction.bind(this)
+      );
+      this.backgroundMode.on('deactivate').subscribe(
+        this.deactivateFunction.bind(this)
+      );
+    }
+  }
+
+  activateFunction() {
+    this.usuarioNotificado = false;
+    this.intervaloBackground = interval(
+      this.UM_MINUTO_EM_MILISEGUNDOS
+    ).subscribe(() => {
+      if ((this.configuracao.permitirNotificar) && (!this.usuarioNotificado)) {
+        this.verificarOportunidadesArbitragem();
+      }
+    });
+  }
+
+  deactivateFunction() {
+    this.intervaloBackground.unsubscribe();
+    this.intervaloBackground = null;
+  }
+
   async verificarOportunidadesArbitragem() {
     this.oportunidades.verificarOportunidadesArbitragem().then(
       (arbitragens) => {
         if (
           (this.configuracao.permitirNotificar)
-          && (!this.paginaVisivel)
           && (arbitragens.length > 0)
+          && (
+            (!this.paginaVisivel)
+            || (
+              (
+                this.platform.is('cordova')
+                || this.platform.is('capacitor')
+              )
+              && (this.backgroundMode.isActive() === true)
+            )
+          )
         ) {
           this.notificacao.notificar(
             'Oportunidade de arbitragem',

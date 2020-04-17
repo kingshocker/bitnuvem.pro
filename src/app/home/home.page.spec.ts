@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 import { HomePage } from './home.page';
 
@@ -30,6 +31,7 @@ describe('HomePage', () => {
           useFactory: () => new Storage({})
         },
         LocalNotifications,
+        BackgroundMode,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
