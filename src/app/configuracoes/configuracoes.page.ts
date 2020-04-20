@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonReorderGroup } from '@ionic/angular';
 
 import { Configuracao } from './configuracao';
 import { ConfiguracoesService } from './configuracoes.service';
@@ -14,6 +14,9 @@ import { NotificacaoService } from '../shared/notificacao.service';
   styleUrls: ['./configuracoes.page.scss'],
 })
 export class ConfiguracoesPage implements OnInit {
+  @ViewChild(IonReorderGroup, {static: false})
+  reorderGroup: IonReorderGroup;
+
   corretoras: Array<Corretora>;
   configuracao: Configuracao;
 
@@ -63,6 +66,20 @@ export class ConfiguracoesPage implements OnInit {
 
   mudarCorretoraHabilitada(idCorretora: string) {
     this.configuracoes.mudarFiltroCorretoraHabilitada(idCorretora);
+  }
+
+  mudarOrdenacao(ev: any) {
+    const ordenacao = this.configuracao.ordenacao;
+    const from = ev.detail.from;
+    const to = Math.min(ev.detail.to, ordenacao.length);
+
+    const tempFrom = ordenacao[from];
+    const tempTo = ordenacao[to];
+    ordenacao[from] = tempTo;
+    ordenacao[to] = tempFrom;
+
+    this.configuracoes.mudarOrdenacao();
+    ev.detail.complete(false);
   }
 
   async mudarSimularTaxaTransferencia() {

@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 
 import { Storage } from '@ionic/storage';
 
-import { Configuracao } from './configuracao';
+import {
+  Configuracao,
+  CampoOrdenacao,
+  Ordenacao,
+} from './configuracao';
 import { Corretora } from '../corretora/corretora';
 import { CorretoraService } from '../corretora/corretora.service';
 
@@ -17,6 +21,7 @@ export class ConfiguracoesService {
   readonly PERMITIR_NOTIFICAR = 'permitir-notificar';
   readonly TEMPO_ENTRE_NOTIFICACOES = 'tempo-entre-notificacoes';
   readonly SIMULAR_TAXA_TRANSFERENCIA = 'simular-taxa-transferencia';
+  readonly ORDENACAO = 'ordenacao';
   readonly VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES = 60 * 2;
   readonly promises = [];
 
@@ -45,6 +50,11 @@ export class ConfiguracoesService {
     this.promises.push(
       this.carregarValor(this.PERMITIR_NOTIFICAR, false).then(
         (valor) => this.configuracao.permitirNotificar = valor
+      )
+    );
+    this.promises.push(
+      this.carregarValor(this.ORDENACAO, this.configuracao.ordenacao).then(
+        (valor) => this.configuracao.ordenacao = valor
       )
     );
     this.promises.push(
@@ -129,6 +139,10 @@ export class ConfiguracoesService {
       this.SIMULAR_TAXA_TRANSFERENCIA,
       this.configuracao.simularTaxaTransferencia,
     );
+  }
+
+  mudarOrdenacao() {
+    this.storage.set(this.ORDENACAO, this.configuracao.ordenacao);
   }
 
   mudarFiltroCorretoraHabilitada(idCorretora: string) {

@@ -52,5 +52,19 @@
       <ion-input type="number" inputmode="numeric" [(ngModel)]="configuracao.tempoEntreNotificacoes" (change)="mudarTempoEntreNotificacoes()"></ion-input>
       <ion-note>Após quantos minutos você poderá ser notificado novamente após ter recebido uma notificação não visualizada.</ion-note>
     </ion-item>
+    <ion-list-header>
+      <ion-label>Ordenar por</ion-label>
+    </ion-list-header>
+    <ion-reorder-group
+      disabled="false"
+      (ionItemReorder)="mudarOrdenacao($event)"
+    >
+      <ion-reorder *ngFor="let criterioOrdenacao of configuracao.ordenacao">
+        <ion-item>
+          <ion-label>{{ criterioOrdenacao.getDescricao() }}</ion-label>
+          <ion-icon name="reorder-three-outline"></ion-icon>
+        </ion-item>
+      </ion-reorder>
+    </ion-reorder-group>
   </ion-list>
 </ion-content>
