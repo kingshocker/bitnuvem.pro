@@ -24,6 +24,8 @@ export abstract class Corretora {
   abstract id: string;
   abstract nome: string;
   abstract taxaTransferencia: number;
+  abstract taxaSaqueFixa: number;
+  abstract taxaSaqueVariavel: number;
   abstract paginaInicial: string;
   abstract paginaOrdens: string;
   abstract paginaContato: string;
@@ -86,5 +88,9 @@ export abstract class Corretora {
 
   calcularValorMaximoCompraAposTaxas(limiteValor: number): number {
     return limiteValor / (1 + this.TAXA_ORDEM_EXECUTORA);
+  }
+
+  simularTaxaSaque(valorSaque: number): number {
+    return this.taxaSaqueFixa + (this.taxaSaqueVariavel * valorSaque);
   }
 }

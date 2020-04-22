@@ -20,6 +20,8 @@ interface LivroOrdensBitnuvem {
 })
 export class BitnuvemService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.0012;
+  readonly TAXA_SAQUE_FIXA = 9.5;
+  readonly TAXA_SAQUE_VARIAVEL = 0.0085;
   readonly LIVRO_ORDENS_VAZIO = {asks: [], bids: []};
 
   id = 'bitnuvem';
@@ -31,6 +33,8 @@ export class BitnuvemService extends Corretora {
   webservice = 'https://cors-anywhere.herokuapp.com/https://bitnuvem.com/api/BTC/orderbook';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
+  taxaSaqueFixa = this.TAXA_SAQUE_FIXA;
+  taxaSaqueVariavel = this.TAXA_SAQUE_VARIAVEL;
 
   constructor(public http: HttpClient) {
     super(http);

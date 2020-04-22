@@ -26,6 +26,8 @@ interface LivroOrdensBraziliex {
 })
 export class BraziliexService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
+  readonly TAXA_SAQUE_FIXA = 9;
+  readonly TAXA_SAQUE_VARIAVEL = 0.0075;
   readonly LIVRO_ORDENS_VAZIO = {
     asks: [],
     bids: [],
@@ -43,6 +45,8 @@ export class BraziliexService extends Corretora {
   webservice = 'https://cors-anywhere.herokuapp.com/https://braziliex.com/api/v1/public/orderbook/btc_brl';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.00054714;
+  taxaSaqueFixa = this.TAXA_SAQUE_FIXA;
+  taxaSaqueVariavel = this.TAXA_SAQUE_VARIAVEL;
 
   constructor(public http: HttpClient) {
     super(http);
