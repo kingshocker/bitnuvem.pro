@@ -2,11 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Storage } from '@ionic/storage';
 
-import {
-  Configuracao,
-  CampoOrdenacao,
-  Ordenacao,
-} from './configuracao';
+import { Configuracao } from './configuracao';
+import { Ordenacao, CampoOrdenacao, CriterioOrdenacao } from './ordenacao';
 import { Corretora } from '../corretora/corretora';
 import { CorretoraService } from '../corretora/corretora.service';
 
@@ -54,7 +51,13 @@ export class ConfiguracoesService {
     );
     this.promises.push(
       this.carregarValor(this.ORDENACAO, this.configuracao.ordenacao).then(
-        (valor) => this.configuracao.ordenacao = valor
+        (valor: Array<{campoOrdenacao: CampoOrdenacao}>) => {
+          const ordenacao: Ordenacao = [];
+          for (let i = 0, length = valor.length; i < length; i++) {
+            ordenacao.push(new CriterioOrdenacao(valor[i].campoOrdenacao));
+          }
+          this.configuracao.ordenacao = ordenacao;
+        }
       )
     );
     this.promises.push(

@@ -4,6 +4,7 @@ import { AlertController, IonReorderGroup } from '@ionic/angular';
 
 import { Configuracao } from './configuracao';
 import { ConfiguracoesService } from './configuracoes.service';
+import { Ordenacao } from './ordenacao';
 import { Corretora } from '../corretora/corretora';
 import { CorretoraService } from '../corretora/corretora.service';
 import { NotificacaoService } from '../shared/notificacao.service';
@@ -69,7 +70,7 @@ export class ConfiguracoesPage implements OnInit {
   }
 
   mudarOrdenacao(ev: any) {
-    const ordenacao = this.configuracao.ordenacao;
+    const ordenacao: Ordenacao = this.configuracao.ordenacao;
     const from = ev.detail.from;
     const to = Math.min(ev.detail.to, ordenacao.length);
 

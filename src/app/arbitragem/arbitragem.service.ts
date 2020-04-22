@@ -6,6 +6,7 @@ import { CorretoraService } from '../corretora/corretora.service';
 import { Arbitragem } from './arbitragem';
 import { Configuracao } from '../configuracoes/configuracao';
 import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
+import { Ordenacao } from '../configuracoes/ordenacao';
 
 @Injectable({
   providedIn: 'root'
@@ -95,7 +96,23 @@ export class ArbitragemService {
       }
     }
 
-    return arbitragens;
+    const arbitragensOrdenadas: Array<Arbitragem> = arbitragens.sort(
+      (arbitragem1: Arbitragem, arbitragem2: Arbitragem) => {
+        const ordenacao: Ordenacao = this.configuracao.ordenacao;
+        for (let i = 0, length = ordenacao.length; i < length; i++) {
+          const resultado: number = ordenacao[i].comparar(
+            arbitragem1,
+            arbitragem2,
+          );
+          if (resultado !== 0) {
+            return resultado;
+          }
+        }
+        return 0;
+      }
+    );
+
+    return arbitragensOrdenadas;
   }
 
   async verificarOportunidadesArbitragemCorretorasPelosIds(

@@ -1,25 +1,5 @@
 import { Corretora } from '../corretora/corretora';
-
-export enum CampoOrdenacao {
-  LUCRO_LIQUIDO = 'lucro-liquido',
-  PERCENTUAL_LUCRO = 'percentual-lucro',
-}
-
-const descricoesCamposOrdenacao = {};
-descricoesCamposOrdenacao[CampoOrdenacao.LUCRO_LIQUIDO] = 'Lucro líquido';
-descricoesCamposOrdenacao[
-  CampoOrdenacao.PERCENTUAL_LUCRO
-] = 'Percentual de lucro';
-
-export class CriterioOrdenacao {
-  constructor(public campoOrdenacao: CampoOrdenacao) {}
-
-  getDescricao(): string {
-    return descricoesCamposOrdenacao[this.campoOrdenacao];
-  }
-}
-
-export type Ordenacao = Array<CriterioOrdenacao>;
+import { Ordenacao, CriterioOrdenacao, CampoOrdenacao } from './ordenacao';
 
 export class Configuracao {
   readonly VALOR_PADRAO_ORDENACAO: Ordenacao = [
