@@ -18,6 +18,7 @@ export class ConfiguracoesService {
   readonly PERMITIR_NOTIFICAR = 'permitir-notificar';
   readonly TEMPO_ENTRE_NOTIFICACOES = 'tempo-entre-notificacoes';
   readonly SIMULAR_TAXA_TRANSFERENCIA = 'simular-taxa-transferencia';
+  readonly SIMULAR_TAXA_SAQUE = 'simular-taxa-saque';
   readonly ORDENACAO = 'ordenacao';
   readonly VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES = 60 * 2;
   readonly promises = [];
@@ -69,6 +70,14 @@ export class ConfiguracoesService {
     this.promises.push(
       this.carregarValor(this.SIMULAR_TAXA_TRANSFERENCIA, false).then(
         (valor) => this.configuracao.simularTaxaTransferencia = valor
+      )
+    );
+    this.promises.push(
+      this.carregarValor(
+        this.SIMULAR_TAXA_SAQUE,
+        this.configuracao.simularTaxaSaque,
+      ).then(
+        (valor) => this.configuracao.simularTaxaSaque = valor
       )
     );
     this.corretoraService.corretoras.forEach((corretora) => {
@@ -141,6 +150,13 @@ export class ConfiguracoesService {
     this.storage.set(
       this.SIMULAR_TAXA_TRANSFERENCIA,
       this.configuracao.simularTaxaTransferencia,
+    );
+  }
+
+  mudarSimularTaxaSaque() {
+    this.storage.set(
+      this.SIMULAR_TAXA_SAQUE,
+      this.configuracao.simularTaxaSaque,
     );
   }
 

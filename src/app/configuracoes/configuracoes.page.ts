@@ -117,4 +117,37 @@ export class ConfiguracoesPage implements OnInit {
       this.configuracoes.mudarSimularTaxaTransferencia();
     }
   }
+
+  async mudarSimularTaxaSaque() {
+    if (this.configuracao.simularTaxaSaque) {
+      const alert = await this.alertController.create({
+        header: 'Confirmar',
+        message: (
+          'A simulação da taxa de saque em reais é estimativa, por isso ela '
+          + 'pode conter erros. Mesmo assim você concorda em habilitar a '
+          + 'simulação da taxa de saque em reais?'
+        ),
+        mode: 'ios',
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              this.configuracao.simularTaxaSaque = false;
+            }
+          }, {
+            text: 'Concordar',
+            handler: () => {
+              this.configuracoes.mudarSimularTaxaSaque();
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    } else {
+      this.configuracoes.mudarSimularTaxaSaque();
+    }
+  }
 }
