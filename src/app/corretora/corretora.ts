@@ -19,14 +19,16 @@ export interface LivroOrdens {
 
 export abstract class Corretora {
   abstract readonly TAXA_ORDEM_EXECUTORA: number;
+  abstract readonly TAXA_SAQUE_FIXA: number;
+  abstract readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO: number;
+  abstract readonly TAXA_SAQUE_VARIAVEL: number;
+  abstract readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO: number;
   abstract readonly POSSUI_CONVENIOS_BANCOS: boolean;
   abstract readonly LIVRO_ORDENS_VAZIO: any;
 
   abstract id: string;
   abstract nome: string;
   abstract taxaTransferencia: number;
-  abstract taxaSaqueFixa: number;
-  abstract taxaSaqueVariavel: number;
   abstract paginaInicial: string;
   abstract paginaOrdens: string;
   abstract paginaContato: string;
@@ -91,7 +93,16 @@ export abstract class Corretora {
     return limiteValor / (1 + this.TAXA_ORDEM_EXECUTORA);
   }
 
-  simularTaxaSaque(valorSaque: number): number {
-    return this.taxaSaqueFixa + (this.taxaSaqueVariavel * valorSaque);
+  simularTaxaSaque(valorSaque: number, possuiConvenioBanco: boolean): number {
+    if (possuiConvenioBanco) {
+      return (
+        this.TAXA_SAQUE_FIXA_BANCO_CONVENIADO
+        + (
+          this.TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO
+          * valorSaque
+        )
+      );
+    }
+    return this.TAXA_SAQUE_FIXA + (this.TAXA_SAQUE_VARIAVEL * valorSaque);
   }
 }

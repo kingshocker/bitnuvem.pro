@@ -34,7 +34,9 @@ interface MetaWalltime {
 export class WalltimeService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.004;
   readonly TAXA_SAQUE_FIXA = 9;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;
   readonly TAXA_SAQUE_VARIAVEL = 0.0123;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
   readonly POSSUI_CONVENIOS_BANCOS = true;
   readonly LIVRO_ORDENS_VAZIO = {
     venda: [],
@@ -57,8 +59,6 @@ export class WalltimeService extends Corretora {
   );
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
-  taxaSaqueFixa = this.TAXA_SAQUE_FIXA;
-  taxaSaqueVariavel = this.TAXA_SAQUE_VARIAVEL;
 
   constructor(public http: HttpClient) {
     super(http);

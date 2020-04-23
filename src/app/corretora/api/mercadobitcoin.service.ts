@@ -21,7 +21,9 @@ interface LivroOrdensMercadoBitcoin {
 export class MercadoBitcoinService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.007;
   readonly TAXA_SAQUE_FIXA = 2.9;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;
   readonly TAXA_SAQUE_VARIAVEL = 0.0199;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
   readonly POSSUI_CONVENIOS_BANCOS = false;
   readonly LIVRO_ORDENS_VAZIO = {asks: [], bids: []};
 
@@ -34,8 +36,6 @@ export class MercadoBitcoinService extends Corretora {
   webservice = 'https://www.mercadobitcoin.net/api/BTC/orderbook/';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
-  taxaSaqueFixa = this.TAXA_SAQUE_FIXA;
-  taxaSaqueVariavel = this.TAXA_SAQUE_VARIAVEL;
 
   constructor(public http: HttpClient) {
     super(http);

@@ -27,7 +27,9 @@ interface LivroOrdensBrasilBitcoin {
 export class BrasilBitcoinService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
   readonly TAXA_SAQUE_FIXA = 4.99;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;
   readonly TAXA_SAQUE_VARIAVEL = 0.005;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
   readonly POSSUI_CONVENIOS_BANCOS = true;
   readonly LIVRO_ORDENS_VAZIO = {
     asks: [],
@@ -43,8 +45,6 @@ export class BrasilBitcoinService extends Corretora {
   webservice = 'https://cors-anywhere.herokuapp.com/https://brasilbitcoin.com.br/API/orderbook/BTC';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0002;
-  taxaSaqueFixa = this.TAXA_SAQUE_FIXA;
-  taxaSaqueVariavel = this.TAXA_SAQUE_VARIAVEL;
 
   constructor(public http: HttpClient) {
     super(http);

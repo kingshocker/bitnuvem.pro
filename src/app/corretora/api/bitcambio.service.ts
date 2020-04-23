@@ -22,7 +22,9 @@ interface LivroOrdensBitCambio {
 export class BitCambioService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.0099;
   readonly TAXA_SAQUE_FIXA = 10;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = this.TAXA_SAQUE_FIXA;
   readonly TAXA_SAQUE_VARIAVEL = 0.01;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
   readonly POSSUI_CONVENIOS_BANCOS = false;
   readonly LIVRO_ORDENS_VAZIO = {
     asks: [],
@@ -38,8 +40,6 @@ export class BitCambioService extends Corretora {
   webservice = 'https://bitcambio_api.blinktrade.com/api/v1/BRL/orderbook';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0004;
-  taxaSaqueFixa = this.TAXA_SAQUE_FIXA;
-  taxaSaqueVariavel = this.TAXA_SAQUE_VARIAVEL;
 
   constructor(public http: HttpClient) {
     super(http);
