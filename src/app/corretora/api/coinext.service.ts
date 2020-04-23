@@ -20,6 +20,7 @@ export class CoinextService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
   readonly TAXA_SAQUE_FIXA = 8.99;
   readonly TAXA_SAQUE_VARIAVEL = 0.0019;
+  readonly POSSUI_CONVENIOS_BANCOS = false;
   readonly LIVRO_ORDENS_VAZIO = [];
 
   id = 'coinext';

@@ -28,6 +28,21 @@
         (ionChange)="mudarSimularTaxaSaque()"
       ></ion-toggle>
     </ion-item>
+    <ng-container *ngIf="configuracao.simularTaxaSaque">
+      <ion-list-header>
+        <ion-label>
+          Possuí conta nos bancos conveniados das corretoras
+        </ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let corretora of corretorasConveniosBancos">
+        <ion-label>{{ corretora.nome }}</ion-label>
+        <ion-toggle
+          slot="end"
+          [(ngModel)]="configuracao.corretoras[corretora.id].possuiBancoConveniado"
+          (ionChange)="mudarCorretoraHabilitada(corretora.id)"
+        ></ion-toggle>
+      </ion-item>
+    </ng-container>
     <ion-list-header>
       <ion-label>Filtros</ion-label>
     </ion-list-header>
@@ -45,7 +60,11 @@
       </ion-item-divider>
       <ion-item *ngFor="let corretora of corretoras">
         <ion-label>{{ corretora.nome }}</ion-label>
-        <ion-toggle slot="end" [(ngModel)]="configuracao.corretoras[corretora.id]" (ionChange)="mudarCorretoraHabilitada(corretora.id)"></ion-toggle>
+        <ion-toggle
+          slot="end"
+          [(ngModel)]="configuracao.corretoras[corretora.id].habilitada"
+          (ionChange)="mudarCorretoraHabilitada(corretora.id)"
+        ></ion-toggle>
       </ion-item>
     </ion-item-group>
     <ion-list-header>

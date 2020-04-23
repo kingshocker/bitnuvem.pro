@@ -22,6 +22,7 @@ export class BitnuvemService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.0012;
   readonly TAXA_SAQUE_FIXA = 9.5;
   readonly TAXA_SAQUE_VARIAVEL = 0.0085;
+  readonly POSSUI_CONVENIOS_BANCOS = true;
   readonly LIVRO_ORDENS_VAZIO = {asks: [], bids: []};
 
   id = 'bitnuvem';

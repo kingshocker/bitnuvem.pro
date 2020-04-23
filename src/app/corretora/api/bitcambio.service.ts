@@ -23,6 +23,7 @@ export class BitCambioService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.0099;
   readonly TAXA_SAQUE_FIXA = 10;
   readonly TAXA_SAQUE_VARIAVEL = 0.01;
+  readonly POSSUI_CONVENIOS_BANCOS = false;
   readonly LIVRO_ORDENS_VAZIO = {
     asks: [],
     bids: [],

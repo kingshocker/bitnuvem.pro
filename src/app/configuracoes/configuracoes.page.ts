@@ -19,6 +19,7 @@ export class ConfiguracoesPage implements OnInit {
   reorderGroup: IonReorderGroup;
 
   corretoras: Array<Corretora>;
+  corretorasConveniosBancos: Array<Corretora>;
   configuracao: Configuracao;
 
   constructor(
@@ -31,6 +32,9 @@ export class ConfiguracoesPage implements OnInit {
   ngOnInit() {
     this.configuracao = this.configuracoes.configuracao;
     this.corretoras = this.corretoraService.corretoras;
+    this.corretorasConveniosBancos = this.corretoras.filter(
+      (corretora: Corretora) => corretora.POSSUI_CONVENIOS_BANCOS
+    );
   }
 
   mudarLucro() {

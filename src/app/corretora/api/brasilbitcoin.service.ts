@@ -28,6 +28,7 @@ export class BrasilBitcoinService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
   readonly TAXA_SAQUE_FIXA = 4.99;
   readonly TAXA_SAQUE_VARIAVEL = 0.005;
+  readonly POSSUI_CONVENIOS_BANCOS = true;
   readonly LIVRO_ORDENS_VAZIO = {
     asks: [],
     bids: [],

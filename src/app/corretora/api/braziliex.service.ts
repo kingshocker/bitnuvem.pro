@@ -28,6 +28,7 @@ export class BraziliexService extends Corretora {
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
   readonly TAXA_SAQUE_FIXA = 9;
   readonly TAXA_SAQUE_VARIAVEL = 0.0075;
+  readonly POSSUI_CONVENIOS_BANCOS = false;
   readonly LIVRO_ORDENS_VAZIO = {
     asks: [],
     bids: [],

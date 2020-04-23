@@ -19,6 +19,7 @@ export interface LivroOrdens {
 
 export abstract class Corretora {
   abstract readonly TAXA_ORDEM_EXECUTORA: number;
+  abstract readonly POSSUI_CONVENIOS_BANCOS: boolean;
   abstract readonly LIVRO_ORDENS_VAZIO: any;
 
   abstract id: string;

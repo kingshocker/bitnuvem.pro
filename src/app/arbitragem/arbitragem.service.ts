@@ -60,7 +60,7 @@ export class ArbitragemService {
     const promises: Array<Promise<LivroOrdens>> = [];
     const corretoras: Array<Corretora> = [];
     for (const idCorretora in this.configuracao.corretoras) {
-      if (!this.configuracao.corretoras[idCorretora]) {
+      if (!this.configuracao.corretoras[idCorretora].habilitada) {
         continue;
       }
 
