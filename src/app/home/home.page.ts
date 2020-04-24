@@ -22,6 +22,9 @@ import { NotificacaoService } from '../shared/notificacao.service';
 })
 export class HomePage implements OnInit, OnDestroy {
   readonly UM_MINUTO_EM_MILISEGUNDOS = 1000 * 60;
+  readonly FORMATO_NUMERO = 'pt-BR';
+  readonly PRECISAO_REAL = '1.2-2';
+
   paginaAtiva: boolean;
   paginaVisivel: boolean;
   intervalo: Observable<number>;

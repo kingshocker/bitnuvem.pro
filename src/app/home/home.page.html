@@ -29,8 +29,8 @@
           <td>{{ arbitragem.corretoraVenda.nome }}</td>
           <td>{{ arbitragem.corretoraCompra.nome }}</td>
           <td>
-            R$ {{ arbitragem.lucro | number:'1.2-2':'pt-BR' }}
-            ({{ arbitragem.porcentagemLucro | number:'1.2-2':'pt-BR' }}%)
+            R$ {{ arbitragem.lucro | number: PRECISAO_REAL:FORMATO_NUMERO }}
+            ({{ arbitragem.porcentagemLucro | number: PRECISAO_REAL:FORMATO_NUMERO }}%)
           </td>
         </tr>
       </tbody>

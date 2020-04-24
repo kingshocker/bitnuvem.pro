@@ -26,9 +26,9 @@
           </a>
         </p>
         <strong>Data da requisição</strong>
-        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataRequisicao | date: 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataRequisicao | date: FORMATO_DATA }}</p>
         <strong>Data da resposta</strong>
-        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataResposta | date: 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataResposta | date: FORMATO_DATA }}</p>
       </div>
       <div class="col">
         <strong>Corretora compra</strong>
@@ -38,35 +38,40 @@
           </a>
         </p>
         <strong>Data da requisição</strong>
-        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataRequisicao | date: 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataRequisicao | date: FORMATO_DATA }}</p>
         <strong>Data da resposta</strong>
-        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataResposta | date: 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataResposta | date: FORMATO_DATA }}</p>
       </div>
     </div>
     <div class="row">
       <div class="col">
         <strong>Investimento</strong>
-        <p>R$ {{ arbitragem.investimento | number:'1.2-2':'pt-BR' }}</p>
+        <p>
+          R$
+          {{ arbitragem.investimento | number: PRECISAO_REAL:FORMATO_NUMERO }}
+        </p>
       </div>
       <div class="col">
         <strong>Lucro</strong>
-        <p>R$ {{ arbitragem.lucro | number:'1.2-2':'pt-BR' }}</p>
+        <p>R$ {{ arbitragem.lucro | number: PRECISAO_REAL:FORMATO_NUMERO }}</p>
       </div>
     </div>
     <div class="row">
       <div class="col">
         <strong>Porcentagem de lucro</strong>
-        <p>{{ arbitragem.porcentagemLucro | number:'1.2-2':'pt-BR' }}%</p>
+        <p>{{ arbitragem.porcentagemLucro | number: PRECISAO_REAL:FORMATO_NUMERO }}%</p>
       </div>
       <div class="col" *ngIf="arbitragem.possuiTaxaTransferencia">
         <strong>Taxa de transferência</strong>
-        <p>{{ arbitragem.taxaTransferencia | number:'1.4-8':'pt-BR' }} BTC</p>
+        <p>{{ arbitragem.taxaTransferencia | number: PRECISAO_BITCOIN:FORMATO_NUMERO }} BTC</p>
       </div>
     </div>
     <div class="row">
       <div class="col" *ngIf="arbitragem.possuiTaxaSaque">
         <strong>Taxa de saque em reais</strong>
-        <p>R$ {{ arbitragem.taxaSaque | number: '1.2-2':'pt-BR' }}</p>
+        <p>
+          R$ {{ arbitragem.taxaSaque | number: PRECISAO_REAL:FORMATO_NUMERO }}
+        </p>
       </div>
     </div>
   </div>
@@ -85,10 +90,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let ordem of arbitragem.ordensVenda">
-          <td>{{ ordem.preco | number:'1.2-2':'pt-BR' }}</td>
-          <td>{{ ordem.quantidade | number:'1.0-8':'pt-BR' }}</td>
-          <td>{{ ordem.total | number:'1.2-2':'pt-BR' }}</td>
-          <td>{{ ordem.valorTaxa | number:'1.2-2':'pt-BR' }}</td>
+          <td>{{ ordem.preco | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
+          <td>
+            {{ ordem.quantidade | number: PRECISAO_BITCOIN:FORMATO_NUMERO }}
+          </td>
+          <td>{{ ordem.total | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
+          <td>{{ ordem.valorTaxa | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
         </tr>
       </tbody>
     </table>
@@ -108,10 +115,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let ordem of arbitragem.ordensCompra">
-          <td>{{ ordem.preco | number:'1.2-2':'pt-BR' }}</td>
-          <td>{{ ordem.quantidade | number:'1.0-8':'pt-BR' }}</td>
-          <td>{{ ordem.total | number:'1.2-2':'pt-BR' }}</td>
-          <td>{{ ordem.valorTaxa | number:'1.2-2':'pt-BR' }}</td>
+          <td>{{ ordem.preco | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
+          <td>
+            {{ ordem.quantidade | number: PRECISAO_BITCOIN:FORMATO_NUMERO }}
+          </td>
+          <td>{{ ordem.total | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
+          <td>{{ ordem.valorTaxa | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
         </tr>
       </tbody>
     </table>
