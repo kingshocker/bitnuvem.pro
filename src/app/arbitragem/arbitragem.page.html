@@ -52,6 +52,12 @@
         <p>{{ arbitragem.taxaTransferencia | number:'1.4-8':'pt-BR' }} BTC</p>
       </div>
     </div>
+    <div class="row">
+      <div class="col" *ngIf="arbitragem.possuiTaxaSaque">
+        <strong>Taxa de saque em reais</strong>
+        <p>R$ {{ arbitragem.taxaSaque | number: '1.2-2':'pt-BR' }}</p>
+      </div>
+    </div>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered table-sm">

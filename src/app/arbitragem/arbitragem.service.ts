@@ -37,6 +37,8 @@ export class ArbitragemService {
         this.configuracao.investimentoMaximo,
         this.configuracao.filtroPorcentagemLucroAcima,
         this.configuracao.simularTaxaTransferencia,
+        this.configuracao.simularTaxaSaque,
+        this.configuracao.corretoras[corretoraB.id].possuiBancoConveniado,
       );
     } else if (
       corretoraA.livroOrdens.compra.length > 0
@@ -49,6 +51,8 @@ export class ArbitragemService {
         this.configuracao.investimentoMaximo,
         this.configuracao.filtroPorcentagemLucroAcima,
         this.configuracao.simularTaxaTransferencia,
+        this.configuracao.simularTaxaSaque,
+        this.configuracao.corretoras[corretoraA.id].possuiBancoConveniado,
       );
     }
 
