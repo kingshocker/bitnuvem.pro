@@ -6,6 +6,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ArbitragemPage } from './arbitragem.page';
+import {
+  InformacoesCorretoraComponent
+} from './components/informacoes-corretora/informacoes-corretora.component';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -24,6 +27,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
   ],
-  declarations: [ArbitragemPage]
+  declarations: [ArbitragemPage, InformacoesCorretoraComponent]
 })
 export class ArbitragemPageModule {}

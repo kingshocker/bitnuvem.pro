@@ -18,30 +18,14 @@
 <ion-content *ngIf="arbitragem">
   <div>
     <div class="row">
-      <div class="col">
-        <strong>Corretora venda</strong>
-        <p>
-          <a [routerLink]="['/corretora', arbitragem.corretoraVenda.id]">
-            {{ arbitragem.corretoraVenda.nome }}
-          </a>
-        </p>
-        <strong>Data da requisição</strong>
-        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataRequisicao | date: FORMATO_DATA }}</p>
-        <strong>Data da resposta</strong>
-        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataResposta | date: FORMATO_DATA }}</p>
-      </div>
-      <div class="col">
-        <strong>Corretora compra</strong>
-        <p>
-          <a [routerLink]="['/corretora', arbitragem.corretoraCompra.id]">
-            {{ arbitragem.corretoraCompra.nome }}
-          </a>
-        </p>
-        <strong>Data da requisição</strong>
-        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataRequisicao | date: FORMATO_DATA }}</p>
-        <strong>Data da resposta</strong>
-        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataResposta | date: FORMATO_DATA }}</p>
-      </div>
+      <app-informacoes-corretora
+        rotulo="Corretora venda"
+        [corretora]="arbitragem.corretoraVenda"
+      ></app-informacoes-corretora>
+      <app-informacoes-corretora
+        rotulo="Corretora compra"
+        [corretora]="arbitragem.corretoraCompra"
+      ></app-informacoes-corretora>
     </div>
     <div class="row">
       <div class="col">
