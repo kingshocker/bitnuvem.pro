@@ -22,10 +22,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let arbitragem of arbitragens; let indice = index" (click)="detalharOportunidadeArbitragem(indice)">
+        <tr
+          *ngFor="let arbitragem of arbitragens; let indice = index"
+          (click)="detalharOportunidadeArbitragem(indice)"
+        >
           <td>{{ arbitragem.corretoraVenda.nome }}</td>
           <td>{{ arbitragem.corretoraCompra.nome }}</td>
-          <td>R$ {{ arbitragem.lucro | number:'1.2-2':'pt-BR' }} ({{ arbitragem.porcentagemLucro | number:'1.2-2':'pt-BR' }}%)</td>
+          <td>
+            R$ {{ arbitragem.lucro | number:'1.2-2':'pt-BR' }}
+            ({{ arbitragem.porcentagemLucro | number:'1.2-2':'pt-BR' }}%)
+          </td>
         </tr>
       </tbody>
     </table>
@@ -34,7 +40,8 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          Não há oportunidades de arbitragem de acordo com os parâmetros informados na configuração.
+          Não há oportunidades de arbitragem de acordo com os parâmetros
+          informados na configuração.
         </ion-col>
       </ion-row>
     </ion-grid>

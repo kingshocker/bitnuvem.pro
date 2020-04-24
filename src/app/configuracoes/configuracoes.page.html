@@ -14,11 +14,20 @@
     </ion-list-header>
     <ion-item>
       <ion-label position="floating">Investimento</ion-label>
-      <ion-input type="number" inputmode="decimal" [(ngModel)]="configuracao.investimentoMaximo" (change)="mudarInvestimentoMaximo()"></ion-input>
+      <ion-input
+        type="number"
+        inputmode="decimal"
+        [(ngModel)]="configuracao.investimentoMaximo"
+        (change)="mudarInvestimentoMaximo()"
+      ></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Simular taxa de transferência</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="configuracao.simularTaxaTransferencia" (ionChange)="mudarSimularTaxaTransferencia()"></ion-toggle>
+      <ion-toggle
+        slot="end"
+        [(ngModel)]="configuracao.simularTaxaTransferencia"
+        (ionChange)="mudarSimularTaxaTransferencia()"
+      ></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-label>Simular taxa de saque em reais</ion-label>
@@ -48,11 +57,21 @@
     </ion-list-header>
     <ion-item>
       <ion-label position="floating">Lucro acima de</ion-label>
-      <ion-input type="number" inputmode="decimal" [(ngModel)]="configuracao.filtroLucroAcima" (change)="mudarLucro()"></ion-input>
+      <ion-input
+        type="number"
+        inputmode="decimal"
+        [(ngModel)]="configuracao.filtroLucroAcima"
+        (change)="mudarLucro()"
+      ></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Porcentagem de lucro acima de</ion-label>
-      <ion-input type="number" inputmode="decimal" [(ngModel)]="configuracao.filtroPorcentagemLucroAcima" (change)="mudarPorcentagemLucro()"></ion-input>
+      <ion-input
+        type="number"
+        inputmode="decimal"
+        [(ngModel)]="configuracao.filtroPorcentagemLucroAcima"
+        (change)="mudarPorcentagemLucro()"
+      ></ion-input>
     </ion-item>
     <ion-item-group>
       <ion-item-divider>
@@ -72,12 +91,24 @@
     </ion-list-header>
     <ion-item>
       <ion-label>Notificar</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="configuracao.permitirNotificar" (ionChange)="mudarPermitirNotificar()"></ion-toggle>
+      <ion-toggle
+        slot="end"
+        [(ngModel)]="configuracao.permitirNotificar"
+        (ionChange)="mudarPermitirNotificar()"
+      ></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Tempo entre notificações</ion-label>
-      <ion-input type="number" inputmode="numeric" [(ngModel)]="configuracao.tempoEntreNotificacoes" (change)="mudarTempoEntreNotificacoes()"></ion-input>
-      <ion-note>Após quantos minutos você poderá ser notificado novamente após ter recebido uma notificação não visualizada.</ion-note>
+      <ion-input
+        type="number"
+        inputmode="numeric"
+        [(ngModel)]="configuracao.tempoEntreNotificacoes"
+        (change)="mudarTempoEntreNotificacoes()"
+      ></ion-input>
+      <ion-note>
+        Após quantos minutos você poderá ser notificado novamente após ter
+        recebido uma notificação não visualizada.
+      </ion-note>
     </ion-item>
     <ion-list-header>
       <ion-label>Ordenar por</ion-label>

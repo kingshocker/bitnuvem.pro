@@ -3,7 +3,10 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf="arbitragem">{{ arbitragem.corretoraVenda.nome }} x {{ arbitragem.corretoraCompra.nome }}</ion-title>
+    <ion-title *ngIf="arbitragem">
+      {{ arbitragem.corretoraVenda.nome }}
+      x {{ arbitragem.corretoraCompra.nome }}
+    </ion-title>
     <ion-buttons slot="primary">
       <ion-button routerLink="/configuracoes">
         <ion-icon slot="icon-only" name="settings"></ion-icon>
@@ -17,19 +20,27 @@
     <div class="row">
       <div class="col">
         <strong>Corretora venda</strong>
-        <p><a [routerLink]="['/corretora', arbitragem.corretoraVenda.id]">{{ arbitragem.corretoraVenda.nome }}</a></p>
+        <p>
+          <a [routerLink]="['/corretora', arbitragem.corretoraVenda.id]">
+            {{ arbitragem.corretoraVenda.nome }}
+          </a>
+        </p>
         <strong>Data da requisição</strong>
-        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataRequisicao | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataRequisicao | date: 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
         <strong>Data da resposta</strong>
-        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataResposta | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataResposta | date: 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
       </div>
       <div class="col">
         <strong>Corretora compra</strong>
-        <p><a [routerLink]="['/corretora', arbitragem.corretoraCompra.id]">{{ arbitragem.corretoraCompra.nome }}</a></p>
+        <p>
+          <a [routerLink]="['/corretora', arbitragem.corretoraCompra.id]">
+            {{ arbitragem.corretoraCompra.nome }}
+          </a>
+        </p>
         <strong>Data da requisição</strong>
-        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataRequisicao | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataRequisicao | date: 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
         <strong>Data da resposta</strong>
-        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataResposta | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
+        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataResposta | date: 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
       </div>
     </div>
     <div class="row">
@@ -61,7 +72,9 @@
   </div>
   <div class="table-responsive">
     <table class="table table-bordered table-sm">
-      <caption>Ordens de venda na {{ arbitragem.corretoraVenda.nome }}</caption>
+      <caption>
+        Ordens de venda na {{ arbitragem.corretoraVenda.nome }}
+      </caption>
       <thead class="thead-light">
         <tr>
           <th>Preço</th>
@@ -82,7 +95,9 @@
   </div>
   <div class="table-responsive">
     <table class="table table-bordered table-sm">
-      <caption>Ordens de compra na {{ arbitragem.corretoraCompra.nome }}</caption>
+      <caption>
+        Ordens de compra na {{ arbitragem.corretoraCompra.nome }}
+      </caption>
       <thead class="thead-light">
         <tr>
           <th>Preço</th>
