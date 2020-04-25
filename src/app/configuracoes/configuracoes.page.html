@@ -9,9 +9,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-list-header>
-      <ion-label>Definições</ion-label>
-    </ion-list-header>
+    <ion-list-header>Definições</ion-list-header>
     <ion-item>
       <ion-label position="floating">Investimento</ion-label>
       <ion-input
@@ -38,23 +36,26 @@
       ></ion-toggle>
     </ion-item>
     <ng-container *ngIf="configuracao.simularTaxaSaque">
-      <ion-list-header>
-        <ion-label>
-          Possuí conta nos bancos conveniados das corretoras
-        </ion-label>
-      </ion-list-header>
-      <ion-item *ngFor="let corretora of corretorasConveniosBancos">
-        <ion-label>{{ corretora.nome }}</ion-label>
-        <ion-toggle
-          slot="end"
-          [(ngModel)]="configuracao.corretoras[corretora.id].possuiBancoConveniado"
-          (ionChange)="mudarCorretoraHabilitada(corretora.id)"
-        ></ion-toggle>
-      </ion-item>
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>
+            Possuí conta nos bancos conveniados das corretoras
+          </ion-label>
+        </ion-item-divider>
+        <ion-item *ngFor="let corretora of corretorasConveniosBancos">
+          <ion-label>{{ corretora.nome }}</ion-label>
+          <ion-toggle
+            slot="end"
+            [(ngModel)]="configuracao.corretoras[corretora.id].possuiBancoConveniado"
+            (ionChange)="mudarCorretoraHabilitada(corretora.id)"
+          ></ion-toggle>
+        </ion-item>
+      </ion-item-group>
     </ng-container>
-    <ion-list-header>
-      <ion-label>Filtros</ion-label>
-    </ion-list-header>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>Filtros</ion-list-header>
     <ion-item>
       <ion-label position="floating">Lucro acima de</ion-label>
       <ion-input
@@ -86,9 +87,10 @@
         ></ion-toggle>
       </ion-item>
     </ion-item-group>
-    <ion-list-header>
-      <ion-label>Notificações</ion-label>
-    </ion-list-header>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>Notificações</ion-list-header>
     <ion-item>
       <ion-label>Notificar</ion-label>
       <ion-toggle
@@ -110,9 +112,10 @@
         recebido uma notificação não visualizada.
       </ion-note>
     </ion-item>
-    <ion-list-header>
-      <ion-label>Ordenar por</ion-label>
-    </ion-list-header>
+  </ion-list>
+
+  <ion-list>
+    <ion-list-header>Ordenar por</ion-list-header>
     <ion-reorder-group
       disabled="false"
       (ionItemReorder)="mudarOrdenacao($event)"
