@@ -1,0 +1,45 @@
+<ion-list>
+  <ion-list-header>Definições</ion-list-header>
+  <ion-item>
+    <ion-label position="floating">Investimento</ion-label>
+    <ion-input
+      type="number"
+      inputmode="decimal"
+      [(ngModel)]="configuracao.investimentoMaximo"
+      (change)="mudarInvestimentoMaximo()"
+    ></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Simular taxa de transferência</ion-label>
+    <ion-toggle
+      slot="end"
+      [(ngModel)]="configuracao.simularTaxaTransferencia"
+      (ionChange)="mudarSimularTaxaTransferencia()"
+    ></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label>Simular taxa de saque em reais</ion-label>
+    <ion-toggle
+      slot="end"
+      [(ngModel)]="configuracao.simularTaxaSaque"
+      (ionChange)="mudarSimularTaxaSaque()"
+    ></ion-toggle>
+  </ion-item>
+  <ng-container *ngIf="configuracao.simularTaxaSaque">
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>
+          Possuí conta nos bancos conveniados das corretoras
+        </ion-label>
+      </ion-item-divider>
+      <ion-item *ngFor="let corretora of corretorasConveniosBancos">
+        <ion-label>{{ corretora.nome }}</ion-label>
+        <ion-toggle
+          slot="end"
+          [(ngModel)]="situacaoUsuario[corretora.id].possuiBancoConveniado"
+          (ionChange)="mudarCorretoraHabilitada(corretora.id)"
+        ></ion-toggle>
+      </ion-item>
+    </ion-item-group>
+  </ng-container>
+</ion-list>

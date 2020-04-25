@@ -6,6 +6,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ConfiguracoesPage } from './configuracoes.page';
+import {
+  ConfiguracaoDefinicaoComponent
+} from './components/configuracao-definicao/configuracao-definicao.component';
 
 const routes: Routes = [
   {
@@ -21,6 +24,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ConfiguracoesPage]
+  declarations: [ConfiguracoesPage, ConfiguracaoDefinicaoComponent],
 })
 export class ConfiguracoesPageModule {}
