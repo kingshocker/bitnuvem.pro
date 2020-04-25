@@ -9,6 +9,9 @@ import { ArbitragemPage } from './arbitragem.page';
 import {
   InformacoesCorretoraComponent
 } from './components/informacoes-corretora/informacoes-corretora.component';
+import {
+  InformacoesArbitragemComponent
+} from './components/informacoes-arbitragem/informacoes-arbitragem.component';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -27,6 +30,10 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
   ],
-  declarations: [ArbitragemPage, InformacoesCorretoraComponent]
+  declarations: [
+    ArbitragemPage,
+    InformacoesCorretoraComponent,
+    InformacoesArbitragemComponent,
+  ]
 })
 export class ArbitragemPageModule {}
