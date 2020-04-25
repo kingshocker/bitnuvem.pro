@@ -31,55 +31,15 @@
       [arbitragem]="arbitragem"
     ></app-informacoes-arbitragem>
   </div>
-  <div class="table-responsive">
-    <table class="table table-bordered table-sm">
-      <caption>
-        Ordens de venda na {{ arbitragem.corretoraVenda.nome }}
-      </caption>
-      <thead class="thead-light">
-        <tr>
-          <th>Preço</th>
-          <th>Quantidade</th>
-          <th>Total</th>
-          <th>Taxas</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let ordem of arbitragem.ordensVenda">
-          <td>{{ ordem.preco | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
-          <td>
-            {{ ordem.quantidade | number: PRECISAO_BITCOIN:FORMATO_NUMERO }}
-          </td>
-          <td>{{ ordem.total | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
-          <td>{{ ordem.valorTaxa | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="table-responsive">
-    <table class="table table-bordered table-sm">
-      <caption>
-        Ordens de compra na {{ arbitragem.corretoraCompra.nome }}
-      </caption>
-      <thead class="thead-light">
-        <tr>
-          <th>Preço</th>
-          <th>Quantidade</th>
-          <th>Total</th>
-          <th>Taxas</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let ordem of arbitragem.ordensCompra">
-          <td>{{ ordem.preco | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
-          <td>
-            {{ ordem.quantidade | number: PRECISAO_BITCOIN:FORMATO_NUMERO }}
-          </td>
-          <td>{{ ordem.total | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
-          <td>{{ ordem.valorTaxa | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <app-tabela-ordens
+    tipo="venda"
+    [corretora]="arbitragem.corretoraVenda"
+    [ordens]="arbitragem.ordensVenda"
+  ></app-tabela-ordens>
+  <app-tabela-ordens
+    tipo="compra"
+    [corretora]="arbitragem.corretoraCompra"
+    [ordens]="arbitragem.ordensCompra"
+  ></app-tabela-ordens>
   <app-rodape></app-rodape>
 </ion-content>

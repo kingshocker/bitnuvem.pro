@@ -12,10 +12,6 @@ import { ComunicacaoService } from '../shared/comunicacao.service';
   styleUrls: ['./arbitragem.page.scss'],
 })
 export class ArbitragemPage implements OnInit {
-  readonly FORMATO_NUMERO = 'pt-BR';
-  readonly PRECISAO_REAL = '1.2-2';
-  readonly PRECISAO_BITCOIN = '1.0-8';
-
   arbitragem: Arbitragem;
   subscricao: Observable<any>;
 

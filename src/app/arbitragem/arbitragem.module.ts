@@ -12,6 +12,9 @@ import {
 import {
   InformacoesArbitragemComponent
 } from './components/informacoes-arbitragem/informacoes-arbitragem.component';
+import {
+  TabelaOrdensComponent
+} from './components/tabela-ordens/tabela-ordens.component';
 
 import { SharedModule } from '../shared/shared.module';
 
@@ -34,6 +37,7 @@ const routes: Routes = [
     ArbitragemPage,
     InformacoesCorretoraComponent,
     InformacoesArbitragemComponent,
+    TabelaOrdensComponent,
   ]
 })
 export class ArbitragemPageModule {}
