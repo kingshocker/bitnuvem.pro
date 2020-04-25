@@ -5,8 +5,6 @@ import { IonReorderGroup } from '@ionic/angular';
 import { Configuracao } from './configuracao';
 import { ConfiguracoesService } from './configuracoes.service';
 import { Ordenacao } from './ordenacao';
-import { Corretora } from '../corretora/corretora';
-import { CorretoraService } from '../corretora/corretora.service';
 import { NotificacaoService } from '../shared/notificacao.service';
 
 @Component({
@@ -18,26 +16,15 @@ export class ConfiguracoesPage implements OnInit {
   @ViewChild(IonReorderGroup, {static: false})
   reorderGroup: IonReorderGroup;
 
-  corretoras: Array<Corretora>;
   configuracao: Configuracao;
 
   constructor(
     private configuracoes: ConfiguracoesService,
-    private corretoraService: CorretoraService,
     private notificacaoService: NotificacaoService,
   ) {}
 
   ngOnInit() {
     this.configuracao = this.configuracoes.configuracao;
-    this.corretoras = this.corretoraService.corretoras;
-  }
-
-  mudarLucro() {
-    this.configuracoes.mudarFiltroLucroAcima();
-  }
-
-  mudarPorcentagemLucro() {
-    this.configuracoes.mudarFiltroPorcentagemLucroAcima();
   }
 
   mudarPermitirNotificar() {

@@ -9,6 +9,9 @@ import { ConfiguracoesPage } from './configuracoes.page';
 import {
   ConfiguracaoDefinicaoComponent
 } from './components/configuracao-definicao/configuracao-definicao.component';
+import {
+  ConfiguracaoFiltroComponent
+} from './components/configuracao-filtro/configuracao-filtro.component';
 
 const routes: Routes = [
   {
@@ -24,6 +27,10 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ConfiguracoesPage, ConfiguracaoDefinicaoComponent],
+  declarations: [
+    ConfiguracoesPage,
+    ConfiguracaoDefinicaoComponent,
+    ConfiguracaoFiltroComponent,
+  ],
 })
 export class ConfiguracoesPageModule {}
