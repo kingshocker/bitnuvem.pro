@@ -12,6 +12,9 @@ import {
 import {
   ConfiguracaoFiltroComponent
 } from './components/configuracao-filtro/configuracao-filtro.component';
+import {
+  ConfiguracaoNotificarComponent
+} from './components/configuracao-notificar/configuracao-notificar.component';
 
 const routes: Routes = [
   {
@@ -31,6 +34,7 @@ const routes: Routes = [
     ConfiguracoesPage,
     ConfiguracaoDefinicaoComponent,
     ConfiguracaoFiltroComponent,
+    ConfiguracaoNotificarComponent,
   ],
 })
 export class ConfiguracoesPageModule {}

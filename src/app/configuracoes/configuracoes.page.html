@@ -12,30 +12,7 @@
 
   <app-configuracao-filtro></app-configuracao-filtro>
 
-  <ion-list>
-    <ion-list-header>Notificações</ion-list-header>
-    <ion-item>
-      <ion-label>Notificar</ion-label>
-      <ion-toggle
-        slot="end"
-        [(ngModel)]="configuracao.permitirNotificar"
-        (ionChange)="mudarPermitirNotificar()"
-      ></ion-toggle>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Tempo entre notificações</ion-label>
-      <ion-input
-        type="number"
-        inputmode="numeric"
-        [(ngModel)]="configuracao.tempoEntreNotificacoes"
-        (change)="mudarTempoEntreNotificacoes()"
-      ></ion-input>
-      <ion-note>
-        Após quantos minutos você poderá ser notificado novamente após ter
-        recebido uma notificação não visualizada.
-      </ion-note>
-    </ion-item>
-  </ion-list>
+  <app-configuracao-notificar></app-configuracao-notificar>
 
   <ion-list>
     <ion-list-header>Ordenar por</ion-list-header>
