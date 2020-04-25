@@ -1,0 +1,14 @@
+<ion-list>
+  <ion-list-header>Ordenar por</ion-list-header>
+  <ion-reorder-group
+    disabled="false"
+    (ionItemReorder)="mudarOrdenacao($event)"
+  >
+    <ion-reorder *ngFor="let criterioOrdenacao of configuracao.ordenacao">
+      <ion-item>
+        <ion-label>{{ criterioOrdenacao.descricao }}</ion-label>
+        <ion-icon slot="end" name="reorder"></ion-icon>
+      </ion-item>
+    </ion-reorder>
+  </ion-reorder-group>
+</ion-list>
