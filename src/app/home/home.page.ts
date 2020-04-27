@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   paginaAtiva: boolean;
   paginaVisivel: boolean;
-  intervalo: Observable<number>;
+  intervalo: Subscription;
   intervaloBackground: Subscription;
   intervaloVisualizacao: Subscription;
   arbitragens: Array<Arbitragem>;
@@ -52,21 +52,30 @@ export class HomePage implements OnInit, OnDestroy {
     this.intervaloVisualizacao = null;
 
     this.enableBackgroundMode();
+    this.paginaAtiva = false;
   }
 
   ngOnInit() {
+    if (this.paginaAtiva) {
+      return ;
+    }
+
+    this.paginaAtiva = true;
     this.exibirMensagemPaginaCarregando();
     this.configuracao = this.configuracoes.configuracao;
     this.verificarOportunidadesArbitragem();
-    this.paginaAtiva = true;
     this.paginaVisivel = true;
     this.usuarioNotificado = false;
     if (!this.intervalo) {
-      this.intervalo = interval(this.UM_MINUTO_EM_MILISEGUNDOS);
-      this.intervalo.pipe(takeWhile(() => this.paginaAtiva)).subscribe(() => {
+      this.intervalo = interval(
+        this.UM_MINUTO_EM_MILISEGUNDOS
+      ).subscribe(() => {
         if (
           (this.paginaVisivel)
-          || (this.configuracao.permitirNotificar && (!this.usuarioNotificado))
+          || (
+            this.configuracao.permitirNotificar
+            && (!this.usuarioNotificado)
+          )
         ) {
           this.verificarOportunidadesArbitragem();
         }
@@ -74,9 +83,33 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
+  ionViewWillEnter() {
+    this.ngOnInit();
+  }
+
+  @HostListener('window:beforeunload')
   ngOnDestroy() {
     this.paginaAtiva = false;
     this.paginaVisivel = false;
+
+    if (this.intervalo) {
+      this.intervalo.unsubscribe();
+      this.intervalo = null;
+    }
+
+    if (this.intervaloVisualizacao) {
+      this.intervaloVisualizacao.unsubscribe();
+      this.intervaloVisualizacao = null;
+    }
+
+    if (this.intervaloBackground) {
+      this.intervaloBackground.unsubscribe();
+      this.intervaloBackground = null;
+    }
+  }
+
+  ionViewWillLeave() {
+    this.ngOnDestroy();
   }
 
   voltarNotificarUsuario() {
@@ -165,7 +198,6 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   detalharOportunidadeArbitragem(indice: number) {
-    this.ngOnDestroy();
     const arbitragem = this.arbitragens[indice];
     this.comunicacao.modificarObjeto(arbitragem);
     this.router.navigate([
