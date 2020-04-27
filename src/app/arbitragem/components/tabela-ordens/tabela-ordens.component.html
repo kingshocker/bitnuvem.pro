@@ -13,12 +13,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let ordem of ordens">
-        <td>{{ ordem.preco | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
+        <td>{{ ordem.preco | number: PRECISAO_REAL }}</td>
         <td>
-          {{ ordem.quantidade | number: PRECISAO_BITCOIN:FORMATO_NUMERO }}
+          {{ ordem.quantidade | number: PRECISAO_BITCOIN }}
         </td>
-        <td>{{ ordem.total | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
-        <td>{{ ordem.valorTaxa | number: PRECISAO_REAL:FORMATO_NUMERO }}</td>
+        <td>{{ ordem.total | number: PRECISAO_REAL }}</td>
+        <td>{{ ordem.valorTaxa | number: PRECISAO_REAL }}</td>
       </tr>
     </tbody>
   </table>

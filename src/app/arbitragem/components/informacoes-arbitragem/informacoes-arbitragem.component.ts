@@ -8,6 +8,9 @@ import { Arbitragem } from '../../../arbitragem/arbitragem';
   styleUrls: ['./informacoes-arbitragem.component.scss'],
 })
 export class InformacoesArbitragemComponent {
+  readonly PRECISAO_REAL = '1.2-2';
+  readonly PRECISAO_BITCOIN = '1.0-8';
+
   @HostBinding('class')
   cssClass = 'row';
 
