@@ -27,11 +27,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   paginaAtiva: boolean;
   paginaVisivel: boolean;
-  intervalo: Subscription;
-  intervaloBackground: Subscription;
-  intervaloVisualizacao: Subscription;
+  tempoRestanteNovaVerificacao: NodeJS.Timer;
+  tarefaVerificarOportunidadesArbitragem: Subscription;
   arbitragens: Array<Arbitragem>;
-  usuarioNotificado: boolean;
+  oportunidadesCarregadas: boolean;
   configuracao: Configuracao;
 
   arbitragensVerificadas: boolean;
@@ -49,10 +48,9 @@ export class HomePage implements OnInit, OnDestroy {
   ) {
     this.carregamento = null;
     this.arbitragens = [];
-    this.intervaloVisualizacao = null;
+    this.paginaAtiva = false;
 
     this.enableBackgroundMode();
-    this.paginaAtiva = false;
   }
 
   ngOnInit() {
@@ -65,22 +63,8 @@ export class HomePage implements OnInit, OnDestroy {
     this.configuracao = this.configuracoes.configuracao;
     this.verificarOportunidadesArbitragem();
     this.paginaVisivel = true;
-    this.usuarioNotificado = false;
-    if (!this.intervalo) {
-      this.intervalo = interval(
-        this.UM_MINUTO_EM_MILISEGUNDOS
-      ).subscribe(() => {
-        if (
-          (this.paginaVisivel)
-          || (
-            this.configuracao.permitirNotificar
-            && (!this.usuarioNotificado)
-          )
-        ) {
-          this.verificarOportunidadesArbitragem();
-        }
-      });
-    }
+    this.oportunidadesCarregadas = false;
+    this.criarTarefaVerificarOportunidadesArbitragem();
   }
 
   ionViewWillEnter() {
@@ -92,38 +76,17 @@ export class HomePage implements OnInit, OnDestroy {
     this.paginaAtiva = false;
     this.paginaVisivel = false;
 
-    if (this.intervalo) {
-      this.intervalo.unsubscribe();
-      this.intervalo = null;
-    }
-
-    if (this.intervaloVisualizacao) {
-      this.intervaloVisualizacao.unsubscribe();
-      this.intervaloVisualizacao = null;
-    }
-
-    if (this.intervaloBackground) {
-      this.intervaloBackground.unsubscribe();
-      this.intervaloBackground = null;
-    }
+    this.pararTarefaVerificarOportunidadesArbitragem();
   }
 
   ionViewWillLeave() {
     this.ngOnDestroy();
   }
 
-  voltarNotificarUsuario() {
-    this.usuarioNotificado = false;
-    if (this.intervaloVisualizacao !== null) {
-      this.intervaloVisualizacao.unsubscribe();
-      this.intervaloVisualizacao = null;
-    }
-  }
-
   @OnPageVisible()
   onPaginaVisivel() {
     this.paginaVisivel = true;
-    this.voltarNotificarUsuario();
+    this.recriarTarefaVerificarOportunidadesArbitragem();
   }
 
   @OnPageHidden()
@@ -131,36 +94,48 @@ export class HomePage implements OnInit, OnDestroy {
     this.paginaVisivel = false;
   }
 
+  enableBackgroundMode() {
+    if (this.platform.is('cordova')) {
+      this.backgroundMode.enable();
+      this.backgroundMode.on('activate').subscribe(() => {
+        this.recriarTarefaVerificarOportunidadesArbitragem();
+      });
+      this.backgroundMode.on('deactivate').subscribe(() => {
+        this.recriarTarefaVerificarOportunidadesArbitragem();
+      });
+    }
+  }
+
   get existemOportunidadesAbitragem() {
     return this.arbitragens.length > 0;
   }
 
-  enableBackgroundMode() {
-    if (this.platform.is('cordova')) {
-      this.backgroundMode.enable();
-      this.backgroundMode.on('activate').subscribe(
-        this.activateFunction.bind(this)
-      );
-      this.backgroundMode.on('deactivate').subscribe(
-        this.deactivateFunction.bind(this)
-      );
+  criarTarefaVerificarOportunidadesArbitragem() {
+    if (this.tempoRestanteNovaVerificacao) {
+      clearTimeout(this.tempoRestanteNovaVerificacao);
+      this.tempoRestanteNovaVerificacao = null;
+    }
+    if (!this.tarefaVerificarOportunidadesArbitragem) {
+      this.tarefaVerificarOportunidadesArbitragem = interval(
+        this.UM_MINUTO_EM_MILISEGUNDOS
+      ).subscribe(() => {
+        if (this.paginaVisivel || this.configuracao.permitirNotificar) {
+          this.verificarOportunidadesArbitragem();
+        }
+      });
     }
   }
 
-  activateFunction() {
-    this.usuarioNotificado = false;
-    this.intervaloBackground = interval(
-      this.UM_MINUTO_EM_MILISEGUNDOS
-    ).subscribe(() => {
-      if ((this.configuracao.permitirNotificar) && (!this.usuarioNotificado)) {
-        this.verificarOportunidadesArbitragem();
-      }
-    });
+  pararTarefaVerificarOportunidadesArbitragem() {
+    if (this.tarefaVerificarOportunidadesArbitragem) {
+      this.tarefaVerificarOportunidadesArbitragem.unsubscribe();
+      this.tarefaVerificarOportunidadesArbitragem = null;
+    }
   }
 
-  deactivateFunction() {
-    this.intervaloBackground.unsubscribe();
-    this.intervaloBackground = null;
+  recriarTarefaVerificarOportunidadesArbitragem() {
+    this.pararTarefaVerificarOportunidadesArbitragem();
+    this.criarTarefaVerificarOportunidadesArbitragem();
   }
 
   async verificarOportunidadesArbitragem() {
@@ -184,14 +159,17 @@ export class HomePage implements OnInit, OnDestroy {
             'Oportunidade de arbitragem',
             'Há novas oportunidades de arbitragem que podem ser do seu interesse',
           );
-          this.intervaloVisualizacao = interval(
-            this.UM_MINUTO_EM_MILISEGUNDOS * this.configuracao.tempoEntreNotificacoes
-          ).subscribe(() => {
-            this.voltarNotificarUsuario();
-          });
+
+          this.pararTarefaVerificarOportunidadesArbitragem();
+          this.tempoRestanteNovaVerificacao = setTimeout(() => {
+            this.criarTarefaVerificarOportunidadesArbitragem();
+          }, (
+            this.UM_MINUTO_EM_MILISEGUNDOS
+            * this.configuracao.tempoEntreNotificacoes
+          ));
         }
         this.arbitragens = arbitragens;
-        this.usuarioNotificado = true;
+        this.oportunidadesCarregadas = true;
         this.fecharMensagemPaginaCarregando();
       }
     );
@@ -212,7 +190,7 @@ export class HomePage implements OnInit, OnDestroy {
       message: 'Carregando...',
     });
     await this.carregamento.present();
-    if (this.usuarioNotificado) {
+    if (this.oportunidadesCarregadas) {
       this.fecharMensagemPaginaCarregando();
     }
   }
