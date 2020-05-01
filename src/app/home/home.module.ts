@@ -7,8 +7,10 @@ import { IonicModule } from '@ionic/angular';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 import { HomePage } from './home.page';
-
 import { SharedModule } from '../shared/shared.module';
+import {
+  OportunidadesArbitragemService
+} from './tarefas/oportunidades-arbitragem.service';
 
 @NgModule({
   imports: [
@@ -24,6 +26,6 @@ import { SharedModule } from '../shared/shared.module';
     SharedModule,
   ],
   declarations: [HomePage],
-  providers: [BackgroundMode],
+  providers: [BackgroundMode, OportunidadesArbitragemService],
 })
 export class HomePageModule {}

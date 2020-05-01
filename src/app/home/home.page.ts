@@ -1,19 +1,21 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, interval, Subscription } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 import { OnPageVisible, OnPageHidden } from 'angular-page-visibility';
 import { LoadingController } from '@ionic/angular';
-import { BackgroundMode } from '@ionic-native/background-mode/ngx';
-import { Platform } from '@ionic/angular';
 
-import { ArbitragemService } from '../arbitragem/arbitragem.service';
 import { Arbitragem } from '../arbitragem/arbitragem';
 import { ComunicacaoService } from '../shared/comunicacao.service';
-import { Configuracao } from '../configuracoes/configuracao';
-import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
-import { NotificacaoService } from '../shared/notificacao.service';
+import {
+  OportunidadesArbitragemService
+} from './tarefas/oportunidades-arbitragem.service';
 
 @Component({
   selector: 'app-home',
@@ -21,35 +23,26 @@ import { NotificacaoService } from '../shared/notificacao.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit, OnDestroy {
-  readonly UM_MINUTO_EM_MILISEGUNDOS = 1000 * 60;
   readonly PRECISAO_REAL = '1.2-2';
 
   paginaAtiva: boolean;
-  paginaVisivel: boolean;
-  tempoRestanteNovaVerificacao: NodeJS.Timer;
-  tarefaVerificarOportunidadesArbitragem: Subscription;
   arbitragens: Array<Arbitragem>;
-  oportunidadesCarregadas: boolean;
-  configuracao: Configuracao;
-
   arbitragensVerificadas: boolean;
   carregamento: HTMLIonLoadingElement;
+  propagadorPaginaVisivel: BehaviorSubject<boolean>;
 
   constructor(
-    private oportunidades: ArbitragemService,
     private comunicacao: ComunicacaoService,
     private router: Router,
-    private configuracoes: ConfiguracoesService,
-    private notificacao: NotificacaoService,
     private loadingController: LoadingController,
-    private backgroundMode: BackgroundMode,
-    private platform: Platform,
+    private changeDetectorRef: ChangeDetectorRef,
+    private oportunidadesArbitragemService: OportunidadesArbitragemService,
   ) {
     this.carregamento = null;
-    this.arbitragens = [];
     this.paginaAtiva = false;
+    this.arbitragens = [];
 
-    this.enableBackgroundMode();
+    this.iniciarTarefaVerificarOportunidadesArbitragem();
   }
 
   ngOnInit() {
@@ -59,11 +52,8 @@ export class HomePage implements OnInit, OnDestroy {
 
     this.paginaAtiva = true;
     this.exibirMensagemPaginaCarregando();
-    this.configuracao = this.configuracoes.configuracao;
-    this.verificarOportunidadesArbitragem();
-    this.paginaVisivel = true;
-    this.oportunidadesCarregadas = false;
-    this.criarTarefaVerificarOportunidadesArbitragem();
+    this.propagadorPaginaVisivel.next(true);
+    this.oportunidadesArbitragemService.criarTarefa();
   }
 
   ionViewWillEnter() {
@@ -73,9 +63,10 @@ export class HomePage implements OnInit, OnDestroy {
   @HostListener('window:beforeunload')
   ngOnDestroy() {
     this.paginaAtiva = false;
-    this.paginaVisivel = false;
+    this.arbitragensVerificadas = false;
+    this.propagadorPaginaVisivel.next(false);
 
-    this.pararTarefaVerificarOportunidadesArbitragem();
+    this.oportunidadesArbitragemService.pararTarefa();
   }
 
   ionViewWillLeave() {
@@ -84,94 +75,49 @@ export class HomePage implements OnInit, OnDestroy {
 
   @OnPageVisible()
   onPaginaVisivel() {
-    this.paginaVisivel = true;
-    this.recriarTarefaVerificarOportunidadesArbitragem();
+    this.propagadorPaginaVisivel.next(true);
   }
 
   @OnPageHidden()
   onPaginaNaoVisivel() {
-    this.paginaVisivel = false;
+    this.propagadorPaginaVisivel.next(false);
   }
 
-  enableBackgroundMode() {
-    if (this.platform.is('cordova')) {
-      this.backgroundMode.enable();
-      this.backgroundMode.on('activate').subscribe(() => {
-        this.recriarTarefaVerificarOportunidadesArbitragem();
-      });
-      this.backgroundMode.on('deactivate').subscribe(() => {
-        this.recriarTarefaVerificarOportunidadesArbitragem();
-      });
-    }
-  }
+  iniciarTarefaVerificarOportunidadesArbitragem() {
+    this.propagadorPaginaVisivel = new BehaviorSubject<boolean>(true);
+    this.propagadorPaginaVisivel.subscribe(
+      this.oportunidadesArbitragemService.observadorPaginaVisivel()
+    );
 
-  get existemOportunidadesAbitragem() {
-    return this.arbitragens.length > 0;
-  }
-
-  criarTarefaVerificarOportunidadesArbitragem() {
-    if (this.tempoRestanteNovaVerificacao) {
-      clearTimeout(this.tempoRestanteNovaVerificacao);
-      this.tempoRestanteNovaVerificacao = null;
-    }
-    if (!this.tarefaVerificarOportunidadesArbitragem) {
-      this.tarefaVerificarOportunidadesArbitragem = interval(
-        this.UM_MINUTO_EM_MILISEGUNDOS
-      ).subscribe(() => {
-        if (this.paginaVisivel || this.configuracao.permitirNotificar) {
-          this.verificarOportunidadesArbitragem();
-        }
-      });
-    }
-  }
-
-  pararTarefaVerificarOportunidadesArbitragem() {
-    if (this.tarefaVerificarOportunidadesArbitragem) {
-      this.tarefaVerificarOportunidadesArbitragem.unsubscribe();
-      this.tarefaVerificarOportunidadesArbitragem = null;
-    }
-  }
-
-  recriarTarefaVerificarOportunidadesArbitragem() {
-    this.pararTarefaVerificarOportunidadesArbitragem();
-    this.criarTarefaVerificarOportunidadesArbitragem();
-  }
-
-  async verificarOportunidadesArbitragem() {
-    this.oportunidades.verificarOportunidadesArbitragem().then(
-      (arbitragens) => {
-        if (
-          (this.configuracao.permitirNotificar)
-          && (arbitragens.length > 0)
-          && (
-            (!this.paginaVisivel)
-            || (
-              (
-                this.platform.is('cordova')
-                || this.platform.is('capacitor')
-              )
-              && (this.backgroundMode.isActive() === true)
-            )
-          )
-        ) {
-          this.notificacao.notificar(
-            'Oportunidade de arbitragem',
-            'Há novas oportunidades de arbitragem que podem ser do seu interesse',
-          );
-
-          this.pararTarefaVerificarOportunidadesArbitragem();
-          this.tempoRestanteNovaVerificacao = setTimeout(() => {
-            this.criarTarefaVerificarOportunidadesArbitragem();
-          }, (
-            this.UM_MINUTO_EM_MILISEGUNDOS
-            * this.configuracao.tempoEntreNotificacoes
-          ));
-        }
+    this.oportunidadesArbitragemService.inscrever(
+      (arbitragens: Array<Arbitragem>) => {
         this.arbitragens = arbitragens;
-        this.oportunidadesCarregadas = true;
+        this.arbitragensVerificadas = true;
         this.fecharMensagemPaginaCarregando();
+        this.changeDetectorRef.detectChanges();
       }
     );
+  }
+
+  async exibirMensagemPaginaCarregando() {
+    this.carregamento = await this.loadingController.create({
+      message: 'Carregando...',
+    });
+    await this.carregamento.present();
+    if (this.arbitragensVerificadas) {
+      this.fecharMensagemPaginaCarregando();
+    }
+  }
+
+  fecharMensagemPaginaCarregando() {
+    if (this.carregamento) {
+      this.carregamento.dismiss();
+      this.carregamento = null;
+    }
+  }
+
+  get existemOportunidadesAbitragem(): boolean {
+    return this.arbitragens.length > 0;
   }
 
   detalharOportunidadeArbitragem(indice: number) {
@@ -182,22 +128,5 @@ export class HomePage implements OnInit, OnDestroy {
       arbitragem.corretoraVenda.id,
       arbitragem.corretoraCompra.id,
     ]);
-  }
-
-  async exibirMensagemPaginaCarregando() {
-    this.carregamento = await this.loadingController.create({
-      message: 'Carregando...',
-    });
-    await this.carregamento.present();
-    if (this.oportunidadesCarregadas) {
-      this.fecharMensagemPaginaCarregando();
-    }
-  }
-
-  fecharMensagemPaginaCarregando() {
-    if (this.carregamento !== null) {
-      this.carregamento.dismiss();
-      this.carregamento = null;
-    }
   }
 }
