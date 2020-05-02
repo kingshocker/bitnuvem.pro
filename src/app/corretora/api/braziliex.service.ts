@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordem,
-  Ordens,
-  TEMPO_REQUISICAO_MAXIMO,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
 
 interface OrdemBraziliex {
   price: number;
@@ -49,8 +42,8 @@ export class BraziliexService extends Corretora {
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.00054714;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 

@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordens,
-  Ordem,
-  TEMPO_REQUISICAO_MAXIMO,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordens, Ordem } from '../corretora';
 
 interface OrdemBitcoinTrade {
   unit_price: number;
@@ -58,8 +51,8 @@ export class BitcoinTradeService extends Corretora {
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 

@@ -12,7 +12,7 @@ describe('InformacoesArbitragemComponent', () => {
   let fixture: ComponentFixture<InformacoesArbitragemComponent>;
 
   function criarCorretoraTeste() {
-    const corretora = new CoinextService(null);
+    const corretora = new CoinextService();
     const livroOrdens = {
       venda: [{preco: 0, quantidade: 0}],
       compra: [{preco: 0, quantidade: 0}],

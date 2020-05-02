@@ -1,6 +1,3 @@
-import { HttpClient } from '@angular/common/http';
-import { timeout, catchError } from 'rxjs/operators';
-
 export const TEMPO_REQUISICAO_MAXIMO = 30000;
 
 export interface Ordem {
@@ -36,7 +33,57 @@ export abstract class Corretora {
   abstract observacao: string;
   abstract livroOrdens: LivroOrdens;
 
-  constructor(public http: HttpClient) {}
+  /**
+   * Changed version from: https://davidwalsh.name/fetch-timeout
+   */
+  protected requisicao(url: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let didTimeOut = false;
+
+      const timeout = setTimeout(() => {
+        didTimeOut = true;
+        reject(new Error('Request timed out'));
+      }, TEMPO_REQUISICAO_MAXIMO);
+
+      fetch(
+        url,
+        {
+          cache: 'no-store',
+          mode: 'cors',
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        },
+      ).then((response: Response) => {
+        // Clear the timeout as cleanup
+        clearTimeout(timeout);
+
+        if (!didTimeOut) {
+          resolve(response);
+        }
+      }).catch((err: Error) => {
+        // Rejection already happened with setTimeout
+        if (didTimeOut) {
+          return;
+        }
+        // Reject with error
+        reject(err);
+      });
+    }).then((response: Response) => {
+      // Request success and no timeout
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    }).catch((erro: Error) => {
+      console.log(this.id, erro);
+
+      return this.LIVRO_ORDENS_VAZIO;
+    });
+  }
 
   abstract converterLivroOrdensAPI(
     livroOrdensAPI: any,
@@ -53,20 +100,13 @@ export abstract class Corretora {
 
   carregarLivroOrdens(): Promise<LivroOrdens> {
     const dataRequisicao = new Date();
-    return this.http.get(this.webservice).pipe(
-      timeout(TEMPO_REQUISICAO_MAXIMO),
-      catchError((erro) => {
-        console.log(this.id, erro);
-
-        return new Promise((resolve) => resolve(this.LIVRO_ORDENS_VAZIO));
-      }),
-    ).toPromise().then((livroOrdensAPI: any) => {
+    return this.requisicao(this.webservice).then((livroOrdensAPI: any) => {
       this.livroOrdens = this.converterLivroOrdensAPI(
         livroOrdensAPI,
         dataRequisicao,
       );
       return this.livroOrdens;
-    }) as Promise<LivroOrdens>;
+    });
   }
 
   calcularValorTaxaVenda(valor: number): number {

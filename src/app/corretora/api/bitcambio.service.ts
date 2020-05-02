@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordem,
-  Ordens,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
 
 type OrdemBitCambio = Array<number>;
 
@@ -41,8 +35,8 @@ export class BitCambioService extends Corretora {
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0004;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 

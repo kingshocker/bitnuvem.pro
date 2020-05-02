@@ -1,14 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { timeout, catchError } from 'rxjs/operators';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordem,
-  Ordens,
-  TEMPO_REQUISICAO_MAXIMO,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
 
 type OrdemWalltime = Array<string>;
 
@@ -60,43 +52,33 @@ export class WalltimeService extends Corretora {
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 
   private async retornarLivroOrdens(): Promise<LivroOrdens> {
     const dataRequisicao = new Date();
-    let livroOrdens: LivroOrdens = null;
-    const metadata: MetaWalltime = await (this.http.get(this.webservice).pipe(
-      timeout(TEMPO_REQUISICAO_MAXIMO),
-      catchError((erro) => {
-        console.error(this.id, erro);
 
-        livroOrdens = this.LIVRO_ORDENS_VAZIO;
-        return null;
-      }),
-    ).toPromise() as Promise<MetaWalltime>);
-    if (livroOrdens !== null) {
-      return livroOrdens;
+    let response: any = await this.requisicao(this.webservice);
+    if (response === this.LIVRO_ORDENS_VAZIO) {
+      return this.LIVRO_ORDENS_VAZIO;
     }
-    const livroOrdensWalltime: LivroOrdensWalltime = await (this.http.get(
+    const metadata: MetaWalltime = response as MetaWalltime;
+
+    response = await this.requisicao(
       this.webservice2.replace(
         '{order_book_prefix}',
         metadata.order_book_prefix,
       ).replace('{current_round}', metadata.current_round.toString())
-    ).pipe(
-      timeout(TEMPO_REQUISICAO_MAXIMO),
-      catchError((erro) => {
-        console.error(this.id, erro);
-
-        livroOrdens = this.LIVRO_ORDENS_VAZIO;
-        return null;
-      }),
-    ).toPromise() as Promise<LivroOrdensWalltime>);
-    if (livroOrdens !== null) {
-      return livroOrdens;
+    );
+    if (response === this.LIVRO_ORDENS_VAZIO) {
+      return this.LIVRO_ORDENS_VAZIO;
     }
+    const livroOrdensWalltime: LivroOrdensWalltime = (
+      response as LivroOrdensWalltime
+    );
+
     this.livroOrdens = this.converterLivroOrdensAPI(
       livroOrdensWalltime,
       dataRequisicao
