@@ -12,6 +12,7 @@ import { ComunicacaoService } from '../shared/comunicacao.service';
   styleUrls: ['./arbitragem.page.scss'],
 })
 export class ArbitragemPage implements OnInit {
+  titulo: string;
   arbitragem: Arbitragem;
   subscricao: Observable<any>;
 
@@ -23,6 +24,11 @@ export class ArbitragemPage implements OnInit {
 
   ngOnInit() {
     this.comunicacao.propagadorObservavel.subscribe(this.carregarArbitragem());
+    if (this.arbitragem) {
+      const corretoraVenda = this.arbitragem.corretoraVenda;
+      const corretoraCompra = this.arbitragem.corretoraCompra;
+      this.titulo = `${corretoraVenda.nome} x ${corretoraCompra.nome}`;
+    }
   }
 
   carregarArbitragemDiretamente() {

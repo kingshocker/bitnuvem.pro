@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ConfiguracoesPage } from './configuracoes.page';
+import { ComumModule } from '../comum/comum.module';
 import {
   ConfiguracaoDefinicaoComponent
 } from './components/configuracao-definicao/configuracao-definicao.component';
@@ -31,7 +32,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ComumModule,
   ],
   declarations: [
     ConfiguracoesPage,

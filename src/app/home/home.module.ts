@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 import { HomePage } from './home.page';
+import { ComumModule } from '../comum/comum.module';
 import { SharedModule } from '../shared/shared.module';
 import {
   OportunidadesArbitragemService
@@ -23,6 +24,7 @@ import {
         component: HomePage
       }
     ]),
+    ComumModule,
     SharedModule,
   ],
   declarations: [HomePage],
