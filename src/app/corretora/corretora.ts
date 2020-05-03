@@ -15,6 +15,8 @@ export interface LivroOrdens {
 }
 
 export abstract class Corretora {
+  readonly PROXY = 'https://cors-anywhere.herokuapp.com/';
+  abstract readonly UTILIZA_PROXY: boolean;
   abstract readonly TAXA_ORDEM_EXECUTORA: number;
   abstract readonly TAXA_SAQUE_FIXA: number;
   abstract readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO: number;
@@ -45,8 +47,10 @@ export abstract class Corretora {
         reject(new Error('Request timed out'));
       }, TEMPO_REQUISICAO_MAXIMO);
 
+      const urlRequisicao = (this.UTILIZA_PROXY ? this.PROXY : '') + url;
+
       fetch(
-        url,
+        urlRequisicao,
         {
           cache: 'no-store',
           mode: 'cors',

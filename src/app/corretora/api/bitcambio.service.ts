@@ -14,6 +14,7 @@ interface LivroOrdensBitCambio {
   providedIn: 'root'
 })
 export class BitCambioService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.0099;
   readonly TAXA_SAQUE_FIXA = 10;
   readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = this.TAXA_SAQUE_FIXA;

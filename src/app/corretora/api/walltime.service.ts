@@ -24,6 +24,7 @@ interface MetaWalltime {
   providedIn: 'root'
 })
 export class WalltimeService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.004;
   readonly TAXA_SAQUE_FIXA = 9;
   readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;
@@ -43,10 +44,12 @@ export class WalltimeService extends Corretora {
   paginaOrdens = 'https://walltime.info/';
   paginaContato = 'https://walltime.info/index_pt.html#!text?content=ajuda';
   observacao = '';
-  webservice = 'https://cors-anywhere.herokuapp.com/https://s3.amazonaws.com/data-production-walltime-info/production/dynamic/meta.json';
+  webservice = (
+    'https://s3.amazonaws.com/data-production-walltime-info/production/dynamic/'
+    + 'meta.json'
+  );
   webservice2 = (
-    'https://cors-anywhere.herokuapp.com/https://s3.amazonaws.com/'
-    + 'data-production-walltime-info/production/dynamic/'
+    'https://s3.amazonaws.com/data-production-walltime-info/production/dynamic/'
     + '{order_book_prefix}_r{current_round}_p0.json'
   );
   livroOrdens: LivroOrdens;

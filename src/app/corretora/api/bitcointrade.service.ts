@@ -26,6 +26,7 @@ interface RespostaLivroOrdensBitcoinTrade {
   providedIn: 'root'
 })
 export class BitcoinTradeService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
   readonly TAXA_SAQUE_FIXA = 4.9;
   readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = this.TAXA_SAQUE_FIXA;
@@ -47,7 +48,7 @@ export class BitcoinTradeService extends Corretora {
   paginaOrdens = 'https://broker.bitcointrade.com.br/';
   paginaContato = 'https://www.bitcointrade.com.br/pt-BR/support/';
   observacao = '';
-  webservice = 'https://api.bitcointrade.com.br/v2/public/BRLBTC/orders';
+  webservice = 'https://api.bitcointrade.com.br/v3/public/BRLBTC/orders';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
 

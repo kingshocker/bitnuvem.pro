@@ -13,6 +13,7 @@ interface LivroOrdensMercadoBitcoin {
   providedIn: 'root'
 })
 export class MercadoBitcoinService extends Corretora {
+  readonly UTILIZA_PROXY = false;
   readonly TAXA_ORDEM_EXECUTORA = 0.007;
   readonly TAXA_SAQUE_FIXA = 2.9;
   readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;

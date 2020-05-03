@@ -13,6 +13,7 @@ interface LivroOrdensBitnuvem {
   providedIn: 'root'
 })
 export class BitnuvemService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.0012;
   readonly TAXA_SAQUE_FIXA = 9.5;
   readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;
@@ -27,7 +28,7 @@ export class BitnuvemService extends Corretora {
   paginaOrdens = 'https://bitnuvem.com/panel/order-book/BTCBRL';
   paginaContato = 'https://bitnuvem.com/suporte';
   observacao = '';
-  webservice = 'https://cors-anywhere.herokuapp.com/https://bitnuvem.com/api/BTC/orderbook';
+  webservice = 'https://bitnuvem.com/api/BTC/orderbook';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
 
