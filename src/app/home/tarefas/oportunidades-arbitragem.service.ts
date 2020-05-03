@@ -128,4 +128,8 @@ export class OportunidadesArbitragemService {
   observadorPaginaVisivel(): (paginaVisivel: boolean) => any {
     return ((paginaVisivel: boolean) => this.paginaVisivel = paginaVisivel);
   }
+
+  habilitarInicioImediato() {
+    this.tarefaFoiExecutada = false;
+  }
 }

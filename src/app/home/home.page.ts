@@ -30,6 +30,7 @@ export class HomePage implements OnInit, OnDestroy {
   arbitragensVerificadas: boolean;
   carregamento: HTMLIonLoadingElement;
   propagadorPaginaVisivel: BehaviorSubject<boolean>;
+  tempoRestantePararTarefa: NodeJS.Timer;
 
   constructor(
     private comunicacao: ComunicacaoService,
@@ -41,6 +42,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.carregamento = null;
     this.paginaAtiva = false;
     this.arbitragens = [];
+    this.tempoRestantePararTarefa = null;
 
     this.iniciarTarefaVerificarOportunidadesArbitragem();
   }
@@ -50,6 +52,7 @@ export class HomePage implements OnInit, OnDestroy {
       return ;
     }
 
+    this.encerrarTempoRestantePararTarefa();
     this.paginaAtiva = true;
     this.exibirMensagemPaginaCarregando();
     this.propagadorPaginaVisivel.next(true);
@@ -63,10 +66,16 @@ export class HomePage implements OnInit, OnDestroy {
   @HostListener('window:beforeunload')
   ngOnDestroy() {
     this.paginaAtiva = false;
-    this.arbitragensVerificadas = false;
-    this.propagadorPaginaVisivel.next(false);
 
-    this.oportunidadesArbitragemService.pararTarefa();
+    if (!this.tempoRestantePararTarefa) {
+      this.tempoRestantePararTarefa = setTimeout(() => {
+        this.arbitragensVerificadas = false;
+        this.oportunidadesArbitragemService.pararTarefa();
+        this.arbitragens = [];
+        this.oportunidadesArbitragemService.habilitarInicioImediato();
+        this.encerrarTempoRestantePararTarefa();
+      }, this.oportunidadesArbitragemService.UM_MINUTO_EM_MILISEGUNDOS);
+    }
   }
 
   ionViewWillLeave() {
@@ -97,6 +106,13 @@ export class HomePage implements OnInit, OnDestroy {
         this.changeDetectorRef.detectChanges();
       }
     );
+  }
+
+  encerrarTempoRestantePararTarefa() {
+    if (this.tempoRestantePararTarefa) {
+      clearTimeout(this.tempoRestantePararTarefa);
+    }
+    this.tempoRestantePararTarefa = null;
   }
 
   async exibirMensagemPaginaCarregando() {
