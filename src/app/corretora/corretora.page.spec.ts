@@ -4,6 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { CorretoraPage } from './corretora.page';
+import { CorretoraService } from './corretora.service';
+import { Corretora } from './corretora';
+import { CorretoraTest } from './corretora.test';
 
 /**
  * An ActivateRoute test double with a `paramMap` observable.
@@ -28,6 +31,12 @@ class ActivatedRouteStub {
   }
 }
 
+class CorretoraServiceTest {
+  corretoraPeloId(idCorretora: string): Corretora {
+    return new CorretoraTest();
+  }
+}
+
 describe('CorretoraPage', () => {
   let component: CorretoraPage;
   let fixture: ComponentFixture<CorretoraPage>;
@@ -38,13 +47,14 @@ describe('CorretoraPage', () => {
       declarations: [CorretoraPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       imports: [RouterTestingModule],
-      providers: [{provide: ActivatedRoute, useValue: activatedRoute}],
-    })
-    .compileComponents();
+      providers: [
+        {provide: ActivatedRoute, useValue: activatedRoute},
+        {provide: CorretoraService, useValue: new CorretoraServiceTest()},
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    activatedRoute.setParam('idCorretora', 'coinext');
     fixture = TestBed.createComponent(CorretoraPage);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -5,37 +5,24 @@ import { RouterTestingModule } from '@angular/router/testing';
 import {
   InformacoesCorretoraComponent
 } from './informacoes-corretora.component';
-import { CoinextService } from '../../../corretora/api/coinext.service';
+import { CorretoraTest } from '../../../corretora/corretora.test';
 
 describe('InformacoesCorretoraComponent', () => {
   let component: InformacoesCorretoraComponent;
   let fixture: ComponentFixture<InformacoesCorretoraComponent>;
 
-  function criarCorretoraTeste() {
-    const corretora = new CoinextService();
-    const livroOrdens = {
-      venda: [],
-      compra: [],
-      dataRequisicao: new Date(),
-      dataResposta: new Date(),
-    };
-    corretora.livroOrdens = livroOrdens;
-    return corretora;
-  }
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InformacoesCorretoraComponent ],
+      declarations: [InformacoesCorretoraComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       imports: [RouterTestingModule],
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(InformacoesCorretoraComponent);
     component = fixture.componentInstance;
-    component.corretora = criarCorretoraTeste();
+    component.corretora = new CorretoraTest();
     fixture.detectChanges();
   });
 
