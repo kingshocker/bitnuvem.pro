@@ -103,7 +103,9 @@ export class Arbitragem {
     const valorMinimo: number = this.corretoraVenda.menorPrecoVenda;
     const valorMaximo: number = this.corretoraCompra.maiorPrecoCompra;
     const ordensVendaSimulacao: Ordens = this.corretoraVenda.livroOrdens.venda;
-    const ordensCompraSimulacao: Ordens = this.corretoraCompra.livroOrdens.compra;
+    const ordensCompraSimulacao: Ordens = (
+      this.corretoraCompra.livroOrdens.compra
+    );
 
     this.ordensVenda = [];
     this.ordensCompra = [];

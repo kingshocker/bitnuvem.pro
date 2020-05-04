@@ -4,7 +4,9 @@ import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 
-import { ConcordaIsencaoResponsabilidade } from './concorda-isencao-responsabilidade.enum';
+import {
+  ConcordaIsencaoResponsabilidade
+} from './concorda-isencao-responsabilidade.enum';
 
 @Component({
   selector: 'app-isencao-responsabilidade',
@@ -24,7 +26,9 @@ export class IsencaoResponsabilidadePage {
 
   async informarItensNaoMarcados() {
     const toast = await this.toastController.create({
-      message: 'É necessário concordar com todos os itens para utilizar o software.',
+      message: (
+        'É necessário concordar com todos os itens para utilizar o software.'
+      ),
       duration: 5000
     });
     toast.present();

@@ -19,7 +19,13 @@ describe('IsencaoResponsabilidadeGuard', () => {
     });
   });
 
-  it('should ...', inject([IsencaoResponsabilidadeGuard], (guard: IsencaoResponsabilidadeGuard) => {
-    expect(guard).toBeTruthy();
-  }));
+  it(
+    'should ...',
+    inject(
+      [IsencaoResponsabilidadeGuard],
+      (guard: IsencaoResponsabilidadeGuard) => {
+        expect(guard).toBeTruthy();
+      }
+    )
+  );
 });

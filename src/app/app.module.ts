@@ -26,10 +26,15 @@ import { BrasilBitcoinService } from './corretora/api/brasilbitcoin.service';
 import { BitCambioService } from './corretora/api/bitcambio.service';
 import { WalltimeService } from './corretora/api/walltime.service';
 
-import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
+import {
+  IsencaoResponsabilidadeGuard
+} from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
 import { ComunicacaoService } from './shared/comunicacao.service';
-import { ConfiguracoesService, configuracoesServiceFactory } from './configuracoes/configuracoes.service';
+import {
+  ConfiguracoesService,
+  configuracoesServiceFactory,
+} from './configuracoes/configuracoes.service';
 import { NotificacaoService } from './shared/notificacao.service';
 
 @NgModule({
@@ -40,7 +45,10 @@ import { NotificacaoService } from './shared/notificacao.service';
     IonicModule.forRoot(),
     AppRoutingModule,
     IonicStorageModule.forRoot(),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register(
+      'ngsw-worker.js',
+      { enabled: environment.production },
+    ),
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
@@ -69,7 +77,7 @@ import { NotificacaoService } from './shared/notificacao.service';
     Platform,
     NotificacaoService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
 

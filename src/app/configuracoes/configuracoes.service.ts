@@ -12,7 +12,9 @@ import { CorretoraService } from '../corretora/corretora.service';
 export class ConfiguracoesService {
   readonly FILTRO_LUCRO_ACIMA = 'filtro-lucro-acima';
   readonly FILTRO_PORCENTAGEM_LUCRO_ACIMA = 'filtro-porcentagem-lucro-acima';
-  readonly FILTRO_CORRETORAS_HABILITADAS = 'filtro-corretora-{corretora}-habilitada';
+  readonly FILTRO_CORRETORAS_HABILITADAS = (
+    'filtro-corretora-{corretora}-habilitada'
+  );
   readonly INVESTIMENTO_MAXIMO = 'investimento-maximo';
   readonly PERMITIR_NOTIFICAR = 'permitir-notificar';
   readonly TEMPO_ENTRE_NOTIFICACOES = 'tempo-entre-notificacoes';
