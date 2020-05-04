@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Configuracao } from '../../configuracao';
 import { ConfiguracoesService } from '../../configuracoes.service';
-import { NotificacaoService } from '../../../shared/notificacao.service';
+import { NotificacaoService } from '../../../comum/notificacao.service';
 
 @Component({
   selector: 'app-configuracao-notificar',

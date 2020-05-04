@@ -30,12 +30,12 @@ import {
   IsencaoResponsabilidadeGuard
 } from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
-import { ComunicacaoService } from './shared/comunicacao.service';
+import { ComunicacaoService } from './comum/comunicacao.service';
 import {
   ConfiguracoesService,
   configuracoesServiceFactory,
 } from './configuracoes/configuracoes.service';
-import { NotificacaoService } from './shared/notificacao.service';
+import { NotificacaoService } from './comum/notificacao.service';
 
 @NgModule({
   declarations: [AppComponent],

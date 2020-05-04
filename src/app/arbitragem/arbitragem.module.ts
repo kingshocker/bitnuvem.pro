@@ -16,7 +16,6 @@ import {
   TabelaOrdensComponent
 } from './components/tabela-ordens/tabela-ordens.component';
 import { ComumModule } from '../comum/comum.module';
-import { SharedModule } from '../shared/shared.module';
 
 const routes: Routes = [
   {
@@ -32,7 +31,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     ComumModule,
-    SharedModule,
   ],
   declarations: [
     ArbitragemPage,

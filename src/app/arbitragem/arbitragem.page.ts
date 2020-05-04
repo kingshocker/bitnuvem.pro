@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { Arbitragem } from './arbitragem';
 import { ArbitragemService } from './arbitragem.service';
-import { ComunicacaoService } from '../shared/comunicacao.service';
+import { ComunicacaoService } from '../comum/comunicacao.service';
 
 @Component({
   selector: 'app-arbitragem',

@@ -8,7 +8,6 @@ import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 import { HomePage } from './home.page';
 import { ComumModule } from '../comum/comum.module';
-import { SharedModule } from '../shared/shared.module';
 import {
   OportunidadesArbitragemService
 } from './tarefas/oportunidades-arbitragem.service';
@@ -25,7 +24,6 @@ import {
       }
     ]),
     ComumModule,
-    SharedModule,
   ],
   declarations: [HomePage],
   providers: [BackgroundMode, OportunidadesArbitragemService],

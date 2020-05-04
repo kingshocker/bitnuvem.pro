@@ -10,7 +10,7 @@ import {
 } from '../../configuracoes/configuracoes.service';
 import { Arbitragem } from '../../arbitragem/arbitragem';
 import { ArbitragemService } from '../../arbitragem/arbitragem.service';
-import { NotificacaoService } from '../../shared/notificacao.service';
+import { NotificacaoService } from '../../comum/notificacao.service';
 
 @Injectable({
   providedIn: 'root'

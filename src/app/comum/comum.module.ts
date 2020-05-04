@@ -5,11 +5,12 @@ import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { CabecalhoComponent } from './cabecalho/cabecalho.component';
+import { RodapeComponent } from './rodape/rodape.component';
 
 @NgModule({
   imports: [CommonModule, IonicModule, RouterModule],
-  exports: [CabecalhoComponent],
-  declarations: [CabecalhoComponent],
+  exports: [CabecalhoComponent, RodapeComponent],
+  declarations: [CabecalhoComponent, RodapeComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ComumModule { }

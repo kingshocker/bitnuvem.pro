@@ -12,7 +12,7 @@ import { OnPageVisible, OnPageHidden } from 'angular-page-visibility';
 import { LoadingController } from '@ionic/angular';
 
 import { Arbitragem } from '../arbitragem/arbitragem';
-import { ComunicacaoService } from '../shared/comunicacao.service';
+import { ComunicacaoService } from '../comum/comunicacao.service';
 import {
   OportunidadesArbitragemService
 } from './tarefas/oportunidades-arbitragem.service';
