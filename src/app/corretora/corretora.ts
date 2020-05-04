@@ -55,10 +55,6 @@ export abstract class Corretora {
           cache: 'no-store',
           mode: 'cors',
           method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
         },
       ).then((response: Response) => {
         // Clear the timeout as cleanup
