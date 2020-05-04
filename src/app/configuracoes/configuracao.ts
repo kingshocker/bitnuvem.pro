@@ -1,4 +1,3 @@
-import { Corretora } from '../corretora/corretora';
 import { Ordenacao, CriterioOrdenacao, CampoOrdenacao } from './ordenacao';
 
 export interface ConfiguracaoCorretora {

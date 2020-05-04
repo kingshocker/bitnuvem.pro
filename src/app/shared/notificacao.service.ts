@@ -7,6 +7,7 @@ import { Platform } from '@ionic/angular';
   providedIn: 'root'
 })
 export class NotificacaoService {
+  notificacao: Notification;
 
   constructor(
     private localNotifications: LocalNotifications,
@@ -26,7 +27,7 @@ export class NotificacaoService {
       const opcoes = {
         body: texto
       };
-      const notificacao = new Notification(titulo, opcoes);
+      this.notificacao = new Notification(titulo, opcoes);
     }
   }
 

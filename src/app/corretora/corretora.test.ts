@@ -1,5 +1,3 @@
-import { Injectable } from '@angular/core';
-
 import { Corretora, LivroOrdens } from './corretora';
 
 export class CorretoraTest extends Corretora {

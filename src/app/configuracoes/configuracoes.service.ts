@@ -4,7 +4,6 @@ import { Storage } from '@ionic/storage';
 
 import { Configuracao, ConfiguracaoCorretora } from './configuracao';
 import { Ordenacao, CampoOrdenacao, CriterioOrdenacao } from './ordenacao';
-import { Corretora } from '../corretora/corretora';
 import { CorretoraService } from '../corretora/corretora.service';
 
 @Injectable({
@@ -97,7 +96,6 @@ export class ConfiguracoesService {
            */
           let valorConvertido: ConfiguracaoCorretora = null;
           if (typeof valor === 'boolean') {
-            const valorAntigo: boolean = valor;
             valorConvertido = {habilitada: valor, possuiBancoConveniado: false};
           } else {
             valorConvertido = valor as ConfiguracaoCorretora;
