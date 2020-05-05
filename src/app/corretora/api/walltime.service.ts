@@ -65,7 +65,8 @@ export class WalltimeService extends Corretora {
 
     let response: any = await this.requisicao(this.webservice);
     if (response === this.LIVRO_ORDENS_VAZIO) {
-      return this.LIVRO_ORDENS_VAZIO;
+      this.livroOrdens = this.LIVRO_ORDENS_VAZIO;
+      return this.livroOrdens;
     }
     const metadata: MetaWalltime = response as MetaWalltime;
 
@@ -76,7 +77,8 @@ export class WalltimeService extends Corretora {
       ).replace('{current_round}', metadata.current_round.toString())
     );
     if (response === this.LIVRO_ORDENS_VAZIO) {
-      return this.LIVRO_ORDENS_VAZIO;
+      this.livroOrdens = this.LIVRO_ORDENS_VAZIO;
+      return this.livroOrdens;
     }
     const livroOrdensWalltime: LivroOrdensWalltime = (
       response as LivroOrdensWalltime
