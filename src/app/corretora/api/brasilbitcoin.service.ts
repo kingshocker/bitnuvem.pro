@@ -27,8 +27,8 @@ export class BrasilBitcoinService extends Corretora {
   readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
   readonly POSSUI_CONVENIOS_BANCOS = true;
   readonly LIVRO_ORDENS_VAZIO = {
-    asks: [],
-    bids: [],
+    sell: [],
+    buy: [],
   };
 
   id = 'brasilbitcoin';
