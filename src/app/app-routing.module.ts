@@ -1,31 +1,45 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
+import {
+  IsencaoResponsabilidadeGuard
+} from './isencao-responsabilidade/isencao-responsabilidade.guard';
 
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule),
+    loadChildren: () => import('./home/home.module').then(
+      m => m.HomePageModule
+    ),
     canActivate: [IsencaoResponsabilidadeGuard],
   },
   {
     path: 'isencao-responsabilidade',
-    loadChildren: './isencao-responsabilidade/isencao-responsabilidade.module#IsencaoResponsabilidadePageModule',
+    loadChildren: () => import(
+      './isencao-responsabilidade/isencao-responsabilidade.module'
+    ).then(
+      m => m.IsencaoResponsabilidadePageModule
+    ),
   },
   {
     path: 'arbitragem/:idCorretoraVenda/:idCorretoraCompra',
-    loadChildren: './arbitragem/arbitragem.module#ArbitragemPageModule',
+    loadChildren: () => import('./arbitragem/arbitragem.module').then(
+      m => m.ArbitragemPageModule
+    ),
     canActivate: [IsencaoResponsabilidadeGuard],
   },
   {
     path: 'configuracoes',
-    loadChildren: './configuracoes/configuracoes.module#ConfiguracoesPageModule',
+    loadChildren: () => import('./configuracoes/configuracoes.module').then(
+      m => m.ConfiguracoesPageModule
+    ),
     canActivate: [IsencaoResponsabilidadeGuard],
   },
   {
     path: 'corretora/:idCorretora',
-    loadChildren: './corretora/corretora.module#CorretoraPageModule',
+    loadChildren: () => import('./corretora/corretora.module').then(
+      m => m.CorretoraPageModule
+    ),
     canActivate: [IsencaoResponsabilidadeGuard],
   },
 ];

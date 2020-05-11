@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordem,
-  Ordens,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
 
 interface OrdemBrasilBitcoin {
   id: number;
@@ -25,10 +19,16 @@ interface LivroOrdensBrasilBitcoin {
   providedIn: 'root'
 })
 export class BrasilBitcoinService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
+  readonly TAXA_SAQUE_FIXA = 4.99;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;
+  readonly TAXA_SAQUE_VARIAVEL = 0.005;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
+  readonly POSSUI_CONVENIOS_BANCOS = true;
   readonly LIVRO_ORDENS_VAZIO = {
-    asks: [],
-    bids: [],
+    sell: [],
+    buy: [],
   };
 
   id = 'brasilbitcoin';
@@ -37,12 +37,12 @@ export class BrasilBitcoinService extends Corretora {
   paginaOrdens = 'https://brasilbitcoin.com.br/#testimonials';
   paginaContato = 'https://brasilbitcoin.com.br/';
   observacao = '';
-  webservice = 'https://cors-anywhere.herokuapp.com/https://brasilbitcoin.com.br/API/orderbook/BTC';
+  webservice = 'https://brasilbitcoin.com.br/API/orderbook/BTC';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0002;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 

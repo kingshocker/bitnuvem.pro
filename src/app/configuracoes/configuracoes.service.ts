@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Storage } from '@ionic/storage';
 
-import { Configuracao } from './configuracao';
-import { Corretora } from '../corretora/corretora';
+import { Configuracao, ConfiguracaoCorretora } from './configuracao';
+import { Ordenacao, CampoOrdenacao, CriterioOrdenacao } from './ordenacao';
 import { CorretoraService } from '../corretora/corretora.service';
 
 @Injectable({
@@ -12,11 +12,15 @@ import { CorretoraService } from '../corretora/corretora.service';
 export class ConfiguracoesService {
   readonly FILTRO_LUCRO_ACIMA = 'filtro-lucro-acima';
   readonly FILTRO_PORCENTAGEM_LUCRO_ACIMA = 'filtro-porcentagem-lucro-acima';
-  readonly FILTRO_CORRETORAS_HABILITADAS = 'filtro-corretora-{corretora}-habilitada';
+  readonly FILTRO_CORRETORAS_HABILITADAS = (
+    'filtro-corretora-{corretora}-habilitada'
+  );
   readonly INVESTIMENTO_MAXIMO = 'investimento-maximo';
   readonly PERMITIR_NOTIFICAR = 'permitir-notificar';
   readonly TEMPO_ENTRE_NOTIFICACOES = 'tempo-entre-notificacoes';
   readonly SIMULAR_TAXA_TRANSFERENCIA = 'simular-taxa-transferencia';
+  readonly SIMULAR_TAXA_SAQUE = 'simular-taxa-saque';
+  readonly ORDENACAO = 'ordenacao';
   readonly VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES = 60 * 2;
   readonly promises = [];
 
@@ -48,6 +52,17 @@ export class ConfiguracoesService {
       )
     );
     this.promises.push(
+      this.carregarValor(this.ORDENACAO, this.configuracao.ordenacao).then(
+        (valor: Array<{campoOrdenacao: CampoOrdenacao}>) => {
+          const ordenacao: Ordenacao = [];
+          for (let i = 0, length = valor.length; i < length; i++) {
+            ordenacao.push(new CriterioOrdenacao(valor[i].campoOrdenacao));
+          }
+          this.configuracao.ordenacao = ordenacao;
+        }
+      )
+    );
+    this.promises.push(
       this.carregarValor(
         this.TEMPO_ENTRE_NOTIFICACOES,
         this.VALOR_PADRAO_TEMPO_ENTRE_NOTIFICACOES,
@@ -58,13 +73,38 @@ export class ConfiguracoesService {
         (valor) => this.configuracao.simularTaxaTransferencia = valor
       )
     );
+    this.promises.push(
+      this.carregarValor(
+        this.SIMULAR_TAXA_SAQUE,
+        this.configuracao.simularTaxaSaque,
+      ).then(
+        (valor) => this.configuracao.simularTaxaSaque = valor
+      )
+    );
     this.corretoraService.corretoras.forEach((corretora) => {
+      const valorPadrao = JSON.parse(
+        JSON.stringify(this.configuracao.VALOR_PADRAO_CORRETORAS)
+      );
+      this.configuracao.corretoras[corretora.id] = valorPadrao;
       this.promises.push(
         this.carregarValorCorretora(
           this.FILTRO_CORRETORAS_HABILITADAS,
           corretora.id,
-          true,
-        ).then((valor) => this.configuracao.corretoras[corretora.id] = valor)
+          valorPadrao,
+        ).then((valor: boolean | ConfiguracaoCorretora) => {
+          /*
+           * Conversão do tipo antigo de valor que era armanzenado para informar
+           * se a corretora estava habilitada para o novo tipo.
+           */
+          let valorConvertido: ConfiguracaoCorretora = null;
+          if (typeof valor === 'boolean') {
+            valorConvertido = {habilitada: valor, possuiBancoConveniado: false};
+          } else {
+            valorConvertido = valor as ConfiguracaoCorretora;
+          }
+
+          this.configuracao.corretoras[corretora.id] = valorConvertido;
+        })
       );
     });
   }
@@ -129,6 +169,17 @@ export class ConfiguracoesService {
       this.SIMULAR_TAXA_TRANSFERENCIA,
       this.configuracao.simularTaxaTransferencia,
     );
+  }
+
+  mudarSimularTaxaSaque() {
+    this.storage.set(
+      this.SIMULAR_TAXA_SAQUE,
+      this.configuracao.simularTaxaSaque,
+    );
+  }
+
+  mudarOrdenacao() {
+    this.storage.set(this.ORDENACAO, this.configuracao.ordenacao);
   }
 
   mudarFiltroCorretoraHabilitada(idCorretora: string) {

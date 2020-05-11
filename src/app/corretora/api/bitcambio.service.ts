@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordem,
-  Ordens,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
 
 type OrdemBitCambio = Array<number>;
 
@@ -20,7 +14,13 @@ interface LivroOrdensBitCambio {
   providedIn: 'root'
 })
 export class BitCambioService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.0099;
+  readonly TAXA_SAQUE_FIXA = 10;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = this.TAXA_SAQUE_FIXA;
+  readonly TAXA_SAQUE_VARIAVEL = 0.01;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
+  readonly POSSUI_CONVENIOS_BANCOS = false;
   readonly LIVRO_ORDENS_VAZIO = {
     asks: [],
     bids: [],
@@ -36,8 +36,8 @@ export class BitCambioService extends Corretora {
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0004;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 

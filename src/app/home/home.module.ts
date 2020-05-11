@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { HomePage } from './home.page';
+import { IonicModule } from '@ionic/angular';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
-import { SharedModule } from '../shared/shared.module';
+import { HomePage } from './home.page';
+import { ComumModule } from '../comum/comum.module';
+import {
+  OportunidadesArbitragemService
+} from './tarefas/oportunidades-arbitragem.service';
 
 @NgModule({
   imports: [
@@ -19,8 +23,9 @@ import { SharedModule } from '../shared/shared.module';
         component: HomePage
       }
     ]),
-    SharedModule,
+    ComumModule,
   ],
-  declarations: [HomePage]
+  declarations: [HomePage],
+  providers: [BackgroundMode, OportunidadesArbitragemService],
 })
 export class HomePageModule {}

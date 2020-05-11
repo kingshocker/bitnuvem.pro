@@ -1,18 +1,26 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>{{ corretora.nome }}</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-cabecalho [titulo]="corretora.nome"></app-cabecalho>
 
 <ion-content>
   <ion-list>
-    <ion-item href="{{ corretora.paginaInicial }}" target="_blank" rel="external">
+    <ion-item
+      href="{{ corretora.paginaInicial }}"
+      target="_blank"
+      rel="external"
+    >
       <ion-label>Página inicial</ion-label>
     </ion-item>
-    <ion-item href="{{ corretora.paginaOrdens }}" target="_blank" rel="external">
+    <ion-item
+      href="{{ corretora.paginaOrdens }}"
+      target="_blank"
+      rel="external"
+    >
       <ion-label>Página das ordens de compra e venda</ion-label>
     </ion-item>
-    <ion-item href="{{ corretora.paginaContato }}" target="_blank" rel="external">
+    <ion-item
+      href="{{ corretora.paginaContato }}"
+      target="_blank"
+      rel="external"
+    >
       <ion-label>Página de contato</ion-label>
     </ion-item>
     <ion-list-header>

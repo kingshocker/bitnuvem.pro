@@ -6,6 +6,19 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ConfiguracoesPage } from './configuracoes.page';
+import { ComumModule } from '../comum/comum.module';
+import {
+  ConfiguracaoDefinicaoComponent
+} from './components/configuracao-definicao/configuracao-definicao.component';
+import {
+  ConfiguracaoFiltroComponent
+} from './components/configuracao-filtro/configuracao-filtro.component';
+import {
+  ConfiguracaoNotificarComponent
+} from './components/configuracao-notificar/configuracao-notificar.component';
+import {
+  ConfiguracaoOrdenacaoComponent
+} from './components/configuracao-ordenacao/configuracao-ordenacao.component';
 
 const routes: Routes = [
   {
@@ -19,8 +32,15 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ComumModule,
   ],
-  declarations: [ConfiguracoesPage]
+  declarations: [
+    ConfiguracoesPage,
+    ConfiguracaoDefinicaoComponent,
+    ConfiguracaoFiltroComponent,
+    ConfiguracaoNotificarComponent,
+    ConfiguracaoOrdenacaoComponent,
+  ],
 })
 export class ConfiguracoesPageModule {}

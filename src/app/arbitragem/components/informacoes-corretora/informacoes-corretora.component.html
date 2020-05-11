@@ -1,0 +1,10 @@
+<div>
+  <strong>{{ rotulo }}</strong>
+  <p>
+    <a [routerLink]="['/corretora', corretora.id]">{{ corretora.nome }}</a>
+  </p>
+  <strong>Data da requisição</strong>
+  <p>{{ corretora.livroOrdens.dataRequisicao | date: FORMATO_DATA }}</p>
+  <strong>Data da resposta</strong>
+  <p>{{ corretora.livroOrdens.dataResposta | date: FORMATO_DATA }}</p>
+</div>

@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordens,
-  Ordem,
-  TEMPO_REQUISICAO_MAXIMO,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordens, Ordem } from '../corretora';
 
 interface OrdemBitcoinTrade {
   unit_price: number;
@@ -33,7 +26,13 @@ interface RespostaLivroOrdensBitcoinTrade {
   providedIn: 'root'
 })
 export class BitcoinTradeService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
+  readonly TAXA_SAQUE_FIXA = 4.9;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = this.TAXA_SAQUE_FIXA;
+  readonly TAXA_SAQUE_VARIAVEL = 0.0099;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
+  readonly POSSUI_CONVENIOS_BANCOS = false;
   readonly LIVRO_ORDENS_VAZIO = {
     code: null,
     message: null,
@@ -49,12 +48,12 @@ export class BitcoinTradeService extends Corretora {
   paginaOrdens = 'https://broker.bitcointrade.com.br/';
   paginaContato = 'https://www.bitcointrade.com.br/pt-BR/support/';
   observacao = '';
-  webservice = 'https://api.bitcointrade.com.br/v2/public/BRLBTC/orders';
+  webservice = 'https://api.bitcointrade.com.br/v3/public/BRLBTC/orders';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 

@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordem,
-  Ordens,
-  TEMPO_REQUISICAO_MAXIMO,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
 
 interface OrdemBraziliex {
   price: number;
@@ -25,7 +18,13 @@ interface LivroOrdensBraziliex {
   providedIn: 'root'
 })
 export class BraziliexService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
+  readonly TAXA_SAQUE_FIXA = 9;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = this.TAXA_SAQUE_FIXA;
+  readonly TAXA_SAQUE_VARIAVEL = 0.0075;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
+  readonly POSSUI_CONVENIOS_BANCOS = false;
   readonly LIVRO_ORDENS_VAZIO = {
     asks: [],
     bids: [],
@@ -40,12 +39,12 @@ export class BraziliexService extends Corretora {
     'A corretora oferece descontos para usuários que possuem certas quantidades'
     + ' do token Braziliex Token (BRZX).'
   );
-  webservice = 'https://cors-anywhere.herokuapp.com/https://braziliex.com/api/v1/public/orderbook/btc_brl';
+  webservice = 'https://braziliex.com/api/v1/public/orderbook/btc_brl';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.00054714;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 

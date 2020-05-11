@@ -1,26 +1,47 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Isenção de responsabilidade</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-cabecalho
+  titulo="Isenção de responsabilidade"
+  [permiteVoltar]="false"
+  [permiteNavegarConfiguracoes]="false"
+>
+</app-cabecalho>
 
 <ion-content>
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-note>Negociar no mercado de criptomoedas é muito arriscado, sendo assim nunca invista uma quantia em dinheiro que você não pode perder, pois você pode perder todo o dinheiro investido.</ion-note>
+        <ion-note>
+          Negociar no mercado de criptomoedas é muito arriscado, sendo assim
+          nunca invista uma quantia em dinheiro que você não pode perder, pois
+          você pode perder todo o dinheiro investido.
+        </ion-note>
       </ion-col>
     </ion-row>
   </ion-grid>
   <ion-list>
     <ion-item>
-      <ion-label class="ion-text-wrap">Concordo que os desenvolvedores não são responsáveis pelos meus ganhos e perdas pelo uso do software</ion-label>
-      <ion-checkbox color="primary" slot="start" [(ngModel)]="concordaIsencaoPerdasGanhos"></ion-checkbox>
+      <ion-label class="ion-text-wrap">
+        Concordo que os desenvolvedores não são responsáveis pelos meus ganhos
+        e perdas pelo uso do software
+      </ion-label>
+      <ion-checkbox
+        color="primary"
+        slot="start"
+        [(ngModel)]="concordaIsencaoPerdasGanhos"
+      ></ion-checkbox>
     </ion-item>
     <ion-item>
-      <ion-label class="ion-text-wrap">Concordo que os desenvolvedores não são responsáveis pelo meu dinheiro e minhas criptomoeadas em posse das corretoras</ion-label>
-      <ion-checkbox color="primary" slot="start" [(ngModel)]="concordaIsencaoCorretoras"></ion-checkbox>
+      <ion-label class="ion-text-wrap">
+        Concordo que os desenvolvedores não são responsáveis pelo meu dinheiro
+        e minhas criptomoeadas em posse das corretoras
+      </ion-label>
+      <ion-checkbox
+        color="primary"
+        slot="start"
+        [(ngModel)]="concordaIsencaoCorretoras"
+      ></ion-checkbox>
     </ion-item>
   </ion-list>
-  <ion-button expand="block" color="primary" (click)="concordarTermosUso()">Concordo com os itens acima listados</ion-button>
+  <ion-button expand="block" color="primary" (click)="concordarTermosUso()">
+    Concordo com os itens acima listados
+  </ion-button>
 </ion-content>

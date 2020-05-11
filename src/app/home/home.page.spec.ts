@@ -1,11 +1,16 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, fakeAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+  async,
+  fakeAsync,
+  ComponentFixture,
+  TestBed,
+} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { IonicModule } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 import { HomePage } from './home.page';
 
@@ -21,7 +26,6 @@ describe('HomePage', () => {
       declarations: [ HomePage ],
       imports: [
         IonicModule.forRoot(),
-        HttpClientTestingModule,
         RouterTestingModule,
       ],
       providers: [
@@ -30,6 +34,7 @@ describe('HomePage', () => {
           useFactory: () => new Storage({})
         },
         LocalNotifications,
+        BackgroundMode,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();

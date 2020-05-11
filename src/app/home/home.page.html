@@ -1,15 +1,5 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      CriptoArbitragem
-    </ion-title>
-    <ion-buttons slot="primary">
-      <ion-button routerLink="/configuracoes">
-        <ion-icon slot="icon-only" name="settings"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-cabecalho titulo="CriptoArbitragem" [permiteVoltar]="false">
+</app-cabecalho>
 
 <ion-content>
   <div class="table-responsive" *ngIf="existemOportunidadesAbitragem">
@@ -22,10 +12,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let arbitragem of arbitragens; let indice = index" (click)="detalharOportunidadeArbitragem(indice)">
+        <tr
+          *ngFor="let arbitragem of arbitragens; let indice = index"
+          (click)="detalharOportunidadeArbitragem(indice)"
+        >
           <td>{{ arbitragem.corretoraVenda.nome }}</td>
           <td>{{ arbitragem.corretoraCompra.nome }}</td>
-          <td>R$ {{ arbitragem.lucro | number:'1.2-2':'pt-BR' }} ({{ arbitragem.porcentagemLucro | number:'1.2-2':'pt-BR' }}%)</td>
+          <td>
+            R$ {{ arbitragem.lucro | number: PRECISAO_REAL }}
+            ({{ arbitragem.porcentagemLucro | number: PRECISAO_REAL }}%)
+            <ion-icon name="arrow-forward" mode="ios"></ion-icon>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -34,7 +31,8 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          Não há oportunidades de arbitragem de acordo com os parâmetros informados na configuração.
+          Não há oportunidades de arbitragem de acordo com os parâmetros
+          informados na configuração.
         </ion-col>
       </ion-row>
     </ion-grid>

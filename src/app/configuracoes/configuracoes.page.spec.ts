@@ -1,6 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { Storage } from '@ionic/storage';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
@@ -13,7 +12,7 @@ describe('ConfiguracoesPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfiguracoesPage ],
+      declarations: [ConfiguracoesPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         {
@@ -22,11 +21,7 @@ describe('ConfiguracoesPage', () => {
         },
         LocalNotifications,
       ],
-      imports: [
-        HttpClientTestingModule,
-      ],
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

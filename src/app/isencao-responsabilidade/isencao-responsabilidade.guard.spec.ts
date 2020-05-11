@@ -1,4 +1,4 @@
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { Storage } from '@ionic/storage';
@@ -19,7 +19,13 @@ describe('IsencaoResponsabilidadeGuard', () => {
     });
   });
 
-  it('should ...', inject([IsencaoResponsabilidadeGuard], (guard: IsencaoResponsabilidadeGuard) => {
-    expect(guard).toBeTruthy();
-  }));
+  it(
+    'should ...',
+    inject(
+      [IsencaoResponsabilidadeGuard],
+      (guard: IsencaoResponsabilidadeGuard) => {
+        expect(guard).toBeTruthy();
+      }
+    )
+  );
 });

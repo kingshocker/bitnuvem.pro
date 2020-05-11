@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { IsencaoResponsabilidadePage } from './isencao-responsabilidade.page';
+import { ComumModule } from '../comum/comum.module';
 
 const routes: Routes = [
   {
@@ -19,8 +20,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ComumModule,
   ],
-  declarations: [IsencaoResponsabilidadePage]
+  declarations: [IsencaoResponsabilidadePage],
 })
 export class IsencaoResponsabilidadePageModule {}

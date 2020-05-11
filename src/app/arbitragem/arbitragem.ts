@@ -12,6 +12,7 @@ export class Arbitragem {
   lucro: number;
   investimento: number;
   taxaTransferencia: number;
+  taxaSaque: number;
 
   constructor(
     public corretoraVenda: Corretora,
@@ -19,6 +20,8 @@ export class Arbitragem {
     public investimentoMaximo: number,
     private lucroPercentualMinimo: number,
     public possuiTaxaTransferencia: boolean,
+    public possuiTaxaSaque: boolean,
+    public possuiBancoConveniado: boolean,
   ) {
     this.verificarOportunidades();
   }
@@ -100,7 +103,9 @@ export class Arbitragem {
     const valorMinimo: number = this.corretoraVenda.menorPrecoVenda;
     const valorMaximo: number = this.corretoraCompra.maiorPrecoCompra;
     const ordensVendaSimulacao: Ordens = this.corretoraVenda.livroOrdens.venda;
-    const ordensCompraSimulacao: Ordens = this.corretoraCompra.livroOrdens.compra;
+    const ordensCompraSimulacao: Ordens = (
+      this.corretoraCompra.livroOrdens.compra
+    );
 
     this.ordensVenda = [];
     this.ordensCompra = [];
@@ -115,6 +120,7 @@ export class Arbitragem {
 
     let ordemVenda = this.clonarOrdem(ordensVendaSimulacao[indiceVenda]);
     let ordemCompra = this.clonarOrdem(ordensCompraSimulacao[indiceCompra]);
+    let totalCompraArbitragem = 0;
 
     let taxaTransferenciaRestante = 0;
     if (this.possuiTaxaTransferencia) {
@@ -140,17 +146,19 @@ export class Arbitragem {
         saldoRestante
       );
 
-      const totalVenda = quantidadeOperada * ordemVenda.preco;
-      const taxaVenda = this.corretoraVenda.calcularValorTaxaVenda(totalVenda);
+      const totalVendaOperacao = quantidadeOperada * ordemVenda.preco;
+      const taxaVenda = this.corretoraVenda.calcularValorTaxaVenda(
+        totalVendaOperacao
+      );
       const investimentoOperacao = (
-        this.corretoraVenda.calcularValorVendaAposTaxas(totalVenda)
+        this.corretoraVenda.calcularValorVendaAposTaxas(totalVendaOperacao)
       );
 
       ordemVenda.quantidade -= quantidadeOperada;
       taxaTransferenciaRestante -= quantidadeOperada;
       saldoRestante -= investimentoOperacao;
       this.investimento += investimentoOperacao;
-      this.lucro += - totalVenda - taxaVenda;
+      this.lucro -= totalVendaOperacao + taxaVenda;
 
       this.adicionarOrdemArbitragem(
         this.ordensVenda,
@@ -182,15 +190,19 @@ export class Arbitragem {
         saldoRestante
       );
 
-      const totalVenda = quantidadeOperada * ordemVenda.preco;
-      const totalCompra = quantidadeOperada * ordemCompra.preco;
-      const taxaVenda = this.corretoraVenda.calcularValorTaxaVenda(totalVenda);
-      const taxaCompra = this.corretoraCompra.calcularValorTaxaCompra(
-        totalCompra
+      const totalVendaOperacao = quantidadeOperada * ordemVenda.preco;
+      const totalCompraOperacao = quantidadeOperada * ordemCompra.preco;
+      const taxaVenda = this.corretoraVenda.calcularValorTaxaVenda(
+        totalVendaOperacao
       );
-      const lucroOperacao = totalCompra - totalVenda - taxaVenda - taxaCompra;
+      const taxaCompra = this.corretoraCompra.calcularValorTaxaCompra(
+        totalCompraOperacao
+      );
+      const lucroOperacao = (
+        totalCompraOperacao - totalVendaOperacao - taxaVenda - taxaCompra
+      );
       const investimentoOperacao = (
-        this.corretoraVenda.calcularValorVendaAposTaxas(totalVenda)
+        this.corretoraVenda.calcularValorVendaAposTaxas(totalVendaOperacao)
       );
 
       if (
@@ -213,6 +225,7 @@ export class Arbitragem {
       saldoRestante -= investimentoOperacao;
       this.investimento += investimentoOperacao;
       this.lucro += lucroOperacao;
+      totalCompraArbitragem += totalCompraOperacao;
 
       this.adicionarOrdemArbitragem(
         this.ordensVenda,
@@ -241,6 +254,16 @@ export class Arbitragem {
           ordemCompra = this.clonarOrdem(ordensCompraSimulacao[indiceCompra]);
         }
       }
+    }
+
+    if (this.possuiTaxaSaque) {
+      this.taxaSaque = this.corretoraCompra.simularTaxaSaque(
+        totalCompraArbitragem,
+        this.possuiBancoConveniado,
+      );
+      this.lucro -= this.taxaSaque;
+    } else {
+      this.taxaSaque = 0;
     }
   }
 }

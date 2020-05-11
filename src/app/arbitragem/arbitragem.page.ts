@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { Arbitragem } from './arbitragem';
 import { ArbitragemService } from './arbitragem.service';
-import { ComunicacaoService } from '../shared/comunicacao.service';
+import { ComunicacaoService } from '../comum/comunicacao.service';
 
 @Component({
   selector: 'app-arbitragem',
@@ -12,6 +12,7 @@ import { ComunicacaoService } from '../shared/comunicacao.service';
   styleUrls: ['./arbitragem.page.scss'],
 })
 export class ArbitragemPage implements OnInit {
+  titulo: string;
   arbitragem: Arbitragem;
   subscricao: Observable<any>;
 
@@ -23,6 +24,11 @@ export class ArbitragemPage implements OnInit {
 
   ngOnInit() {
     this.comunicacao.propagadorObservavel.subscribe(this.carregarArbitragem());
+    if (this.arbitragem) {
+      const corretoraVenda = this.arbitragem.corretoraVenda;
+      const corretoraCompra = this.arbitragem.corretoraCompra;
+      this.titulo = `${corretoraVenda.nome} x ${corretoraCompra.nome}`;
+    }
   }
 
   carregarArbitragemDiretamente() {

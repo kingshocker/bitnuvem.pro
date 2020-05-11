@@ -1,99 +1,30 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button>
-    </ion-buttons>
-    <ion-title *ngIf="arbitragem">{{ arbitragem.corretoraVenda.nome }} x {{ arbitragem.corretoraCompra.nome }}</ion-title>
-    <ion-buttons slot="primary">
-      <ion-button routerLink="/configuracoes">
-        <ion-icon slot="icon-only" name="settings"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-cabecalho [titulo]="titulo"></app-cabecalho>
 
 <ion-content *ngIf="arbitragem">
-  <div>
+  <div class="container-fluid">
     <div class="row">
-      <div class="col">
-        <strong>Corretora venda</strong>
-        <p><a [routerLink]="['/corretora', arbitragem.corretoraVenda.id]">{{ arbitragem.corretoraVenda.nome }}</a></p>
-        <strong>Data da requisição</strong>
-        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataRequisicao | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
-        <strong>Data da resposta</strong>
-        <p>{{ arbitragem.corretoraVenda.livroOrdens.dataResposta | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
-      </div>
-      <div class="col">
-        <strong>Corretora compra</strong>
-        <p><a [routerLink]="['/corretora', arbitragem.corretoraCompra.id]">{{ arbitragem.corretoraCompra.nome }}</a></p>
-        <strong>Data da requisição</strong>
-        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataRequisicao | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
-        <strong>Data da resposta</strong>
-        <p>{{ arbitragem.corretoraCompra.livroOrdens.dataResposta | date : 'dd/MM/yyyy HH:mm:ss (z)' }}</p>
-      </div>
+      <app-informacoes-corretora
+        rotulo="Corretora venda"
+        [corretora]="arbitragem.corretoraVenda"
+      ></app-informacoes-corretora>
+      <app-informacoes-corretora
+        rotulo="Corretora compra"
+        [corretora]="arbitragem.corretoraCompra"
+      ></app-informacoes-corretora>
     </div>
-    <div class="row">
-      <div class="col">
-        <strong>Investimento</strong>
-        <p>R$ {{ arbitragem.investimento | number:'1.2-2':'pt-BR' }}</p>
-      </div>
-      <div class="col">
-        <strong>Lucro</strong>
-        <p>R$ {{ arbitragem.lucro | number:'1.2-2':'pt-BR' }}</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <strong>Porcentagem de lucro</strong>
-        <p>{{ arbitragem.porcentagemLucro | number:'1.2-2':'pt-BR' }}%</p>
-      </div>
-      <div class="col" *ngIf="arbitragem.possuiTaxaTransferencia">
-        <strong>Taxa de transferência</strong>
-        <p>{{ arbitragem.taxaTransferencia | number:'1.4-8':'pt-BR' }} BTC</p>
-      </div>
-    </div>
+    <app-informacoes-arbitragem
+      [arbitragem]="arbitragem"
+    ></app-informacoes-arbitragem>
   </div>
-  <div class="table-responsive">
-    <table class="table table-bordered table-sm">
-      <caption>Ordens de venda na {{ arbitragem.corretoraVenda.nome }}</caption>
-      <thead class="thead-light">
-        <tr>
-          <th>Preço</th>
-          <th>Quantidade</th>
-          <th>Total</th>
-          <th>Taxas</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let ordem of arbitragem.ordensVenda">
-          <td>{{ ordem.preco | number:'1.2-2':'pt-BR' }}</td>
-          <td>{{ ordem.quantidade | number:'1.0-8':'pt-BR' }}</td>
-          <td>{{ ordem.total | number:'1.2-2':'pt-BR' }}</td>
-          <td>{{ ordem.valorTaxa | number:'1.2-2':'pt-BR' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="table-responsive">
-    <table class="table table-bordered table-sm">
-      <caption>Ordens de compra na {{ arbitragem.corretoraCompra.nome }}</caption>
-      <thead class="thead-light">
-        <tr>
-          <th>Preço</th>
-          <th>Quantidade</th>
-          <th>Total</th>
-          <th>Taxas</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let ordem of arbitragem.ordensCompra">
-          <td>{{ ordem.preco | number:'1.2-2':'pt-BR' }}</td>
-          <td>{{ ordem.quantidade | number:'1.0-8':'pt-BR' }}</td>
-          <td>{{ ordem.total | number:'1.2-2':'pt-BR' }}</td>
-          <td>{{ ordem.valorTaxa | number:'1.2-2':'pt-BR' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <app-tabela-ordens
+    tipo="venda"
+    [corretora]="arbitragem.corretoraVenda"
+    [ordens]="arbitragem.ordensVenda"
+  ></app-tabela-ordens>
+  <app-tabela-ordens
+    tipo="compra"
+    [corretora]="arbitragem.corretoraCompra"
+    [ordens]="arbitragem.ordensCompra"
+  ></app-tabela-ordens>
   <app-rodape></app-rodape>
 </ion-content>

@@ -1,14 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { timeout, catchError } from 'rxjs/operators';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordem,
-  Ordens,
-  TEMPO_REQUISICAO_MAXIMO,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
 
 type OrdemWalltime = Array<string>;
 
@@ -32,7 +24,13 @@ interface MetaWalltime {
   providedIn: 'root'
 })
 export class WalltimeService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.004;
+  readonly TAXA_SAQUE_FIXA = 9;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;
+  readonly TAXA_SAQUE_VARIAVEL = 0.0123;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
+  readonly POSSUI_CONVENIOS_BANCOS = true;
   readonly LIVRO_ORDENS_VAZIO = {
     venda: [],
     compra: [],
@@ -46,52 +44,46 @@ export class WalltimeService extends Corretora {
   paginaOrdens = 'https://walltime.info/';
   paginaContato = 'https://walltime.info/index_pt.html#!text?content=ajuda';
   observacao = '';
-  webservice = 'https://cors-anywhere.herokuapp.com/https://s3.amazonaws.com/data-production-walltime-info/production/dynamic/meta.json';
+  webservice = (
+    'https://s3.amazonaws.com/data-production-walltime-info/production/dynamic/'
+    + 'meta.json'
+  );
   webservice2 = (
-    'https://cors-anywhere.herokuapp.com/https://s3.amazonaws.com/'
-    + 'data-production-walltime-info/production/dynamic/'
+    'https://s3.amazonaws.com/data-production-walltime-info/production/dynamic/'
     + '{order_book_prefix}_r{current_round}_p0.json'
   );
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 
   private async retornarLivroOrdens(): Promise<LivroOrdens> {
     const dataRequisicao = new Date();
-    let livroOrdens: LivroOrdens = null;
-    const metadata: MetaWalltime = await (this.http.get(this.webservice).pipe(
-      timeout(TEMPO_REQUISICAO_MAXIMO),
-      catchError((erro) => {
-        console.error(this.id, erro);
 
-        livroOrdens = this.LIVRO_ORDENS_VAZIO;
-        return null;
-      }),
-    ).toPromise() as Promise<MetaWalltime>);
-    if (livroOrdens !== null) {
-      return livroOrdens;
+    let response: any = await this.requisicao(this.webservice);
+    if (response === this.LIVRO_ORDENS_VAZIO) {
+      this.livroOrdens = this.LIVRO_ORDENS_VAZIO;
+      return this.livroOrdens;
     }
-    const livroOrdensWalltime: LivroOrdensWalltime = await (this.http.get(
+    const metadata: MetaWalltime = response as MetaWalltime;
+
+    response = await this.requisicao(
       this.webservice2.replace(
         '{order_book_prefix}',
         metadata.order_book_prefix,
       ).replace('{current_round}', metadata.current_round.toString())
-    ).pipe(
-      timeout(TEMPO_REQUISICAO_MAXIMO),
-      catchError((erro) => {
-        console.error(this.id, erro);
-
-        livroOrdens = this.LIVRO_ORDENS_VAZIO;
-        return null;
-      }),
-    ).toPromise() as Promise<LivroOrdensWalltime>);
-    if (livroOrdens !== null) {
-      return livroOrdens;
+    );
+    if (response === this.LIVRO_ORDENS_VAZIO) {
+      this.livroOrdens = this.LIVRO_ORDENS_VAZIO;
+      return this.livroOrdens;
     }
+    const livroOrdensWalltime: LivroOrdensWalltime = (
+      response as LivroOrdensWalltime
+    );
+
     this.livroOrdens = this.converterLivroOrdensAPI(
       livroOrdensWalltime,
       dataRequisicao

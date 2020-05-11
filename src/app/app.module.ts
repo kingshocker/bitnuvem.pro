@@ -1,7 +1,6 @@
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -18,7 +17,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { CorretoraService } from './corretora/corretora.service';
-import { BisqService } from './corretora/api/bisq.service';
 import { BraziliexService } from './corretora/api/braziliex.service';
 import { CoinextService } from './corretora/api/coinext.service';
 import { BitcoinTradeService } from './corretora/api/bitcointrade.service';
@@ -28,11 +26,16 @@ import { BrasilBitcoinService } from './corretora/api/brasilbitcoin.service';
 import { BitCambioService } from './corretora/api/bitcambio.service';
 import { WalltimeService } from './corretora/api/walltime.service';
 
-import { IsencaoResponsabilidadeGuard } from './isencao-responsabilidade/isencao-responsabilidade.guard';
+import {
+  IsencaoResponsabilidadeGuard
+} from './isencao-responsabilidade/isencao-responsabilidade.guard';
 import { ArbitragemService } from './arbitragem/arbitragem.service';
-import { ComunicacaoService } from './shared/comunicacao.service';
-import { ConfiguracoesService, configuracoesServiceFactory } from './configuracoes/configuracoes.service';
-import { NotificacaoService } from './shared/notificacao.service';
+import { ComunicacaoService } from './comum/comunicacao.service';
+import {
+  ConfiguracoesService,
+  configuracoesServiceFactory,
+} from './configuracoes/configuracoes.service';
+import { NotificacaoService } from './comum/notificacao.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,16 +45,18 @@ import { NotificacaoService } from './shared/notificacao.service';
     IonicModule.forRoot(),
     AppRoutingModule,
     IonicStorageModule.forRoot(),
-    HttpClientModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register(
+      'ngsw-worker.js',
+      { enabled: environment.production },
+    ),
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     IsencaoResponsabilidadeGuard,
     CorretoraService,
-    BisqService,
     BraziliexService,
     CoinextService,
     BitcoinTradeService,
@@ -72,7 +77,7 @@ import { NotificacaoService } from './shared/notificacao.service';
     Platform,
     NotificacaoService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
 

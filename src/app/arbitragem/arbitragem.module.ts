@@ -6,8 +6,16 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ArbitragemPage } from './arbitragem.page';
-
-import { SharedModule } from '../shared/shared.module';
+import {
+  InformacoesCorretoraComponent
+} from './components/informacoes-corretora/informacoes-corretora.component';
+import {
+  InformacoesArbitragemComponent
+} from './components/informacoes-arbitragem/informacoes-arbitragem.component';
+import {
+  TabelaOrdensComponent
+} from './components/tabela-ordens/tabela-ordens.component';
+import { ComumModule } from '../comum/comum.module';
 
 const routes: Routes = [
   {
@@ -22,8 +30,13 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes),
-    SharedModule,
+    ComumModule,
   ],
-  declarations: [ArbitragemPage]
+  declarations: [
+    ArbitragemPage,
+    InformacoesCorretoraComponent,
+    InformacoesArbitragemComponent,
+    TabelaOrdensComponent,
+  ],
 })
 export class ArbitragemPageModule {}

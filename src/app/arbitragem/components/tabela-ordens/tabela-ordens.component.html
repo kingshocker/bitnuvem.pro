@@ -1,0 +1,25 @@
+<div class="table-responsive">
+  <table class="table table-bordered table-sm">
+    <caption>
+      Ordens de {{ tipo }} na {{ corretora.nome }}
+    </caption>
+    <thead class="thead-light">
+      <tr>
+        <th>Preço</th>
+        <th>Quantidade</th>
+        <th>Total</th>
+        <th>Taxas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ordem of ordens">
+        <td>{{ ordem.preco | number: PRECISAO_REAL }}</td>
+        <td>
+          {{ ordem.quantidade | number: PRECISAO_BITCOIN }}
+        </td>
+        <td>{{ ordem.total | number: PRECISAO_REAL }}</td>
+        <td>{{ ordem.valorTaxa | number: PRECISAO_REAL }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

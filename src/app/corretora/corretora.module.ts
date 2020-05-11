@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { CorretoraPage } from './corretora.page';
+import { ComumModule } from '../comum/comum.module';
 
 const routes: Routes = [
   {
@@ -19,8 +20,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ComumModule,
   ],
-  declarations: [CorretoraPage]
+  declarations: [CorretoraPage],
 })
 export class CorretoraPageModule {}

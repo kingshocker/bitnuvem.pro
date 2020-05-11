@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import {
-  Corretora,
-  LivroOrdens,
-  Ordem,
-  Ordens,
-} from '../corretora';
+import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
 
 type OrdemBitnuvem = Array<string>;
 
@@ -19,7 +13,13 @@ interface LivroOrdensBitnuvem {
   providedIn: 'root'
 })
 export class BitnuvemService extends Corretora {
+  readonly UTILIZA_PROXY = true;
   readonly TAXA_ORDEM_EXECUTORA = 0.0012;
+  readonly TAXA_SAQUE_FIXA = 9.5;
+  readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;
+  readonly TAXA_SAQUE_VARIAVEL = 0.0085;
+  readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
+  readonly POSSUI_CONVENIOS_BANCOS = true;
   readonly LIVRO_ORDENS_VAZIO = {asks: [], bids: []};
 
   id = 'bitnuvem';
@@ -28,12 +28,12 @@ export class BitnuvemService extends Corretora {
   paginaOrdens = 'https://bitnuvem.com/panel/order-book/BTCBRL';
   paginaContato = 'https://bitnuvem.com/suporte';
   observacao = '';
-  webservice = 'https://cors-anywhere.herokuapp.com/https://bitnuvem.com/api/BTC/orderbook';
+  webservice = 'https://bitnuvem.com/api/BTC/orderbook';
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0005;
 
-  constructor(public http: HttpClient) {
-    super(http);
+  constructor() {
+    super();
     this.livroOrdens = null;
   }
 

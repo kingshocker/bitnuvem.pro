@@ -1,6 +1,6 @@
 {
   "name": "CriptoArbitragem",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "Carlson Santana Cruz",
   "homepage": "https://github.com/carlsonsantana/criptoarbitragem",
   "scripts": {
@@ -11,7 +11,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "git-test": "node git-test.js",
-    "sync": "ngx-pwa-icons -i src/assets/icons/icon.png -s '1024' -o ./resources -n icon.png && ionic cordova resources && ionic cordova prepare && cordova-version-sync && ngx-pwa-icons -i src/assets/icons/icon.png && ngx-pwa-icons -i src/assets/icons/icon.png -s '64' -o ./src/assets/icon -n favicon.png && del resources/icon.png"
+    "sync": "ngx-pwa-icons -i src/assets/icons/icon.png -s '1024' -o ./resources -n icon.png && ionic cordova resources && ionic cordova prepare && cordova-version-sync && ngx-pwa-icons -i src/assets/icons/icon.png && ngx-pwa-icons -i src/assets/icons/icon.png -s '64' -o ./src/assets/icon -n favicon.png && del resources/icon.png",
+    "deploy_github_pages": "node deploy_github_pages.js"
   },
   "precommit": {
     "run": [
@@ -30,6 +31,7 @@
     "@angular/pwa": "^0.803.19",
     "@angular/router": "~8.1.2",
     "@angular/service-worker": "~8.1.2",
+    "@ionic-native/background-mode": "^5.23.0",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/local-notifications": "^5.15.0",
     "@ionic-native/splash-screen": "^5.0.0",
@@ -40,7 +42,12 @@
     "bootstrap": "^4.3.1",
     "cordova-android": "^8.1.0",
     "cordova-browser": "^6.0.0",
+    "cordova-plugin-background-mode": "^0.7.3",
+    "cordova-plugin-badge": "^0.8.8",
+    "cordova-plugin-local-notification": "^0.9.0-beta.2",
     "core-js": "^2.5.4",
+    "es6-promise": "^4.2.8",
+    "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.4.1",
     "popper.js": "^1.16.0",
     "rxjs": "~6.5.1",
@@ -70,6 +77,9 @@
     "cordova-res": "^0.8.1",
     "cordova-version-sync": "^1.0.3",
     "del-cli": "^3.0.0",
+    "gh-pages": "^2.2.0",
+    "git-remote-origin-url": "^3.1.0",
+    "gitlog": "^3.1.2",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -92,7 +102,9 @@
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
-      "cordova-plugin-ionic-keyboard": {}
+      "cordova-plugin-ionic-keyboard": {},
+      "cordova-plugin-background-mode": {},
+      "cordova-plugin-local-notification": {}
     },
     "platforms": [
       "android",

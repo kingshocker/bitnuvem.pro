@@ -1,0 +1,20 @@
+<div class="col-6">
+  <strong>Investimento</strong>
+  <p>R$ {{ investimento | number: PRECISAO_REAL }}</p>
+</div>
+<div class="col-6">
+  <strong>Lucro</strong>
+  <p>R$ {{ lucro | number: PRECISAO_REAL }}</p>
+</div>
+<div class="col-6">
+  <strong>Porcentagem de lucro</strong>
+  <p>{{ porcentagemLucro | number: PRECISAO_REAL }}%</p>
+</div>
+<div class="col-6" *ngIf="possuiTaxaTransferencia">
+  <strong>Taxa de transferência</strong>
+  <p>{{ taxaTransferencia | number: PRECISAO_BITCOIN }} BTC</p>
+</div>
+<div class="col-6" *ngIf="possuiTaxaSaque">
+  <strong>Taxa de saque em reais</strong>
+  <p>R$ {{ taxaSaque | number: PRECISAO_REAL }}</p>
+</div>

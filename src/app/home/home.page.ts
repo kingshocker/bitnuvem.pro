@@ -1,17 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, interval, Subscription } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 import { OnPageVisible, OnPageHidden } from 'angular-page-visibility';
 import { LoadingController } from '@ionic/angular';
 
-import { ArbitragemService } from '../arbitragem/arbitragem.service';
 import { Arbitragem } from '../arbitragem/arbitragem';
-import { ComunicacaoService } from '../shared/comunicacao.service';
-import { Configuracao } from '../configuracoes/configuracao';
-import { ConfiguracoesService } from '../configuracoes/configuracoes.service';
-import { NotificacaoService } from '../shared/notificacao.service';
+import { ComunicacaoService } from '../comum/comunicacao.service';
+import {
+  OportunidadesArbitragemService
+} from './tarefas/oportunidades-arbitragem.service';
 
 @Component({
   selector: 'app-home',
@@ -19,113 +23,96 @@ import { NotificacaoService } from '../shared/notificacao.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit, OnDestroy {
-  readonly UM_MINUTO_EM_MILISEGUNDOS = 1000 * 60;
-  paginaAtiva: boolean;
-  paginaVisivel: boolean;
-  intervalo: Observable<number>;
-  intervaloVisualizacao: Subscription;
-  arbitragens: Array<Arbitragem>;
-  usuarioNotificado: boolean;
-  configuracao: Configuracao;
+  readonly PRECISAO_REAL = '1.2-2';
 
+  paginaAtiva: boolean;
+  arbitragens: Array<Arbitragem>;
   arbitragensVerificadas: boolean;
   carregamento: HTMLIonLoadingElement;
+  propagadorPaginaVisivel: BehaviorSubject<boolean>;
+  tempoRestantePararTarefa: NodeJS.Timer;
 
   constructor(
-    private oportunidades: ArbitragemService,
     private comunicacao: ComunicacaoService,
     private router: Router,
-    private configuracoes: ConfiguracoesService,
-    private notificacao: NotificacaoService,
     private loadingController: LoadingController,
+    private changeDetectorRef: ChangeDetectorRef,
+    private oportunidadesArbitragemService: OportunidadesArbitragemService,
   ) {
     this.carregamento = null;
+    this.paginaAtiva = false;
     this.arbitragens = [];
-    this.intervaloVisualizacao = null;
+    this.tempoRestantePararTarefa = null;
+
+    this.iniciarTarefaVerificarOportunidadesArbitragem();
   }
 
   ngOnInit() {
-    this.exibirMensagemPaginaCarregando();
-    this.configuracao = this.configuracoes.configuracao;
-    this.verificarOportunidadesArbitragem();
-    this.paginaAtiva = true;
-    this.paginaVisivel = true;
-    this.usuarioNotificado = false;
-    if (!this.intervalo) {
-      this.intervalo = interval(this.UM_MINUTO_EM_MILISEGUNDOS);
-      this.intervalo.pipe(takeWhile(() => this.paginaAtiva)).subscribe(() => {
-        if (
-          (this.paginaVisivel)
-          || (this.configuracao.permitirNotificar && (!this.usuarioNotificado))
-        ) {
-          this.verificarOportunidadesArbitragem();
-        }
-      });
+    if (this.paginaAtiva) {
+      return ;
     }
+
+    this.encerrarTempoRestantePararTarefa();
+    this.paginaAtiva = true;
+    this.exibirMensagemPaginaCarregando();
+    this.propagadorPaginaVisivel.next(true);
+    this.oportunidadesArbitragemService.criarTarefa();
   }
 
+  ionViewWillEnter() {
+    this.ngOnInit();
+  }
+
+  @HostListener('window:beforeunload')
   ngOnDestroy() {
     this.paginaAtiva = false;
-    this.paginaVisivel = false;
+
+    if (!this.tempoRestantePararTarefa) {
+      this.tempoRestantePararTarefa = setTimeout(() => {
+        this.arbitragensVerificadas = false;
+        this.oportunidadesArbitragemService.pararTarefa();
+        this.arbitragens = [];
+        this.oportunidadesArbitragemService.habilitarInicioImediato();
+        this.encerrarTempoRestantePararTarefa();
+      }, this.oportunidadesArbitragemService.UM_MINUTO_EM_MILISEGUNDOS);
+    }
   }
 
-  voltarNotificarUsuario() {
-    this.usuarioNotificado = false;
-    if (this.intervaloVisualizacao !== null) {
-      this.intervaloVisualizacao.unsubscribe();
-      this.intervaloVisualizacao = null;
-    }
+  ionViewWillLeave() {
+    this.ngOnDestroy();
   }
 
   @OnPageVisible()
   onPaginaVisivel() {
-    this.paginaVisivel = true;
-    this.voltarNotificarUsuario();
+    this.propagadorPaginaVisivel.next(true);
   }
 
   @OnPageHidden()
   onPaginaNaoVisivel() {
-    this.paginaVisivel = false;
+    this.propagadorPaginaVisivel.next(false);
   }
 
-  get existemOportunidadesAbitragem() {
-    return this.arbitragens.length > 0;
-  }
+  iniciarTarefaVerificarOportunidadesArbitragem() {
+    this.propagadorPaginaVisivel = new BehaviorSubject<boolean>(true);
+    this.propagadorPaginaVisivel.subscribe(
+      this.oportunidadesArbitragemService.observadorPaginaVisivel()
+    );
 
-  async verificarOportunidadesArbitragem() {
-    this.oportunidades.verificarOportunidadesArbitragem().then(
-      (arbitragens) => {
-        if (
-          (this.configuracao.permitirNotificar)
-          && (!this.paginaVisivel)
-          && (arbitragens.length > 0)
-        ) {
-          this.notificacao.notificar(
-            'Oportunidade de arbitragem',
-            'Há novas oportunidades de arbitragem que podem ser do seu interesse',
-          );
-          this.intervaloVisualizacao = interval(
-            this.UM_MINUTO_EM_MILISEGUNDOS * this.configuracao.tempoEntreNotificacoes
-          ).subscribe(() => {
-            this.voltarNotificarUsuario();
-          });
-        }
+    this.oportunidadesArbitragemService.inscrever(
+      (arbitragens: Array<Arbitragem>) => {
         this.arbitragens = arbitragens;
-        this.usuarioNotificado = true;
+        this.arbitragensVerificadas = true;
         this.fecharMensagemPaginaCarregando();
+        this.changeDetectorRef.detectChanges();
       }
     );
   }
 
-  detalharOportunidadeArbitragem(indice: number) {
-    this.ngOnDestroy();
-    const arbitragem = this.arbitragens[indice];
-    this.comunicacao.modificarObjeto(arbitragem);
-    this.router.navigate([
-      '/arbitragem',
-      arbitragem.corretoraVenda.id,
-      arbitragem.corretoraCompra.id,
-    ]);
+  encerrarTempoRestantePararTarefa() {
+    if (this.tempoRestantePararTarefa) {
+      clearTimeout(this.tempoRestantePararTarefa);
+    }
+    this.tempoRestantePararTarefa = null;
   }
 
   async exibirMensagemPaginaCarregando() {
@@ -133,15 +120,29 @@ export class HomePage implements OnInit, OnDestroy {
       message: 'Carregando...',
     });
     await this.carregamento.present();
-    if (this.usuarioNotificado) {
+    if (this.arbitragensVerificadas) {
       this.fecharMensagemPaginaCarregando();
     }
   }
 
   fecharMensagemPaginaCarregando() {
-    if (this.carregamento !== null) {
+    if (this.carregamento) {
       this.carregamento.dismiss();
       this.carregamento = null;
     }
+  }
+
+  get existemOportunidadesAbitragem(): boolean {
+    return this.arbitragens.length > 0;
+  }
+
+  detalharOportunidadeArbitragem(indice: number) {
+    const arbitragem = this.arbitragens[indice];
+    this.comunicacao.modificarObjeto(arbitragem);
+    this.router.navigate([
+      '/arbitragem',
+      arbitragem.corretoraVenda.id,
+      arbitragem.corretoraCompra.id,
+    ]);
   }
 }
