@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="br.com.criptoarbitragem" version="0.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="br.com.criptoarbitragem" version="0.4.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>CriptoArbitragem</name>
     <description>Permite mostrar oportunidades de arbitragem em Bitcoin nas corretoras.</description>
     <author email="3837162+carlsonsantana@users.noreply.github.com" href="https://github.com/carlsonsantana/">Carlson Santana Cruz</author>
