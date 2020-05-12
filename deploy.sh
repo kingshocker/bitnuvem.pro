@@ -32,5 +32,5 @@ gem install fastlane > /dev/null
 gem install supply > /dev/null
 ionic cordova build --release --prod android > /dev/null
 jarsigner -verbose -sigalg SHA1withRSA -storepass $STOREPASS -keypass $KEYPASS -digestalg SHA1 -keystore android.jks platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk android_criptoarbitragem > /dev/null
-/usr/local/android-sdk/build-tools/28.0.3/zipalign -v 4 platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk app.apk > /dev/null
+zipalign -v 4 platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk app.apk > /dev/null
 fastlane supply run -j google-console-api.json -p br.com.criptoarbitragem -b app.apk -e $RELEASE_STATUS
