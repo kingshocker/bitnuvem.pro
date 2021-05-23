@@ -9,7 +9,6 @@ before_install:
 script:
   - npm run lint > /dev/null
   - npm run test > /dev/null
-  - npm run e2e > /dev/null
 before_deploy:
   - npm run sync > /dev/null
 deploy:
@@ -19,4 +18,3 @@ deploy:
     branch: master
   script: bash deploy.sh
   edge: true
-

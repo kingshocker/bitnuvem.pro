@@ -10,7 +10,7 @@ type LivroOrdensCoinext = Array<OrdemCoinext>;
   providedIn: 'root'
 })
 export class CoinextService extends Corretora {
-  readonly UTILIZA_PROXY = true;
+  readonly UTILIZA_PROXY = false;
   readonly TAXA_ORDEM_EXECUTORA = 0.005;
   readonly TAXA_SAQUE_FIXA = 8.99;
   readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = 0;
