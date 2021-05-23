@@ -2,19 +2,24 @@ import { Injectable } from '@angular/core';
 
 import { Corretora, LivroOrdens, Ordem, Ordens } from '../corretora';
 
-type OrdemBitCambio = Array<number>;
+interface OrdemBitCambio {
+  Quantity: number;
+  Rate: number;
+}
+
+type OrdensBitCambio = Array<OrdemBitCambio>;
 
 interface LivroOrdensBitCambio {
-  pair: string;
-  bids: Array<OrdemBitCambio>;
-  asks: Array<OrdemBitCambio>;
+  success: boolean;
+  message: string;
+  result: {buy: OrdensBitCambio, sell: OrdensBitCambio};
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class BitCambioService extends Corretora {
-  readonly UTILIZA_PROXY = true;
+  readonly UTILIZA_PROXY = false;
   readonly TAXA_ORDEM_EXECUTORA = 0.0099;
   readonly TAXA_SAQUE_FIXA = 10;
   readonly TAXA_SAQUE_FIXA_BANCO_CONVENIADO = this.TAXA_SAQUE_FIXA;
@@ -22,17 +27,20 @@ export class BitCambioService extends Corretora {
   readonly TAXA_SAQUE_VARIAVEL_BANCO_CONVENIADO = this.TAXA_SAQUE_VARIAVEL;
   readonly POSSUI_CONVENIOS_BANCOS = false;
   readonly LIVRO_ORDENS_VAZIO = {
-    asks: [],
-    bids: [],
+    success: false,
+    message: '',
+    results: {buy: [], sell: []}
   };
 
   id = 'bitcambio';
   nome = 'BitCambio';
   paginaInicial = 'https://bitcambio.com.br/';
-  paginaOrdens = 'https://pro.bitcambio.com.br/#/';
+  paginaOrdens = 'https://nova.bitcambio.com.br/pt/trade/pro/BTC/BRL';
   paginaContato = 'https://bitcambiohelp.zendesk.com/hc/pt-br';
   observacao = '';
-  webservice = 'https://bitcambio_api.blinktrade.com/api/v1/BRL/orderbook';
+  webservice = (
+    'https://nova.bitcambio.com.br/api/v3/public/getorderbook?market=BTC_BRL'
+  );
   livroOrdens: LivroOrdens;
   taxaTransferencia = 0.0004;
 
@@ -57,20 +65,24 @@ export class BitCambioService extends Corretora {
       livroOrdensAPI
     ) as LivroOrdensBitCambio;
 
-    livroOrdensBitCambio.asks.forEach((ordemBitCambio: OrdemBitCambio) => {
-      const ordem: Ordem = {
-        preco: ordemBitCambio[0],
-        quantidade: ordemBitCambio[1],
-      };
-      ordensVenda.push(ordem);
-    });
-    livroOrdensBitCambio.bids.forEach((ordemBitCambio: OrdemBitCambio) => {
-      const ordem: Ordem = {
-        preco: ordemBitCambio[0],
-        quantidade: ordemBitCambio[1],
-      };
-      ordensCompra.push(ordem);
-    });
+    livroOrdensBitCambio.result.buy.forEach(
+      (ordemBitCambio: OrdemBitCambio) => {
+        const ordem: Ordem = {
+          preco: ordemBitCambio.Rate,
+          quantidade: ordemBitCambio.Quantity,
+        };
+        ordensVenda.push(ordem);
+      }
+    );
+    livroOrdensBitCambio.result.sell.forEach(
+      (ordemBitCambio: OrdemBitCambio) => {
+        const ordem: Ordem = {
+          preco: ordemBitCambio.Rate,
+          quantidade: ordemBitCambio.Quantity,
+        };
+        ordensCompra.push(ordem);
+      }
+    );
 
     return livroOrdens;
   }
