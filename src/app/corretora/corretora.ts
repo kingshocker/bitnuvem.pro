@@ -14,8 +14,24 @@ export interface LivroOrdens {
   dataResposta: Date;
 }
 
+export interface RespostaProxy {
+  contents: string;
+  status: {
+    url?: string,
+    content_type?: string,
+    content_length?: number,
+    http_code?: number,
+    error?: {
+      name: string,
+      code: string,
+      timings: any
+    },
+    response_time: number
+  };
+}
+
 export abstract class Corretora {
-  readonly PROXY = 'https://cors-anywhere.herokuapp.com/';
+  readonly PROXY = 'https://api.allorigins.win/get?url=';
   abstract readonly UTILIZA_PROXY: boolean;
   abstract readonly TAXA_ORDEM_EXECUTORA: number;
   abstract readonly TAXA_SAQUE_FIXA: number;
@@ -47,7 +63,11 @@ export abstract class Corretora {
         reject(new Error('Request timed out'));
       }, TEMPO_REQUISICAO_MAXIMO);
 
-      const urlRequisicao = (this.UTILIZA_PROXY ? this.PROXY : '') + url;
+      const urlRequisicao = (
+        this.UTILIZA_PROXY
+        ? (this.PROXY + encodeURIComponent(url))
+        : url
+      );
 
       fetch(
         urlRequisicao,
@@ -78,6 +98,18 @@ export abstract class Corretora {
       }
 
       return response.json();
+    }).then((resposta: any) => {
+      if (this.UTILIZA_PROXY) {
+        const respostaProxy: RespostaProxy = resposta;
+
+        if (!respostaProxy.contents) {
+          throw new Error(respostaProxy.status.error.code);
+        }
+
+        return JSON.parse(respostaProxy.contents);
+      }
+
+      return resposta;
     }).catch((erro: Error) => {
       console.log(this.id, erro);
 
