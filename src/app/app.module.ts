@@ -17,7 +17,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { CorretoraService } from './corretora/corretora.service';
-import { BraziliexService } from './corretora/api/braziliex.service';
 import { CoinextService } from './corretora/api/coinext.service';
 import { BitcoinTradeService } from './corretora/api/bitcointrade.service';
 import { MercadoBitcoinService } from './corretora/api/mercadobitcoin.service';
@@ -57,7 +56,6 @@ import { NotificacaoService } from './comum/notificacao.service';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     IsencaoResponsabilidadeGuard,
     CorretoraService,
-    BraziliexService,
     CoinextService,
     BitcoinTradeService,
     MercadoBitcoinService,

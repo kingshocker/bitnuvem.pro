@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { Corretora } from './corretora';
-import { BraziliexService } from './api/braziliex.service';
 import { CoinextService } from './api/coinext.service';
 import { BitcoinTradeService } from './api/bitcointrade.service';
 import { MercadoBitcoinService } from './api/mercadobitcoin.service';
@@ -17,7 +16,6 @@ export class CorretoraService {
   corretoras: Array<Corretora>;
 
   constructor(
-    private braziliex: BraziliexService,
     private coinext: CoinextService,
     private bitcoinTrade: BitcoinTradeService,
     private mercadoBitcoin: MercadoBitcoinService,
@@ -27,7 +25,6 @@ export class CorretoraService {
     private walltimeService: WalltimeService,
   ) {
     this.corretoras = [
-      this.braziliex,
       this.coinext,
       this.bitcoinTrade,
       this.mercadoBitcoin,
