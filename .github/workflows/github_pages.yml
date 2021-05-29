@@ -1,0 +1,27 @@
+name: Deploy on GitHub Pages
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Build
+      run: |
+        npm install
+        npm run build
+        cp www/index.html www/404.html
+
+    - name: Deploy
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v2.4.1
+      with:
+        target_branch: gh-pages
+        build_dir: www
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAGES_TOKEN_CRIPTOARBITRAGEM }}
